@@ -324,6 +324,19 @@ body {
     margin-bottom: 0;
 }
 
+/* AIローディング表示 */
+@keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+}
+
+.total .result-content p:first-child:last-child {
+    animation: pulse 1.5s infinite;
+    text-align: center;
+    color: #764ba2;
+    font-weight: bold;
+}
+
 /* リセットボタン */
 .reset-btn {
     background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);

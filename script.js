@@ -137,7 +137,7 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     calculateFortune(birthdate, birthtime, name);
 });
 
-function calculateFortune(birthdate, birthtime, name) {
+async function calculateFortune(birthdate, birthtime, name) {
     const date = new Date(birthdate);
     
     // 1. 九星気学
@@ -171,13 +171,13 @@ function calculateFortune(birthdate, birthtime, name) {
     const tarot = calculateTarot(date);
     displayTarot(tarot);
 
-    // 総合運勢
-    displayTotal(kyusei, num, western, gosei);
-
     // 表示切り替え
     document.querySelector('.fortune-card').style.display = 'none';
     document.getElementById('results').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
+
+    // 総合運勢（AI生成）
+    await displayTotal(kyusei, num, western, gosei);
 }
 
 // ============================================================
@@ -390,15 +390,65 @@ function displayTarot(card) {
     document.getElementById('tarotDesc').textContent = tarotData[card].description;
 }
 
-function displayTotal(kyusei, num, western, gosei) {
-    const totalHtml = `
-        <p>あなたは<strong>${kyusei}</strong>で、運命数<strong>${num}</strong>の性質を持っています。</p>
-        <p>星座は<strong>${western}</strong>で、五星三心では<strong>${gosei}</strong>に分類されます。</p>
-        <p>これらの占術すべてが、あなたが多面的で魅力的な人物であることを示しています。</p>
-        <p>2026年は、あなたの持つ才能を存分に発揮できる年となるでしょう。</p>
-        <p>自分を信じて、前向きに進んでいってください！✨</p>
-    `;
-    document.getElementById('totalFortune').innerHTML = totalHtml;
+async function displayTotal(kyusei, num, western, gosei) {
+    // ローディング表示
+    document.getElementById('totalFortune').innerHTML = '<p>🔮 AI が総合運勢を鑑定中...</p>';
+    
+    try {
+        // Claude APIを使って説得力のある総合運勢を生成
+        const prompt = `あなたは経験豊富な占い師です。以下の占い結果から、説得力があり、温かく、前向きで、具体的なアドバイスを含む総合運勢を400-600文字で作成してください。
+
+占い結果:
+- 九星気学: ${kyusei} - ${kyuseiData[kyusei].description}
+- 数秘術: 運命数${num} - ${numerologyData[num].description}
+- 西洋占星術: ${western} - ${westernZodiacData[western].description}
+- 五星三心占い: ${gosei} - ${goseiData[gosei].description}
+
+要件:
+1. これらの占術結果の共通点や相互作用を分析
+2. 2026年の運勢として、具体的な展望を提示
+3. 実践的なアドバイスを含める
+4. 励ましと希望を与える内容
+5. 自然な日本語で、押しつけがましくない表現
+
+HTMLタグは使わず、段落は改行で区切ってください。`;
+
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1000,
+                messages: [
+                    { role: "user", content: prompt }
+                ],
+            })
+        });
+
+        const data = await response.json();
+        
+        if (data.content && data.content[0] && data.content[0].text) {
+            const totalText = data.content[0].text;
+            // 段落に分けてHTMLに変換
+            const paragraphs = totalText.split('\n\n').filter(p => p.trim());
+            const totalHtml = paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
+            document.getElementById('totalFortune').innerHTML = totalHtml;
+        } else {
+            throw new Error('AIからの応答が不正です');
+        }
+        
+    } catch (error) {
+        console.error('総合運勢の生成に失敗:', error);
+        // エラー時はデフォルトの文章を表示
+        const totalHtml = `
+            <p>あなたは<strong>${kyusei}</strong>で、運命数<strong>${num}</strong>の性質を持っています。</p>
+            <p>星座は<strong>${western}</strong>で、五星三心では<strong>${gosei}</strong>に分類されます。</p>
+            <p>これらの占術すべてが、あなたが多面的で魅力的な人物であることを示しています。2026年は、あなたの持つ才能を存分に発揮できる年となるでしょう。自分を信じて、前向きに進んでいってください！✨</p>
+        `;
+        document.getElementById('totalFortune').innerHTML = totalHtml;
+    }
 }
 
 function resetForm() {
