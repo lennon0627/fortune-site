@@ -510,20 +510,32 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
 6. 絵文字(✨、🌟など)を適度に使って華やかにしてください
 7. 文章は400-600文字程度で、読みやすい長さにしてください`;
 
-        console.log('📤 リクエスト送信中...');
+        console.log('📤 Google Gemini APIにリクエスト送信中...');
         
-        // Anthropic APIを呼び出し
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
+        // ★★★ ここにあなたのGoogle Gemini APIキーを入力してください ★★★
+        // APIキーの取得方法: https://makersuite.google.com/app/apikey
+        const GEMINI_API_KEY = AIzaSyCon9KhK--VIMWw66kSTZEF18Y6wYMMBXg;
+        
+        if (GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
+            throw new Error('Google Gemini APIキーが設定されていません。script.jsの543行目付近のGEMINI_API_KEYを設定してください。');
+        }
+        
+        // Google Gemini APIを呼び出し
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
             body: JSON.stringify({
-                model: "claude-sonnet-4-20250514",
-                max_tokens: 1500,
-                messages: [
-                    { role: "user", content: prompt }
-                ],
+                contents: [{
+                    parts: [{
+                        text: prompt
+                    }]
+                }],
+                generationConfig: {
+                    temperature: 0.9,
+                    maxOutputTokens: 1500,
+                }
             })
         });
 
@@ -540,14 +552,12 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
         
         // レスポンスから文章を取得
         let fortune = '';
-        if (data.content && data.content.length > 0) {
-            fortune = data.content
-                .filter(item => item.type === "text")
-                .map(item => item.text)
-                .join("");
+        if (data.candidates && data.candidates.length > 0 && data.candidates[0].content) {
+            const parts = data.candidates[0].content.parts;
+            fortune = parts.map(part => part.text).join('');
             console.log('📝 生成された文章:', fortune.substring(0, 100) + '...');
         } else {
-            console.warn('⚠️ data.contentが空またはundefined');
+            console.warn('⚠️ 予期しないレスポンス形式:', data);
         }
         
         // 生成された文章を表示
