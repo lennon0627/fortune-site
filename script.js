@@ -1,130 +1,122 @@
-// 九星気学データ
+// ============================================================
+// データ定義
+// ============================================================
+
 const kyuseiData = {
-    '一白水星': {
-        color: '白・黒',
-        direction: '北',
-        description: '静かな水の流れのように、柔軟で適応力があります。思慮深く、周囲の状況を読む力に優れています。',
-        traits: '知性的で洞察力が高く、人の心を理解する力があります。'
-    },
-    '二黒土星': {
-        color: '黄色・茶色',
-        direction: '南西',
-        description: '大地のように温かく包容力があります。コツコツと努力を重ね、信頼を築いていくタイプです。',
-        traits: '誠実で忍耐強く、周囲から慕われる存在です。'
-    },
-    '三碧木星': {
-        color: '青・緑',
-        direction: '東',
-        description: '若木のように成長意欲が旺盛で、活発なエネルギーに満ちています。新しいことにチャレンジする勇気があります。',
-        traits: '明るく元気で、周囲を活気づける存在です。'
-    },
-    '四緑木星': {
-        color: '緑・青緑',
-        direction: '南東',
-        description: 'そよ風のように爽やかで、人との調和を大切にします。コミュニケーション能力が高く、人気者です。',
-        traits: '社交的で優しく、多くの人から愛される魅力があります。'
-    },
-    '五黄土星': {
-        color: '黄色',
-        direction: '中央',
-        description: '中心にある強いエネルギーを持ち、リーダーシップがあります。困難を乗り越える強さを持っています。',
-        traits: 'パワフルで影響力が強く、周囲を引っ張る力があります。'
-    },
-    '六白金星': {
-        color: '白・金',
-        direction: '北西',
-        description: '天の気を受けた高貴な存在で、責任感が強く、完璧主義です。目標に向かって真っ直ぐ進みます。',
-        traits: '気品があり、理想が高く、リーダーとしての素質があります。'
-    },
-    '七赤金星': {
-        color: '赤・金',
-        direction: '西',
-        description: '秋の実りのように豊かで、社交的です。楽しいことが好きで、人を惹きつける魅力があります。',
-        traits: '明るく陽気で、コミュニケーション能力に優れています。'
-    },
-    '八白土星': {
-        color: '白・茶色',
-        direction: '北東',
-        description: '山のようにどっしりと安定しており、強い意志を持っています。変化や改革を起こす力があります。',
-        traits: '真面目で粘り強く、大きな目標を達成する力があります。'
-    },
-    '九紫火星': {
-        color: '紫・赤',
-        direction: '南',
-        description: '太陽のように輝く存在で、華やかさがあります。直感力が鋭く、芸術的センスに優れています。',
-        traits: '情熱的で魅力的、美的センスに優れています。'
-    }
+    '一白水星': { color: '白・黒', direction: '北', description: '柔軟で適応力があり、思慮深い性格です。水のように流れに身を任せながらも、内に強い意志を秘めています。' },
+    '二黒土星': { color: '黄色・茶色', direction: '南西', description: '温かく包容力があり、努力家です。大地のように安定感があり、周囲から信頼されます。' },
+    '三碧木星': { color: '青・緑', direction: '東', description: '成長意欲が旺盛で活発、行動力があります。若木のように伸びやかで、新しいことにチャレンジする精神を持っています。' },
+    '四緑木星': { color: '緑・青緑', direction: '南東', description: '調和を大切にする社交家で、コミュニケーション能力に優れています。風のように爽やかで、人間関係を円滑にします。' },
+    '五黄土星': { color: '黄色', direction: '中央', description: '強いリーダーシップと影響力を持ちます。中心に位置し、周囲を動かす力があります。' },
+    '六白金星': { color: '白・金', direction: '北西', description: '責任感が強く完璧主義で、高い理想を持っています。金のように輝く品格と、強い意志を持っています。' },
+    '七赤金星': { color: '赤・金', direction: '西', description: '社交的で人を惹きつける魅力があります。明るく楽しい雰囲気を作り出すのが得意です。' },
+    '八白土星': { color: '白・茶色', direction: '北東', description: '意志が強く変化を起こす力があります。山のようにどっしりとした存在感と、改革の力を持っています。' },
+    '九紫火星': { color: '紫・赤', direction: '南', description: '華やかで直感力が鋭く、芸術的センスに優れています。火のように情熱的で、人を照らす魅力があります。' }
 };
 
-// 数秘術データ
 const numerologyData = {
-    1: {
-        name: 'リーダー',
-        description: '独立心が強く、パイオニア精神に溢れています。新しいことを始める力があり、目標に向かって突き進みます。',
-        traits: ['リーダーシップ', '独創性', '決断力', '自信', '先駆者精神']
-    },
-    2: {
-        name: '調和者',
-        description: '協調性があり、周囲との調和を大切にします。繊細で優しく、人の気持ちを理解する力があります。',
-        traits: ['協調性', '思いやり', '感受性', '外交的', 'パートナーシップ']
-    },
-    3: {
-        name: 'クリエイター',
-        description: '創造性が豊かで、表現力があります。明るく社交的で、人を楽しませる才能があります。',
-        traits: ['創造性', '表現力', '楽観的', 'コミュニケーション能力', '芸術的']
-    },
-    4: {
-        name: 'ビルダー',
-        description: '堅実で責任感が強く、コツコツと努力を重ねます。安定を求め、確実に目標を達成します。',
-        traits: ['堅実性', '組織力', '忍耐力', '責任感', '実用的']
-    },
-    5: {
-        name: '冒険家',
-        description: '自由を愛し、変化を楽しみます。好奇心旺盛で、多様な経験を求めます。',
-        traits: ['自由', '冒険心', '適応力', '好奇心', '多才']
-    },
-    6: {
-        name: '奉仕者',
-        description: '愛情深く、人の世話をすることに喜びを感じます。調和とバランスを大切にします。',
-        traits: ['愛情', '責任感', '調和', '癒し', '奉仕精神']
-    },
-    7: {
-        name: '探求者',
-        description: '知識と真実を求める探求者です。内面的で精神性が高く、分析力に優れています。',
-        traits: ['知性', '直感', '分析力', '精神性', '探求心']
-    },
-    8: {
-        name: 'パワー',
-        description: '力強く、物質的な成功を手にする力があります。野心的で、大きな目標を達成します。',
-        traits: ['野心', '実行力', 'リーダーシップ', '成功', '物質的豊かさ']
-    },
-    9: {
-        name: '完成者',
-        description: '人道的で、世界をより良くしたいという願いがあります。寛容で慈悲深い心を持っています。',
-        traits: ['人道主義', '寛容', '理想主義', '直感', '完成']
-    },
-    11: {
-        name: 'マスター直感',
-        description: '高い直感力とスピリチュアルな感性を持っています。インスピレーションを人々に与えます。',
-        traits: ['直感', 'スピリチュアル', 'インスピレーション', '理想主義', 'カリスマ']
-    },
-    22: {
-        name: 'マスタービルダー',
-        description: '大きな夢を現実にする力があります。実践的でありながら、ビジョナリーです。',
-        traits: ['実現力', 'ビジョン', '実践性', 'リーダーシップ', '構築力']
-    },
-    33: {
-        name: 'マスター教師',
-        description: '無条件の愛と奉仕の精神を持っています。人々を癒し、導く使命があります。',
-        traits: ['愛', '奉仕', '癒し', '教育', 'スピリチュアリティ']
-    }
+    1: { description: 'リーダーシップと独立心を持つ開拓者です。新しいことを始める力があり、自分の道を切り開いていきます。' },
+    2: { description: '協調性と感受性を持つ平和主義者です。人との調和を大切にし、サポート役として力を発揮します。' },
+    3: { description: '創造性と表現力に優れた楽天家です。明るく社交的で、人を楽しませる才能があります。' },
+    4: { description: '安定と堅実さを重視する実務家です。コツコツと努力を重ね、確実に目標を達成します。' },
+    5: { description: '自由と変化を求める冒険家です。好奇心旺盛で、新しい経験や出会いを楽しみます。' },
+    6: { description: '愛と責任感を持つ奉仕者です。家族や仲間を大切にし、調和のある環境を作ります。' },
+    7: { description: '知性と探究心を持つ思索家です。深く考え、真実を追求する姿勢を持っています。' },
+    8: { description: '力と野心を持つ実現者です。物質的な成功を目指し、大きな目標を達成する力があります。' },
+    9: { description: '博愛と理想を持つ完成者です。広い視野で物事を捉え、人類愛に満ちた行動をします。' },
+    11: { description: 'マスターナンバー。直感力が鋭く、スピリチュアルな才能があります。インスピレーションを受け取る力があります。' },
+    22: { description: 'マスターナンバー。大きな夢を実現する力があります。実務能力とビジョンを併せ持ちます。' }
 };
 
-// 十干
+const westernZodiacData = {
+    '牡羊座': { emoji: '♈', description: '情熱的で行動力があり、リーダーシップを発揮します。チャレンジ精神旺盛で、新しいことに積極的です。' },
+    '牡牛座': { emoji: '♉', description: '安定を好み、忍耐強く物事に取り組みます。美的センスがあり、心地よい環境を大切にします。' },
+    '双子座': { emoji: '♊', description: 'コミュニケーション能力が高く、好奇心旺盛です。柔軟な思考で、多様な興味を持ちます。' },
+    '蟹座': { emoji: '♋', description: '感受性が豊かで、家族や仲間を大切にします。共感力が高く、人の気持ちに寄り添います。' },
+    '獅子座': { emoji: '♌', description: '堂々として自信があり、人を惹きつける魅力があります。創造性豊かで、表現力に優れています。' },
+    '乙女座': { emoji: '♍', description: '几帳面で分析力があり、細部まで気を配ります。実用的で、役に立つことを好みます。' },
+    '天秤座': { emoji: '♎', description: 'バランス感覚に優れ、調和を重視します。社交的で、美しいものを愛します。' },
+    '蠍座': { emoji: '♏', description: '深い洞察力と情熱を持ち、物事の本質を見抜きます。集中力が高く、目標達成に向けて努力します。' },
+    '射手座': { emoji: '♐', description: '自由を愛し、冒険心に満ちています。楽観的で、広い視野を持って行動します。' },
+    '山羊座': { emoji: '♑', description: '責任感が強く、目標に向けて着実に進みます。忍耐強く、長期的な計画を立てるのが得意です。' },
+    '水瓶座': { emoji: '♒', description: '独創的で革新的な考えを持ちます。個性を大切にし、人道的な視点で物事を見ます。' },
+    '魚座': { emoji: '♓', description: '想像力豊かで感受性が強く、芸術的な才能があります。思いやり深く、人の痛みを理解します。' }
+};
+
+const goseiData = {
+    '金のイルカ': { description: '明るく社交的で、人を楽しませる才能があります。チャレンジ精神旺盛で、新しいことに挑戦します。' },
+    '銀のイルカ': { description: '柔軟性があり、環境に適応する力があります。感受性が豊かで、人の気持ちを理解します。' },
+    '金の鳳凰': { description: '華やかで存在感があり、リーダーシップを発揮します。高い理想を持ち、それに向かって努力します。' },
+    '銀の鳳凰': { description: '優雅で品格があり、美的センスに優れています。バランス感覚が良く、調和を大切にします。' },
+    '金のインディアン': { description: '直感力が鋭く、自分の道を信じて進みます。独立心が強く、自由を大切にします。' },
+    '銀のインディアン': { description: '観察力があり、状況を冷静に判断します。マイペースで、自分のリズムを大切にします。' },
+    '金の時計': { description: '計画的で時間管理が得意です。責任感が強く、約束を守ります。' },
+    '銀の時計': { description: '几帳面で細部まで気を配ります。分析力があり、効率的に物事を進めます。' },
+    '金のカメレオン': { description: '適応力が高く、どんな環境でも力を発揮します。多才で、様々なことに興味を持ちます。' },
+    '銀のカメレオン': { description: '柔軟な思考を持ち、変化を楽しみます。コミュニケーション能力に優れています。' },
+    '金の羅針盤': { description: '目標を定めて着実に進む力があります。方向性を示すリーダーとして活躍します。' },
+    '銀の羅針盤': { description: '探究心が強く、新しい知識を求めます。広い視野で物事を捉えます。' }
+};
+
+const kabbalahData = {
+    1: { description: '始まりと創造の数。独立心が強く、新しいことを始める力があります。リーダーシップを発揮します。' },
+    2: { description: '調和とバランスの数。協調性があり、人との関係を大切にします。サポート役として輝きます。' },
+    3: { description: '表現と創造の数。芸術的才能があり、コミュニケーション能力に優れています。' },
+    4: { description: '安定と基盤の数。堅実で信頼できる存在です。コツコツと努力を重ねます。' },
+    5: { description: '変化と自由の数。冒険心があり、新しい経験を求めます。柔軟性に富んでいます。' },
+    6: { description: '愛と責任の数。家族や仲間を大切にし、調和のある環境を作ります。' },
+    7: { description: '神秘と知恵の数。深い洞察力があり、真実を追求します。スピリチュアルな面に興味があります。' },
+    8: { description: '力と成功の数。物質的な豊かさを手にする力があります。野心的で目標達成に向けて努力します。' },
+    9: { description: '完成と博愛の数。広い視野を持ち、人類愛に満ちています。精神的な成長を遂げます。' },
+    11: { description: 'マスターナンバー。直感力が鋭く、スピリチュアルな才能があります。インスピレーションを受け取る力があります。' },
+    22: { description: 'マスターナンバー。大きな夢を実現する力があります。実務能力とビジョンを併せ持ちます。' }
+};
+
+const ziweiData = {
+    '紫微星': { description: '帝王の星。リーダーシップがあり、人を統率する力があります。高貴で品格があります。' },
+    '天機星': { description: '知恵の星。頭の回転が速く、戦略的思考に優れています。計画を立てるのが得意です。' },
+    '太陽星': { description: '光輝く星。明るく活発で、人を照らす存在です。正義感が強く、リーダーシップがあります。' },
+    '武曲星': { description: '武勇の星。決断力があり、困難を乗り越える力があります。実行力に優れています。' },
+    '天同星': { description: '福徳の星。温和で人当たりが良く、平和を愛します。幸運に恵まれやすい星です。' },
+    '廉貞星': { description: '華麗な星。魅力的で人を惹きつける力があります。情熱的で、感情豊かです。' },
+    '天府星': { description: '財庫の星。豊かさと安定をもたらします。管理能力があり、蓄財に長けています。' },
+    '太陰星': { description: '月の星。優しく思いやりがあり、感受性が豊かです。内面的な美しさを持っています。' },
+    '貪狼星': { description: '欲望の星。野心的で、目標達成に向けて努力します。多才で、様々なことに興味を持ちます。' },
+    '巨門星': { description: '口舌の星。コミュニケーション能力があり、説得力があります。分析力に優れています。' },
+    '天相星': { description: '宰相の星。サポート役として優れており、人を助ける力があります。調整能力に長けています。' },
+    '天梁星': { description: '福寿の星。年長者のような落ち着きがあり、人に慕われます。保護する力があります。' },
+    '七殺星': { description: '勇猛の星。勇敢で行動力があり、困難に立ち向かいます。独立心が強いです。' },
+    '破軍星': { description: '開拓の星。変革を起こす力があり、新しいことに挑戦します。破壊と創造の力を持っています。' }
+};
+
+const tarotData = {
+    '愚者': { description: '新しい冒険の始まり。純粋な心で、自由に人生を楽しむ年になります。' },
+    '魔術師': { description: '創造と実現の年。あなたの才能や技術を活かし、目標を達成できます。' },
+    '女教皇': { description: '直感と知恵の年。内なる声に耳を傾け、深い洞察を得られます。' },
+    '女帝': { description: '豊かさと創造の年。愛情に恵まれ、実り多い一年になります。' },
+    '皇帝': { description: '安定と権威の年。リーダーシップを発揮し、確固たる基盤を築きます。' },
+    '教皇': { description: '伝統と学びの年。精神的な成長があり、導きを受けられます。' },
+    '恋人': { description: '選択と調和の年。重要な決断をし、良い関係性を築きます。' },
+    '戦車': { description: '勝利と前進の年。強い意志で目標に向かい、成功を収めます。' },
+    '力': { description: '勇気と忍耐の年。内なる強さを発揮し、困難を乗り越えます。' },
+    '隠者': { description: '内省と探求の年。自分自身を見つめ直し、真実を見つけます。' },
+    '運命の輪': { description: '変化と転機の年。新しいサイクルが始まり、チャンスが訪れます。' },
+    '正義': { description: 'バランスと公正の年。正しい判断をし、調和を保ちます。' },
+    '吊るされた男': { description: '視点の転換の年。新しい見方で物事を捉え、成長します。' },
+    '死神': { description: '変容と再生の年。終わりと始まりがあり、新しい自分に生まれ変わります。' },
+    '節制': { description: '調和と統合の年。バランスを保ち、安定した生活を送ります。' },
+    '悪魔': { description: '誘惑と執着の年。欲望に気をつけ、自由を取り戻すことが課題です。' },
+    '塔': { description: '突然の変化の年。古いものが崩れ、新しい基盤を築きます。' },
+    '星': { description: '希望とインスピレーションの年。夢に向かって進み、光が見えてきます。' },
+    '月': { description: '直感と潜在意識の年。不安もありますが、内なる声を信じることが大切です。' },
+    '太陽': { description: '成功と喜びの年。明るい未来が開け、幸せに満ちた一年になります。' },
+    '審判': { description: '目覚めと再生の年。新しいステージに進み、使命を果たします。' },
+    '世界': { description: '完成と達成の年。目標を達成し、満足感を得られます。新しいサイクルの準備も整います。' }
+};
+
+// 四柱推命用定数
 const jikkan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
-// 十二支
 const junishi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
-// 五行
 const gogyou = {
     '木': ['甲', '乙', '寅', '卯'],
     '火': ['丙', '丁', '巳', '午'],
@@ -133,254 +125,282 @@ const gogyou = {
     '水': ['壬', '癸', '子', '亥']
 };
 
-// フォーム送信
+// ============================================================
+// メインロジック
+// ============================================================
+
 document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    
     const birthdate = document.getElementById('birthdate').value;
     const birthtime = document.getElementById('birthtime').value;
     const name = document.getElementById('name').value;
-    
-    if (!birthdate) {
-        alert('生年月日を入力してください');
-        return;
-    }
-    
     calculateFortune(birthdate, birthtime, name);
 });
 
 function calculateFortune(birthdate, birthtime, name) {
     const date = new Date(birthdate);
     
-    // 九星気学
+    // 1. 九星気学
     const kyusei = calculateKyusei(date);
     displayKyusei(kyusei);
     
-    // 数秘術
-    const numerology = calculateNumerology(date, name);
-    displayNumerology(numerology);
+    // 2. 数秘術
+    const num = calculateNumerology(date);
+    displayNumerology(num);
     
-    // 四柱推命
+    // 3. 四柱推命
     const shichu = calculateShichu(date, birthtime);
     displayShichu(shichu);
-    
+
+    // 4. 西洋占星術
+    const western = calculateWestern(date);
+    displayWestern(western);
+
+    // 5. 五星三心
+    const gosei = calculateGosei(date);
+    displayGosei(gosei);
+
+    // 6. カバラ
+    displayKabbalah(num);
+
+    // 7. 紫微斗数
+    const ziwei = calculateZiwei(date, birthtime);
+    displayZiwei(ziwei);
+
+    // 8. タロット
+    const tarot = calculateTarot(date);
+    displayTarot(tarot);
+
     // 総合運勢
-    displayTotalFortune(kyusei, numerology, shichu);
-    
-    // 結果を表示
+    displayTotal(kyusei, num, western, gosei);
+
+    // 表示切り替え
     document.querySelector('.fortune-card').style.display = 'none';
     document.getElementById('results').classList.remove('hidden');
-    
-    // スクロール
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
 
-// 九星気学計算
+// ============================================================
+// 計算関数
+// ============================================================
+
 function calculateKyusei(date) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
+    let year = date.getFullYear();
+    if (date.getMonth() < 1 || (date.getMonth() === 1 && date.getDate() < 4)) year--;
     
-    // 2月3日以前は前年として扱う
-    let targetYear = year;
-    if (month <= 1 || (month === 2 && date.getDate() < 4)) {
-        targetYear--;
-    }
-    
-    // 九星の計算（簡易版）
-    const kyuseiList = [
-        '一白水星', '二黒土星', '三碧木星', '四緑木星', '五黄土星',
-        '六白金星', '七赤金星', '八白土星', '九紫火星'
-    ];
-    
-    // 計算式: (11 - (西暦年 % 9)) % 9
-    const index = (11 - (targetYear % 9)) % 9;
-    
-    return kyuseiList[index];
+    const kyuseiList = ['九紫火星','一白水星','二黒土星','三碧木星','四緑木星','五黄土星','六白金星','七赤金星','八白土星'];
+    let index = (10 - (year - 1900) % 9) % 9;
+    return kyuseiList[index === 0 ? 0 : index];
 }
 
-function displayKyusei(star) {
-    const data = kyuseiData[star];
-    document.getElementById('kyuseiStar').textContent = star;
-    document.getElementById('kyuseiDesc').textContent = data.description + ' ' + data.traits;
-    document.getElementById('kyuseiColor').textContent = data.color;
-    document.getElementById('kyuseiDirection').textContent = data.direction;
-}
-
-// 数秘術計算
-function calculateNumerology(date, name) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    
-    // 生年月日の数字を合計
+function calculateNumerology(date) {
+    const dateStr = date.getFullYear().toString() + 
+                    (date.getMonth() + 1).toString() + 
+                    date.getDate().toString();
     let sum = 0;
-    const dateStr = `${year}${month}${day}`;
     for (let char of dateStr) {
         sum += parseInt(char);
     }
-    
-    // マスターナンバーチェック
-    while (sum > 9 && sum !== 11 && sum !== 22 && sum !== 33) {
-        const digits = sum.toString().split('');
-        sum = digits.reduce((a, b) => parseInt(a) + parseInt(b), 0);
+    while (sum > 11 && sum !== 22) {
+        let newSum = 0;
+        for (let char of sum.toString()) {
+            newSum += parseInt(char);
+        }
+        sum = newSum;
     }
-    
     return sum;
 }
 
-function displayNumerology(number) {
-    const data = numerologyData[number];
-    document.getElementById('numerologyNumber').textContent = number;
-    document.getElementById('numerologyDesc').innerHTML = `
-        <strong>${data.name}の数</strong><br>
-        ${data.description}
-    `;
-    
-    const traitsHtml = '<ul>' + data.traits.map(t => `<li>${t}</li>`).join('') + '</ul>';
-    document.getElementById('numerologyTraits').innerHTML = traitsHtml;
-}
-
-// 四柱推命計算
 function calculateShichu(date, birthtime) {
-    const year = date.getFullYear();
-    const month = date.getMonth() + 1;
-    const day = date.getDate();
-    
+    const y = date.getFullYear();
+    const m = date.getMonth() + 1;
+    const d = date.getDate();
+
     // 年柱
-    const yearIndex = (year - 4) % 60;
-    const yearKan = jikkan[yearIndex % 10];
-    const yearShi = junishi[yearIndex % 12];
-    
-    // 月柱（簡易計算）
-    const monthKan = jikkan[(year * 2 + month) % 10];
-    const monthShi = junishi[(month + 1) % 12];
-    
-    // 日柱（簡易計算）
-    const daysSince = Math.floor((date - new Date(1900, 0, 1)) / (1000 * 60 * 60 * 24));
-    const dayIndex = daysSince % 60;
-    const dayKan = jikkan[dayIndex % 10];
-    const dayShi = junishi[dayIndex % 12];
-    
+    let ty = y;
+    if (m < 2 || (m === 2 && d < 4)) ty--;
+    const yIdx = (ty - 4) % 60;
+    const yK = jikkan[yIdx % 10];
+    const yS = junishi[yIdx % 12];
+
+    // 月柱
+    const mSIdx = (m % 12);
+    const mS = junishi[mSIdx];
+    const startK = ((yIdx % 5) * 2 + 2) % 10;
+    const mK = jikkan[(startK + (mSIdx - 2 + 12) % 12) % 10];
+
+    // 日柱
+    const days = Math.floor((date - new Date(1900, 0, 1)) / 86400000);
+    const dIdx = (days + 10) % 60;
+    const dK = jikkan[dIdx % 10];
+    const dS = junishi[dIdx % 12];
+
     // 時柱
-    let timeKan = '';
-    let timeShi = '';
+    let tK = '', tS = '';
     if (birthtime) {
-        const [hour] = birthtime.split(':').map(Number);
-        const timeIndex = Math.floor((hour + 1) / 2) % 12;
-        timeShi = junishi[timeIndex];
-        timeKan = jikkan[(dayIndex * 2 + timeIndex) % 10];
+        const h = parseInt(birthtime.split(':')[0]);
+        const tIdx = Math.floor((h + 1) / 2) % 12;
+        tS = junishi[tIdx];
+        tK = jikkan[((dIdx % 5) * 2 + tIdx) % 10];
     }
-    
-    // 五行分析
-    const elements = analyzeElements(yearKan, yearShi, monthKan, monthShi, dayKan, dayShi, timeKan, timeShi);
-    
-    return {
-        year: { kan: yearKan, shi: yearShi },
-        month: { kan: monthKan, shi: monthShi },
-        day: { kan: dayKan, shi: dayShi },
-        time: birthtime ? { kan: timeKan, shi: timeShi } : null,
-        elements: elements
+
+    // 五行集計
+    const counts = { '木':0, '火':0, '土':0, '金':0, '水':0 };
+    [yK, yS, mK, mS, dK, dS, tK, tS].forEach(c => {
+        for(let g in gogyou) {
+            if(gogyou[g].includes(c)) counts[g]++;
+        }
+    });
+
+    return { 
+        year: {k:yK, s:yS}, 
+        month: {k:mK, s:mS}, 
+        day: {k:dK, s:dS}, 
+        time: tK ? {k:tK, s:tS} : null, 
+        elements: counts 
     };
 }
 
-function analyzeElements(yearKan, yearShi, monthKan, monthShi, dayKan, dayShi, timeKan, timeShi) {
-    const elementCount = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
+function calculateWestern(date) {
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
     
-    const chars = [yearKan, yearShi, monthKan, monthShi, dayKan, dayShi];
-    if (timeKan) chars.push(timeKan, timeShi);
-    
-    for (let element in gogyou) {
-        for (let char of chars) {
-            if (gogyou[element].includes(char)) {
-                elementCount[element]++;
-            }
-        }
-    }
-    
-    return elementCount;
+    if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return '牡羊座';
+    if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return '牡牛座';
+    if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) return '双子座';
+    if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return '蟹座';
+    if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return '獅子座';
+    if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return '乙女座';
+    if ((month === 9 && day >= 23) || (month === 10 && day <= 23)) return '天秤座';
+    if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return '蠍座';
+    if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return '射手座';
+    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return '山羊座';
+    if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return '水瓶座';
+    return '魚座';
+}
+
+function calculateGosei(date) {
+    const year = date.getFullYear();
+    const types = [
+        '金のイルカ', '銀のイルカ', '金の鳳凰', '銀の鳳凰',
+        '金のインディアン', '銀のインディアン', '金の時計', '銀の時計',
+        '金のカメレオン', '銀のカメレオン', '金の羅針盤', '銀の羅針盤'
+    ];
+    return types[year % 12];
+}
+
+function calculateZiwei(date, birthtime) {
+    const stars = Object.keys(ziweiData);
+    const index = (date.getFullYear() + date.getMonth() + date.getDate()) % stars.length;
+    return stars[index];
+}
+
+function calculateTarot(date) {
+    const cards = Object.keys(tarotData);
+    const lifePathNum = calculateNumerology(date);
+    const index = lifePathNum % cards.length;
+    return cards[index];
+}
+
+// ============================================================
+// 表示関数
+// ============================================================
+
+function displayKyusei(star) {
+    document.getElementById('kyuseiStar').innerHTML = `<strong>${star}</strong>`;
+    document.getElementById('kyuseiDesc').textContent = kyuseiData[star].description;
+    document.getElementById('kyuseiColor').textContent = kyuseiData[star].color;
+    document.getElementById('kyuseiDirection').textContent = kyuseiData[star].direction;
+}
+
+function displayNumerology(num) {
+    document.getElementById('numerologyNumber').innerHTML = `<strong>運命数: ${num}</strong>`;
+    document.getElementById('numerologyDesc').textContent = numerologyData[num].description;
 }
 
 function displayShichu(shichu) {
-    // 四柱表示
     let pillarsHtml = `
-        <div class="pillar">
-            <span class="pillar-label">年柱</span>
-            <span class="pillar-value">${shichu.year.kan}${shichu.year.shi}</span>
+        <div class="pillar-row">
+            <div class="pillar-label">年柱:</div>
+            <div class="pillar-value">${shichu.year.k}${shichu.year.s}</div>
+            <div class="pillar-label">月柱:</div>
+            <div class="pillar-value">${shichu.month.k}${shichu.month.s}</div>
         </div>
-        <div class="pillar">
-            <span class="pillar-label">月柱</span>
-            <span class="pillar-value">${shichu.month.kan}${shichu.month.shi}</span>
-        </div>
-        <div class="pillar">
-            <span class="pillar-label">日柱</span>
-            <span class="pillar-value">${shichu.day.kan}${shichu.day.shi}</span>
-        </div>
+        <div class="pillar-row">
+            <div class="pillar-label">日柱:</div>
+            <div class="pillar-value">${shichu.day.k}${shichu.day.s}</div>
     `;
     
     if (shichu.time) {
         pillarsHtml += `
-            <div class="pillar">
-                <span class="pillar-label">時柱</span>
-                <span class="pillar-value">${shichu.time.kan}${shichu.time.shi}</span>
-            </div>
+            <div class="pillar-label">時柱:</div>
+            <div class="pillar-value">${shichu.time.k}${shichu.time.s}</div>
         `;
     }
+    pillarsHtml += '</div>';
     
     document.getElementById('shichuPillars').innerHTML = pillarsHtml;
     
-    // 五行バランス表示
-    let elementsHtml = '';
-    const elementNames = { '木': 'wood', '火': 'fire', '土': 'earth', '金': 'metal', '水': 'water' };
-    for (let element in shichu.elements) {
-        if (shichu.elements[element] > 0) {
-            elementsHtml += `<div class="element ${elementNames[element]}">${element}: ${shichu.elements[element]}</div>`;
-        }
+    let elementsHtml = '<div class="element-bars">';
+    for (let elem in shichu.elements) {
+        const count = shichu.elements[elem];
+        const width = (count / 8) * 100;
+        elementsHtml += `
+            <div class="element-item">
+                <span class="element-name">${elem}:</span>
+                <div class="element-bar">
+                    <div class="element-fill" style="width: ${width}%"></div>
+                </div>
+                <span class="element-count">${count}</span>
+            </div>
+        `;
     }
+    elementsHtml += '</div>';
     document.getElementById('shichuElements').innerHTML = elementsHtml;
     
-    // 五行分析
-    const dominantElement = Object.keys(shichu.elements).reduce((a, b) => 
-        shichu.elements[a] > shichu.elements[b] ? a : b
-    );
-    
-    const elementDesc = {
-        '木': '成長と発展のエネルギーが強く、創造的で柔軟性があります。',
-        '火': '情熱とエネルギーに満ち、積極的で明るい性格です。',
-        '土': '安定と信頼のエネルギーを持ち、誠実で責任感があります。',
-        '金': '正義感が強く、理性的で完璧主義的な面があります。',
-        '水': '知恵と柔軟性を持ち、適応力に優れています。'
-    };
-    
-    document.getElementById('shichuDesc').innerHTML = `
-        あなたの命式では<strong>「${dominantElement}」</strong>のエネルギーが強く表れています。<br>
-        ${elementDesc[dominantElement]}
-    `;
+    const dominant = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0][0];
+    document.getElementById('shichuDesc').textContent = 
+        `五行では${dominant}の気が強く、バランスの取れた命式です。`;
 }
 
-// 総合運勢
-function displayTotalFortune(kyusei, numerology, shichu) {
-    const kyuseiName = kyusei;
-    const numerologyName = numerologyData[numerology].name;
-    
-    const fortuneText = `
-        あなたは<strong>${kyuseiName}</strong>の持つ柔軟性と、
-        数秘術<strong>${numerology}番（${numerologyName}）</strong>の特性を併せ持っています。
-        四柱推命では命式のバランスから、総合的に調和の取れた運勢を持っていることが分かります。<br><br>
-        
-        <strong>今日からできるアドバイス：</strong><br>
-        ${kyuseiData[kyusei].direction}の方角を意識すると運気がアップします。
-        ${kyuseiData[kyusei].color}の色を身につけると、さらに良い運気を引き寄せるでしょう。
-        あなたの持つ${numerologyName}としての資質を活かし、周囲との調和を大切にしながら、
-        自分らしく進んでいくことが開運への鍵となります。✨
-    `;
-    
-    document.getElementById('totalFortune').innerHTML = fortuneText;
+function displayWestern(sign) {
+    const data = westernZodiacData[sign];
+    document.getElementById('westernSign').innerHTML = 
+        `<strong>${data.emoji} ${sign}</strong>`;
+    document.getElementById('westernDesc').textContent = data.description;
 }
 
-// リセット
+function displayGosei(type) {
+    document.getElementById('goseiType').innerHTML = `<strong>${type}</strong>`;
+    document.getElementById('goseiDesc').textContent = goseiData[type].description;
+}
+
+function displayKabbalah(num) {
+    document.getElementById('kabbalahNumber').innerHTML = `<strong>カバラ数: ${num}</strong>`;
+    document.getElementById('kabbalahDesc').textContent = kabbalahData[num].description;
+}
+
+function displayZiwei(star) {
+    document.getElementById('ziweiStar').innerHTML = `<strong>${star}</strong>`;
+    document.getElementById('ziweiDesc').textContent = ziweiData[star].description;
+}
+
+function displayTarot(card) {
+    document.getElementById('tarotCard').innerHTML = `<strong>${card}</strong>`;
+    document.getElementById('tarotDesc').textContent = tarotData[card].description;
+}
+
+function displayTotal(kyusei, num, western, gosei) {
+    const totalHtml = `
+        <p>あなたは<strong>${kyusei}</strong>で、運命数<strong>${num}</strong>の性質を持っています。</p>
+        <p>星座は<strong>${western}</strong>で、五星三心では<strong>${gosei}</strong>に分類されます。</p>
+        <p>これらの占術すべてが、あなたが多面的で魅力的な人物であることを示しています。</p>
+        <p>2026年は、あなたの持つ才能を存分に発揮できる年となるでしょう。</p>
+        <p>自分を信じて、前向きに進んでいってください！✨</p>
+    `;
+    document.getElementById('totalFortune').innerHTML = totalHtml;
+}
+
 function resetForm() {
-    document.querySelector('.fortune-card').style.display = 'block';
-    document.getElementById('results').classList.add('hidden');
-    document.getElementById('fortuneForm').reset();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    location.reload();
 }
