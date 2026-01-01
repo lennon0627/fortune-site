@@ -23,12 +23,34 @@
             </div>
             <form id="fortuneForm" class="fortune-form">
                 <div class="input-group">
-                    <label for="birthdate"><span class="label-icon">🎂</span> 生年月日</label>
-                    <input type="date" id="birthdate" required>
+                    <label><span class="label-icon">🎂</span> 生年月日</label>
+                    <div class="date-selects">
+                        <select id="birthYear" required>
+                            <option value="">年</option>
+                        </select>
+                        <span class="date-separator">年</span>
+                        <select id="birthMonth" required>
+                            <option value="">月</option>
+                        </select>
+                        <span class="date-separator">月</span>
+                        <select id="birthDay" required>
+                            <option value="">日</option>
+                        </select>
+                        <span class="date-separator">日</span>
+                    </div>
                 </div>
                 <div class="input-group">
-                    <label for="birthtime"><span class="label-icon">🕐</span> 生まれた時間</label>
-                    <input type="time" id="birthtime">
+                    <label><span class="label-icon">🕐</span> 生まれた時間</label>
+                    <div class="time-selects">
+                        <select id="birthHour">
+                            <option value="">時</option>
+                        </select>
+                        <span class="time-separator">時</span>
+                        <select id="birthMinute">
+                            <option value="">分</option>
+                        </select>
+                        <span class="time-separator">分</span>
+                    </div>
                 </div>
                 <div class="input-group">
                     <label for="name"><span class="label-icon">✨</span> お名前</label>
@@ -123,8 +145,13 @@
                     <textarea id="copyText" class="copy-textarea" readonly></textarea>
                     <div class="copy-actions">
                         <button id="copyBtn" class="copy-btn">📋 結果をコピー</button>
-                        <a href="https://gemini.google.com" target="_blank" class="gemini-btn">
-                            <span class="gemini-icon">✨</span> Geminiで占う
+                    </div>
+                    <div class="ai-buttons">
+                        <a href="https://gemini.google.com" target="_blank" class="ai-btn gemini-btn">
+                            <span class="ai-icon">✨</span> Geminiで占う
+                        </a>
+                        <a href="https://chat.openai.com" target="_blank" class="ai-btn chatgpt-btn">
+                            <span class="ai-icon">🤖</span> ChatGPTで占う
                         </a>
                     </div>
                 </div>

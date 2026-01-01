@@ -2,6 +2,94 @@
 // データ定義
 // ============================================================
 
+// プルダウンの初期化
+document.addEventListener('DOMContentLoaded', function() {
+    initializeDateSelects();
+    initializeTimeSelects();
+});
+
+function initializeDateSelects() {
+    const yearSelect = document.getElementById('birthYear');
+    const monthSelect = document.getElementById('birthMonth');
+    const daySelect = document.getElementById('birthDay');
+    
+    // 年の選択肢を生成（1900年〜現在）
+    const currentYear = new Date().getFullYear();
+    for (let year = currentYear; year >= 1900; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+    
+    // 月の選択肢を生成
+    for (let month = 1; month <= 12; month++) {
+        const option = document.createElement('option');
+        option.value = month;
+        option.textContent = month;
+        monthSelect.appendChild(option);
+    }
+    
+    // 日の選択肢を生成（初期値は31日まで）
+    updateDayOptions();
+    
+    // 年・月が変更されたら日の選択肢を更新
+    yearSelect.addEventListener('change', updateDayOptions);
+    monthSelect.addEventListener('change', updateDayOptions);
+}
+
+function updateDayOptions() {
+    const yearSelect = document.getElementById('birthYear');
+    const monthSelect = document.getElementById('birthMonth');
+    const daySelect = document.getElementById('birthDay');
+    
+    const year = parseInt(yearSelect.value) || 2000;
+    const month = parseInt(monthSelect.value) || 1;
+    
+    // 選択された年月の最終日を取得
+    const daysInMonth = new Date(year, month, 0).getDate();
+    
+    // 現在選択されている日を保存
+    const currentDay = parseInt(daySelect.value);
+    
+    // 日の選択肢をクリア
+    daySelect.innerHTML = '<option value="">日</option>';
+    
+    // 新しい選択肢を生成
+    for (let day = 1; day <= daysInMonth; day++) {
+        const option = document.createElement('option');
+        option.value = day;
+        option.textContent = day;
+        daySelect.appendChild(option);
+    }
+    
+    // 以前選択されていた日が有効なら再選択
+    if (currentDay && currentDay <= daysInMonth) {
+        daySelect.value = currentDay;
+    }
+}
+
+function initializeTimeSelects() {
+    const hourSelect = document.getElementById('birthHour');
+    const minuteSelect = document.getElementById('birthMinute');
+    
+    // 時の選択肢を生成
+    for (let hour = 0; hour < 24; hour++) {
+        const option = document.createElement('option');
+        option.value = hour.toString().padStart(2, '0');
+        option.textContent = hour;
+        hourSelect.appendChild(option);
+    }
+    
+    // 分の選択肢を生成（0, 15, 30, 45）
+    for (let minute = 0; minute < 60; minute += 15) {
+        const option = document.createElement('option');
+        option.value = minute.toString().padStart(2, '0');
+        option.textContent = minute;
+        minuteSelect.appendChild(option);
+    }
+}
+
 const kyuseiData = {
     '一白水星': { color: '白・黒', direction: '北', description: '柔軟で適応力があり、思慮深い性格です。水のように流れに身を任せながらも、内に強い意志を秘めています。' },
     '二黒土星': { color: '黄色・茶色', direction: '南西', description: '温かく包容力があり、努力家です。大地のように安定感があり、周囲から信頼されます。' },
@@ -131,9 +219,30 @@ const gogyou = {
 
 document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     e.preventDefault();
-    const birthdate = document.getElementById('birthdate').value;
-    const birthtime = document.getElementById('birthtime').value;
+    
+    // プルダウンから値を取得
+    const year = document.getElementById('birthYear').value;
+    const month = document.getElementById('birthMonth').value;
+    const day = document.getElementById('birthDay').value;
+    const hour = document.getElementById('birthHour').value;
+    const minute = document.getElementById('birthMinute').value;
     const name = document.getElementById('name').value;
+    
+    // 必須項目のチェック
+    if (!year || !month || !day) {
+        alert('生年月日を選択してください。');
+        return;
+    }
+    
+    // 日付文字列を作成（YYYY-MM-DD形式）
+    const birthdate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
+    
+    // 時刻文字列を作成（HH:MM形式）
+    let birthtime = '';
+    if (hour && minute) {
+        birthtime = `${hour}:${minute}`;
+    }
+    
     calculateFortune(birthdate, birthtime, name);
 });
 
@@ -371,7 +480,8 @@ function calculateGosei(date) {
 
 function calculateZiwei(date, birthtime) {
     const stars = Object.keys(ziweiData);
-    const index = (date.getFullYear() + date.getMonth() + date.getDate()) % stars.length;
+    // getMonth()は0始まりなので+1する
+    const index = (date.getFullYear() + (date.getMonth() + 1) + date.getDate()) % stars.length;
     return stars[index];
 }
 
