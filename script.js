@@ -177,7 +177,7 @@ function calculateFortune(birthdate, birthtime, name) {
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
     // 総合運勢（テンプレートベース）
-    displayTotal(kyusei, num, western, gosei);
+    displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot);
 }
 
 // ============================================================
@@ -461,36 +461,87 @@ const fortuneTemplates = {
     ]
 };
 
-function displayTotal(kyusei, num, western, gosei) {
+async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
     console.log('総合運勢を生成中...', { kyusei, num, western, gosei });
     
     // ローディング表示
-    document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ 総合運勢を鑑定中...</p>';
+    document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ AIが総合運勢を鑑定中...</p>';
     
-    // 少し遅延を入れて鑑定している感を出す
-    setTimeout(() => {
-        const kyuseiInfo = fortuneTemplates.kyuseiTraits[kyusei];
-        const numInfo = fortuneTemplates.numerologyTraits[num];
-        const westernTrait = fortuneTemplates.westernTraits[western];
-        const goseiAdvice = fortuneTemplates.goseiAdvice[gosei];
+    try {
+        // 各占術の結果情報を収集
+        const kyuseiInfo = kyuseiData[kyusei];
+        const numInfo = numerologyData[num];
+        const westernInfo = westernZodiacData[western];
+        const goseiInfo = goseiData[gosei];
+        const ziweiInfo = ziweiData[ziwei];
+        const tarotInfo = tarotData[tarot];
         
-        // 季節ごとのアドバイスをランダムに選択
-        const randomSeason = fortuneTemplates.seasonalMessages[Math.floor(Math.random() * fortuneTemplates.seasonalMessages.length)];
+        // 四柱推命の五行分析
+        const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
         
-        // パーソナライズされた総合運勢を組み立て
-        const fortune = `
-            <p>あなたの本質には、<strong>${kyusei}</strong>の持つ「${kyuseiInfo.trait}」と、運命数<strong>${num}</strong>が示す「${numInfo.trait}」という特質が融合しています。この組み合わせは、あなたが持つ独自の魅力と可能性を表しています。</p>
-            
-            <p><strong>2026年の展望:</strong> <strong>${western}</strong>として${westernTrait}、${kyuseiInfo.year}年となるでしょう。特に${randomSeason.season}は${randomSeason.message}。</p>
-            
-            <p><strong>開運のヒント:</strong> 五星三心の<strong>${gosei}</strong>の特性から、${goseiAdvice}</p>
-            
-            <p><strong>今年のアドバイス:</strong> ${numInfo.advice}。あなたの持つ${kyuseiInfo.trait}を最大限に活かすことで、2026年は実り多い一年となります。自分らしさを大切にしながら、新しい可能性にも目を向けていってください！✨</p>
-        `;
+        // AIへのプロンプト作成
+        const prompt = `以下の占い結果を基に、2026年の総合運勢を温かみのある文章で書いてください。
+
+【占い結果】
+- 九星気学: ${kyusei} - ${kyuseiInfo.description}
+  ラッキーカラー: ${kyuseiInfo.color}、方位: ${kyuseiInfo.direction}
+  
+- 数秘術: ${num} - ${numInfo.description}
+
+- 四柱推命: 年柱${shichu.year.k}${shichu.year.s}、月柱${shichu.month.k}${shichu.month.s}、日柱${shichu.day.k}${shichu.day.s}
+  五行バランス: ${dominantElement[0]}が${dominantElement[1]}で最も強い
+  
+- 西洋占星術: ${western} ${westernInfo.emoji} - ${westernInfo.description}
+
+- 五星三心: ${gosei} - ${goseiInfo.description}
+
+- 紫微斗数: ${ziwei} - ${ziweiInfo.description}
+
+- 2026年のタロット: ${tarot} - ${tarotInfo.description}
+
+【要件】
+1. 親しみやすく、前向きな文章で書いてください
+2. 具体的なアドバイスを含めてください
+3. 2026年の運勢の流れや特徴的な時期について触れてください
+4. 開運のヒントや注意点も盛り込んでください
+5. HTML形式で、段落は<p>タグで囲み、重要な部分は<strong>タグで強調してください
+6. 絵文字(✨、🌟など)を適度に使って華やかにしてください
+7. 文章は400-600文字程度で、読みやすい長さにしてください`;
+
+        // Anthropic APIを呼び出し
+        const response = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                model: "claude-sonnet-4-20250514",
+                max_tokens: 1500,
+                messages: [
+                    { role: "user", content: prompt }
+                ],
+            })
+        });
+
+        const data = await response.json();
         
-        document.getElementById('totalFortune').innerHTML = fortune;
+        // レスポンスから文章を取得
+        let fortune = '';
+        if (data.content && data.content.length > 0) {
+            fortune = data.content
+                .filter(item => item.type === "text")
+                .map(item => item.text)
+                .join("");
+        }
+        
+        // 生成された文章を表示
+        document.getElementById('totalFortune').innerHTML = fortune || '<p>総合運勢の生成に失敗しました。もう一度お試しください。</p>';
         console.log('総合運勢の生成完了');
-    }, 1000);
+        
+    } catch (error) {
+        console.error('総合運勢生成エラー:', error);
+        document.getElementById('totalFortune').innerHTML = '<p>総合運勢の生成中にエラーが発生しました。もう一度お試しください。</p>';
+    }
 }
 
 function resetForm() {
