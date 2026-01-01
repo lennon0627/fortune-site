@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>トリプル運勢占い✨ 九星気学×数秘術×四柱推命</title>
+    <title>究極の運勢占い✨ 8種類の占術で完全鑑定</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -11,113 +11,112 @@
     <div class="container">
         <header class="header">
             <h1 class="title">
-                <span class="title-main">トリプル運勢占い</span>
-                <span class="title-sub">九星気学 × 数秘術 × 四柱推命</span>
+                <span class="title-main">究極の運勢占い</span>
+                <span class="title-sub">8種類の占術で完全鑑定 ✨</span>
             </h1>
         </header>
 
         <div class="fortune-card">
             <div class="card-header">
-                <h2>あなたの運勢を見てみましょう✨</h2>
+                <h2>生年月日を入力して占う</h2>
             </div>
-            
             <form id="fortuneForm" class="fortune-form">
                 <div class="input-group">
-                    <label for="birthdate">
-                        <span class="label-icon">🎂</span>
-                        生年月日
-                    </label>
+                    <label for="birthdate"><span class="label-icon">🎂</span> 生年月日</label>
                     <input type="date" id="birthdate" required>
                 </div>
-
                 <div class="input-group">
-                    <label for="birthtime">
-                        <span class="label-icon">🕐</span>
-                        生まれた時間（分かる場合）
-                    </label>
+                    <label for="birthtime"><span class="label-icon">🕐</span> 生まれた時間</label>
                     <input type="time" id="birthtime">
                 </div>
-
                 <div class="input-group">
-                    <label for="name">
-                        <span class="label-icon">✨</span>
-                        お名前（数秘術用・任意）
-                    </label>
+                    <label for="name"><span class="label-icon">✨</span> お名前</label>
                     <input type="text" id="name" placeholder="山田太郎">
                 </div>
-
                 <button type="submit" class="submit-btn">
-                    <span>占う！</span>
-                    <span class="btn-sparkle">✨</span>
+                    <span>占う！</span><span class="btn-sparkle">✨</span>
                 </button>
             </form>
         </div>
 
         <div id="results" class="results hidden">
             <div class="result-section kyusei">
-                <h3 class="section-title">
-                    <span class="icon">🌟</span>
-                    九星気学
-                </h3>
+                <h3 class="section-title"><span class="icon">🌟</span>九星気学</h3>
                 <div class="result-content">
                     <div class="star-display" id="kyuseiStar"></div>
-                    <div class="description" id="kyuseiDesc"></div>
+                    <div id="kyuseiDesc"></div>
                     <div class="lucky-info">
-                        <div class="luck-item">
-                            <span class="luck-label">ラッキーカラー</span>
-                            <span class="luck-value" id="kyuseiColor"></span>
-                        </div>
-                        <div class="luck-item">
-                            <span class="luck-label">ラッキー方位</span>
-                            <span class="luck-value" id="kyuseiDirection"></span>
-                        </div>
+                        <div class="luck-item">ラッキーカラー: <span id="kyuseiColor"></span></div>
+                        <div class="luck-item">ラッキー方位: <span id="kyuseiDirection"></span></div>
                     </div>
                 </div>
             </div>
 
             <div class="result-section numerology">
-                <h3 class="section-title">
-                    <span class="icon">🔢</span>
-                    数秘術
-                </h3>
+                <h3 class="section-title"><span class="icon">🔢</span>数秘術</h3>
                 <div class="result-content">
                     <div class="number-display" id="numerologyNumber"></div>
-                    <div class="description" id="numerologyDesc"></div>
-                    <div class="traits">
-                        <h4>あなたの特徴</h4>
-                        <div id="numerologyTraits"></div>
-                    </div>
+                    <div id="numerologyDesc"></div>
                 </div>
             </div>
 
             <div class="result-section shichusuimei">
-                <h3 class="section-title">
-                    <span class="icon">🎋</span>
-                    四柱推命
-                </h3>
+                <h3 class="section-title"><span class="icon">🎋</span>四柱推命</h3>
                 <div class="result-content">
                     <div class="pillars" id="shichuPillars"></div>
                     <div class="elements" id="shichuElements"></div>
-                    <div class="description" id="shichuDesc"></div>
+                    <div id="shichuDesc"></div>
+                </div>
+            </div>
+
+            <div class="result-section western">
+                <h3 class="section-title"><span class="icon">♈</span>西洋占星術</h3>
+                <div class="result-content">
+                    <div class="star-display" id="westernSign"></div>
+                    <div id="westernDesc"></div>
+                </div>
+            </div>
+
+            <div class="result-section gosei">
+                <h3 class="section-title"><span class="icon">🎭</span>五星三心占い</h3>
+                <div class="result-content">
+                    <div class="star-display" id="goseiType"></div>
+                    <div id="goseiDesc"></div>
+                </div>
+            </div>
+
+            <div class="result-section kabbalah">
+                <h3 class="section-title"><span class="icon">🔯</span>カバラ占術</h3>
+                <div class="result-content">
+                    <div class="number-display" id="kabbalahNumber"></div>
+                    <div id="kabbalahDesc"></div>
+                </div>
+            </div>
+
+            <div class="result-section ziwei">
+                <h3 class="section-title"><span class="icon">🟣</span>紫微斗数</h3>
+                <div class="result-content">
+                    <div class="star-display" id="ziweiStar"></div>
+                    <div id="ziweiDesc"></div>
+                </div>
+            </div>
+
+            <div class="result-section tarot">
+                <h3 class="section-title"><span class="icon">🃏</span>タロット (2026年)</h3>
+                <div class="result-content">
+                    <div class="star-display" id="tarotCard"></div>
+                    <div id="tarotDesc"></div>
                 </div>
             </div>
 
             <div class="result-section total">
-                <h3 class="section-title">
-                    <span class="icon">💫</span>
-                    総合運勢
-                </h3>
-                <div class="result-content">
-                    <div class="total-fortune" id="totalFortune"></div>
-                </div>
+                <h3 class="section-title"><span class="icon">💫</span>総合運勢</h3>
+                <div class="result-content" id="totalFortune"></div>
             </div>
 
-            <button class="reset-btn" onclick="resetForm()">
-                もう一度占う
-            </button>
+            <button class="reset-btn" onclick="resetForm()">もう一度占う</button>
         </div>
     </div>
-
     <script src="script.js"></script>
 </body>
 </html>
