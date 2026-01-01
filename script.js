@@ -347,7 +347,13 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     copyText += `${tarotInfo.description}\n`;
     copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
-    copyText += `上記の占い結果を基に、2026年の私の運勢を詳しく教えてください。`;
+    copyText += `上記の占い結果を基に、私の運勢を詳しく教えてください。
+1.「これまでの人生」と「これからの人生」を、命式・数・星・方位の流れを統合して、人生の物語として伝えてください。
+・人生の転機年
+・天職・晩年運
+・魂のテーマ(使命)
+2.(占った年)の運勢と月別バイオリズム(仕事・金運・吉方位)
+3.最終メッセージ`;
     
     document.getElementById('copyText').value = copyText;
     
