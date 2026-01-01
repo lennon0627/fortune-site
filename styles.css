@@ -1,0 +1,521 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&family=Kosugi+Maru&display=swap');
+
+:root {
+    --primary: #FF6B9D;
+    --secondary: #FEC85E;
+    --accent: #A78BFA;
+    --success: #4ADE80;
+    --info: #60A5FA;
+    --bg-dark: #1A1625;
+    --bg-card: rgba(255, 255, 255, 0.95);
+    --text-dark: #2D2438;
+    --text-light: #F8F4FF;
+    --shadow: rgba(167, 139, 250, 0.3);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Kosugi Maru', 'Poppins', sans-serif;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+    min-height: 100vh;
+    color: var(--text-dark);
+    position: relative;
+    overflow-x: hidden;
+}
+
+/* 星空背景 */
+.stars {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+}
+
+.stars::before,
+.stars::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    box-shadow: 
+        100px 200px white, 300px 100px white, 500px 300px white,
+        700px 150px white, 200px 400px white, 600px 250px white,
+        150px 50px white, 450px 350px white, 750px 400px white,
+        50px 150px white, 350px 450px white, 550px 50px white,
+        250px 300px white, 650px 200px white, 400px 100px white,
+        800px 300px white, 100px 350px white, 500px 450px white,
+        300px 250px white, 700px 100px white, 150px 400px white;
+    animation: twinkle 3s infinite;
+}
+
+.stars::after {
+    animation-delay: 1.5s;
+}
+
+@keyframes twinkle {
+    0%, 100% { opacity: 0.3; }
+    50% { opacity: 1; }
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* ヘッダー */
+.header {
+    text-align: center;
+    margin-bottom: 3rem;
+    animation: slideDown 0.8s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.title {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.title-main {
+    font-size: 3.5rem;
+    font-weight: 800;
+    background: linear-gradient(45deg, #FF6B9D, #FEC85E, #A78BFA, #4ADE80);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientFlow 4s ease infinite;
+    text-shadow: 0 0 30px rgba(255, 107, 157, 0.5);
+    letter-spacing: 0.05em;
+}
+
+@keyframes gradientFlow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+.title-sub {
+    font-size: 1.2rem;
+    color: var(--text-light);
+    font-weight: 600;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    letter-spacing: 0.1em;
+}
+
+/* カード */
+.fortune-card {
+    background: var(--bg-card);
+    border-radius: 30px;
+    padding: 3rem 2.5rem;
+    box-shadow: 
+        0 20px 60px rgba(0, 0, 0, 0.3),
+        0 0 0 1px rgba(255, 255, 255, 0.5) inset;
+    animation: float 3s ease-in-out infinite;
+    margin-bottom: 2rem;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0px); }
+    50% { transform: translateY(-10px); }
+}
+
+.card-header h2 {
+    text-align: center;
+    font-size: 1.8rem;
+    margin-bottom: 2rem;
+    color: var(--primary);
+    font-weight: 700;
+}
+
+/* フォーム */
+.fortune-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.input-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.input-group label {
+    font-weight: 600;
+    color: var(--text-dark);
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.label-icon {
+    font-size: 1.3rem;
+}
+
+.input-group input {
+    padding: 1rem 1.5rem;
+    border: 3px solid transparent;
+    border-radius: 15px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: linear-gradient(white, white) padding-box,
+                linear-gradient(45deg, var(--primary), var(--accent)) border-box;
+    transition: all 0.3s ease;
+}
+
+.input-group input:focus {
+    outline: none;
+    transform: scale(1.02);
+    box-shadow: 0 8px 25px var(--shadow);
+}
+
+/* ボタン */
+.submit-btn {
+    margin-top: 1rem;
+    padding: 1.2rem 2rem;
+    background: linear-gradient(135deg, var(--primary), var(--accent));
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.3rem;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px var(--shadow);
+    font-family: inherit;
+}
+
+.submit-btn:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 40px var(--shadow);
+}
+
+.submit-btn:active {
+    transform: translateY(-1px) scale(0.98);
+}
+
+.btn-sparkle {
+    animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+/* 結果セクション */
+.results {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    animation: fadeInUp 0.8s ease-out;
+}
+
+.results.hidden {
+    display: none;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.result-section {
+    background: var(--bg-card);
+    border-radius: 25px;
+    padding: 2.5rem;
+    box-shadow: 0 15px 50px rgba(0, 0, 0, 0.2);
+    animation: scaleIn 0.5s ease-out backwards;
+}
+
+.result-section:nth-child(1) { animation-delay: 0.1s; }
+.result-section:nth-child(2) { animation-delay: 0.2s; }
+.result-section:nth-child(3) { animation-delay: 0.3s; }
+.result-section:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.section-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    padding-bottom: 1rem;
+    border-bottom: 3px solid;
+}
+
+.kyusei .section-title {
+    color: var(--primary);
+    border-color: var(--primary);
+}
+
+.numerology .section-title {
+    color: var(--secondary);
+    border-color: var(--secondary);
+}
+
+.shichusuimei .section-title {
+    color: var(--accent);
+    border-color: var(--accent);
+}
+
+.total .section-title {
+    color: var(--success);
+    border-color: var(--success);
+}
+
+.icon {
+    font-size: 2rem;
+}
+
+.result-content {
+    line-height: 1.8;
+}
+
+/* 九星気学専用 */
+.star-display {
+    text-align: center;
+    font-size: 3rem;
+    font-weight: 800;
+    margin: 1.5rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(167, 139, 250, 0.1));
+    border-radius: 20px;
+}
+
+.lucky-info {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.luck-item {
+    background: linear-gradient(135deg, rgba(255, 107, 157, 0.1), rgba(254, 200, 94, 0.1));
+    padding: 1.5rem;
+    border-radius: 15px;
+    text-align: center;
+}
+
+.luck-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+}
+
+.luck-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+/* 数秘術専用 */
+.number-display {
+    text-align: center;
+    font-size: 5rem;
+    font-weight: 800;
+    margin: 1.5rem 0;
+    background: linear-gradient(45deg, var(--secondary), var(--primary));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.traits {
+    margin-top: 1.5rem;
+    padding: 1.5rem;
+    background: linear-gradient(135deg, rgba(254, 200, 94, 0.1), rgba(255, 107, 157, 0.1));
+    border-radius: 15px;
+}
+
+.traits h4 {
+    font-size: 1.2rem;
+    margin-bottom: 1rem;
+    color: var(--secondary);
+}
+
+.traits ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.traits li {
+    padding: 0.5rem 0;
+    padding-left: 1.5rem;
+    position: relative;
+}
+
+.traits li::before {
+    content: '✨';
+    position: absolute;
+    left: 0;
+}
+
+/* 四柱推命専用 */
+.pillars {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.pillar {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    background: linear-gradient(135deg, rgba(167, 139, 250, 0.1), rgba(96, 165, 250, 0.1));
+    border-radius: 15px;
+}
+
+.pillar-label {
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+
+.pillar-value {
+    display: block;
+    font-size: 1.8rem;
+    font-weight: 700;
+}
+
+.elements {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.element {
+    padding: 0.8rem 1.5rem;
+    border-radius: 25px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.element.wood { background: #4ADE80; color: white; }
+.element.fire { background: #EF4444; color: white; }
+.element.earth { background: #F59E0B; color: white; }
+.element.metal { background: #94A3B8; color: white; }
+.element.water { background: #3B82F6; color: white; }
+
+/* 説明文 */
+.description {
+    font-size: 1.1rem;
+    line-height: 1.9;
+    color: var(--text-dark);
+    margin-top: 1rem;
+}
+
+/* 総合運勢 */
+.total-fortune {
+    font-size: 1.2rem;
+    line-height: 2;
+    padding: 2rem;
+    background: linear-gradient(135deg, rgba(74, 222, 128, 0.1), rgba(96, 165, 250, 0.1));
+    border-radius: 20px;
+    border-left: 5px solid var(--success);
+}
+
+/* リセットボタン */
+.reset-btn {
+    margin-top: 2rem;
+    padding: 1rem 2rem;
+    background: linear-gradient(135deg, var(--info), var(--accent));
+    color: white;
+    border: none;
+    border-radius: 20px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 10px 30px rgba(96, 165, 250, 0.3);
+    font-family: inherit;
+    display: block;
+    width: 100%;
+}
+
+.reset-btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 15px 40px rgba(96, 165, 250, 0.4);
+}
+
+/* レスポンシブ */
+@media (max-width: 768px) {
+    .title-main {
+        font-size: 2.5rem;
+    }
+    
+    .title-sub {
+        font-size: 1rem;
+    }
+    
+    .fortune-card {
+        padding: 2rem 1.5rem;
+    }
+    
+    .result-section {
+        padding: 1.5rem;
+    }
+    
+    .pillars {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .title-main {
+        font-size: 2rem;
+    }
+    
+    .container {
+        padding: 1rem 0.5rem;
+    }
+}
