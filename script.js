@@ -81,8 +81,8 @@ function initializeTimeSelects() {
         hourSelect.appendChild(option);
     }
     
-    // 分の選択肢を生成（0, 15, 30, 45）
-    for (let minute = 0; minute < 60; minute += 15) {
+    // 分の選択肢を生成（1分刻み）
+    for (let minute = 0; minute < 60; minute++) {
         const option = document.createElement('option');
         option.value = minute.toString().padStart(2, '0');
         option.textContent = minute;
@@ -227,10 +227,16 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     const hour = document.getElementById('birthHour').value;
     const minute = document.getElementById('birthMinute').value;
     const name = document.getElementById('name').value;
+    const gender = document.querySelector('input[name="gender"]:checked');
     
     // 必須項目のチェック
     if (!year || !month || !day) {
         alert('生年月日を選択してください。');
+        return;
+    }
+    
+    if (!gender) {
+        alert('性別を選択してください。');
         return;
     }
     
@@ -243,10 +249,10 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
         birthtime = `${hour}:${minute}`;
     }
     
-    calculateFortune(birthdate, birthtime, name);
+    calculateFortune(birthdate, birthtime, name, gender.value);
 });
 
-function calculateFortune(birthdate, birthtime, name) {
+function calculateFortune(birthdate, birthtime, name, gender) {
     const date = new Date(birthdate);
     
     // 1. 九星気学
@@ -289,11 +295,11 @@ function calculateFortune(birthdate, birthtime, name) {
     displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot);
     
     // コピー用テキストを生成
-    generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name);
+    generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender);
 }
 
 // コピー用テキストを生成
-function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name) {
+function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender) {
     const kyuseiInfo = kyuseiData[kyusei];
     const numInfo = numerologyData[num];
     const westernInfo = westernZodiacData[western];
@@ -302,10 +308,13 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     const tarotInfo = tarotData[tarot];
     const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
     
+    const genderText = gender === 'male' ? '男性' : '女性';
+    
     let copyText = `【占い結果】2026年版\n`;
     if (name) {
         copyText += `お名前: ${name}\n`;
     }
+    copyText += `性別: ${genderText}\n`;
     copyText += `生年月日: ${birthdate}`;
     if (birthtime) {
         copyText += ` ${birthtime}`;

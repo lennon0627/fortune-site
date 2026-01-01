@@ -170,6 +170,56 @@ body {
     font-size: 0.9em;
 }
 
+/* 性別選択 */
+.gender-selects {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.gender-option {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    border: 2px solid #e0e0e0;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    flex: 1;
+    min-width: 120px;
+    justify-content: center;
+}
+
+.gender-option:hover {
+    border-color: #667eea;
+    background: #f8f9ff;
+}
+
+.gender-option input[type="radio"] {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+}
+
+.gender-option input[type="radio"]:checked + span {
+    font-weight: bold;
+    color: #667eea;
+}
+
+.gender-option:has(input[type="radio"]:checked) {
+    border-color: #667eea;
+    background: linear-gradient(135deg, #f8f9ff 0%, #e8ecff 100%);
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.gender-option span {
+    font-size: 1em;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+
 .submit-btn {
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
@@ -425,6 +475,14 @@ body {
     
     .lucky-info {
         grid-template-columns: 1fr;
+    }
+    
+    .gender-selects {
+        flex-direction: row;
+    }
+    
+    .gender-option {
+        min-width: 100px;
     }
 }
 
