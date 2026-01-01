@@ -8,12 +8,45 @@
 </head>
 <body>
     <div class="stars"></div>
+    
+    <!-- APIキー設定モーダル -->
+    <div id="apiKeyModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>🔑 Google Gemini API設定</h2>
+            </div>
+            <div class="modal-body">
+                <p>AI生成の総合運勢を利用するには、Google Gemini APIキーが必要です。</p>
+                <div class="info-box">
+                    <h3>📝 APIキーの取得方法</h3>
+                    <ol>
+                        <li><a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a> にアクセス</li>
+                        <li>Googleアカウントでログイン</li>
+                        <li>「Create API Key」をクリック</li>
+                        <li>APIキーをコピーして下に貼り付け</li>
+                    </ol>
+                    <p class="note">💡 月60リクエストまで完全無料です!</p>
+                </div>
+                <div class="input-group">
+                    <label for="apiKeyInput">Google Gemini APIキー</label>
+                    <input type="password" id="apiKeyInput" placeholder="AIza...">
+                    <button type="button" id="toggleApiKeyVisibility" class="toggle-btn">👁️ 表示</button>
+                </div>
+                <div class="modal-actions">
+                    <button id="saveApiKey" class="btn-primary">保存</button>
+                    <button id="closeModal" class="btn-secondary">後で設定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <header class="header">
             <h1 class="title">
                 <span class="title-main">究極の運勢占い</span>
                 <span class="title-sub">8種類の占術で完全鑑定 ✨</span>
             </h1>
+            <button id="settingsBtn" class="settings-btn" title="API設定">⚙️</button>
         </header>
 
         <div class="fortune-card">
@@ -34,7 +67,7 @@
                     <input type="text" id="name" placeholder="山田太郎">
                 </div>
                 <button type="submit" class="submit-btn">
-                    <span>占う！</span><span class="btn-sparkle">✨</span>
+                    <span>占う!</span><span class="btn-sparkle">✨</span>
                 </button>
             </form>
         </div>

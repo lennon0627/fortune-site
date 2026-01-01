@@ -1,4 +1,97 @@
 // ============================================================
+// APIキー管理
+// ============================================================
+
+const API_KEY_STORAGE = 'gemini_api_key';
+
+// APIキーの保存
+function saveApiKey(apiKey) {
+    localStorage.setItem(API_KEY_STORAGE, apiKey);
+}
+
+// APIキーの取得
+function getApiKey() {
+    return localStorage.getItem(API_KEY_STORAGE);
+}
+
+// APIキーの削除
+function clearApiKey() {
+    localStorage.removeItem(API_KEY_STORAGE);
+}
+
+// モーダルの表示/非表示
+function showModal() {
+    document.getElementById('apiKeyModal').classList.add('show');
+}
+
+function hideModal() {
+    document.getElementById('apiKeyModal').classList.remove('show');
+}
+
+// ページ読み込み時の処理
+document.addEventListener('DOMContentLoaded', function() {
+    const apiKey = getApiKey();
+    
+    // APIキーが保存されていない場合はモーダルを表示
+    if (!apiKey) {
+        showModal();
+    }
+    
+    // 設定ボタンのクリックイベント
+    document.getElementById('settingsBtn').addEventListener('click', function() {
+        const currentKey = getApiKey();
+        if (currentKey) {
+            document.getElementById('apiKeyInput').value = currentKey;
+        }
+        showModal();
+    });
+    
+    // APIキー表示/非表示の切り替え
+    document.getElementById('toggleApiKeyVisibility').addEventListener('click', function() {
+        const input = document.getElementById('apiKeyInput');
+        if (input.type === 'password') {
+            input.type = 'text';
+            this.textContent = '🙈 非表示';
+        } else {
+            input.type = 'password';
+            this.textContent = '👁️ 表示';
+        }
+    });
+    
+    // 保存ボタンのクリックイベント
+    document.getElementById('saveApiKey').addEventListener('click', function() {
+        const apiKey = document.getElementById('apiKeyInput').value.trim();
+        
+        if (!apiKey) {
+            alert('APIキーを入力してください。');
+            return;
+        }
+        
+        // 簡単なバリデーション
+        if (!apiKey.startsWith('AIza')) {
+            alert('正しいGoogle Gemini APIキーを入力してください。\nAPIキーは "AIza" で始まります。');
+            return;
+        }
+        
+        saveApiKey(apiKey);
+        alert('APIキーを保存しました! ✨');
+        hideModal();
+    });
+    
+    // 閉じるボタンのクリックイベント
+    document.getElementById('closeModal').addEventListener('click', function() {
+        hideModal();
+    });
+    
+    // モーダル外クリックで閉じる
+    document.getElementById('apiKeyModal').addEventListener('click', function(e) {
+        if (e.target === this) {
+            hideModal();
+        }
+    });
+});
+
+// ============================================================
 // データ定義
 // ============================================================
 
@@ -470,6 +563,13 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
     try {
         console.log('🔍 API呼び出し開始');
         
+        // localStorageからAPIキーを取得
+        const GEMINI_API_KEY = getApiKey();
+        
+        if (!GEMINI_API_KEY) {
+            throw new Error('APIキーが設定されていません。右上の⚙️ボタンからAPIキーを設定してください。');
+        }
+        
         // 各占術の結果情報を収集
         const kyuseiInfo = kyuseiData[kyusei];
         const numInfo = numerologyData[num];
@@ -512,14 +612,6 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
 
         console.log('📤 Google Gemini APIにリクエスト送信中...');
         
-        // ★★★ ここにあなたのGoogle Gemini APIキーを入力してください ★★★
-        // APIキーの取得方法: https://makersuite.google.com/app/apikey
-        const GEMINI_API_KEY = AIzaSyCon9KhK--VIMWw66kSTZEF18Y6wYMMBXg;
-        
-        if (GEMINI_API_KEY === 'YOUR_API_KEY_HERE') {
-            throw new Error('Google Gemini APIキーが設定されていません。script.jsの543行目付近のGEMINI_API_KEYを設定してください。');
-        }
-        
         // Google Gemini APIを呼び出し
         const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
             method: "POST",
@@ -544,6 +636,12 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
         if (!response.ok) {
             const errorText = await response.text();
             console.error('❌ API エラーレスポンス:', errorText);
+            
+            // APIキーエラーの場合
+            if (response.status === 400 || response.status === 401) {
+                throw new Error('APIキーが正しくありません。右上の⚙️ボタンから正しいAPIキーを設定してください。');
+            }
+            
             throw new Error(`API Error: ${response.status} - ${errorText}`);
         }
 
@@ -574,9 +672,9 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
         
         // ユーザーにエラー詳細を表示
         document.getElementById('totalFortune').innerHTML = `
-            <p style="color: #f5576c;">総合運勢の生成中にエラーが発生しました。</p>
-            <p style="font-size: 0.9em; color: #666;">エラー: ${error.message}</p>
-            <p style="font-size: 0.9em; color: #666;">ブラウザのコンソール(F12キー)を開いて詳細を確認してください。</p>
+            <p style="color: #f5576c; font-weight: bold;">総合運勢の生成中にエラーが発生しました</p>
+            <p style="font-size: 0.95em; color: #666; margin-top: 10px;">${error.message}</p>
+            <p style="font-size: 0.9em; color: #999; margin-top: 15px;">💡 右上の⚙️ボタンからGoogle Gemini APIキーを設定できます</p>
         `;
     }
 }
