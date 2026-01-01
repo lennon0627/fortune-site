@@ -1,97 +1,4 @@
 // ============================================================
-// APIキー管理
-// ============================================================
-
-const API_KEY_STORAGE = 'gemini_api_key';
-
-// APIキーの保存
-function saveApiKey(apiKey) {
-    localStorage.setItem(API_KEY_STORAGE, apiKey);
-}
-
-// APIキーの取得
-function getApiKey() {
-    return localStorage.getItem(API_KEY_STORAGE);
-}
-
-// APIキーの削除
-function clearApiKey() {
-    localStorage.removeItem(API_KEY_STORAGE);
-}
-
-// モーダルの表示/非表示
-function showModal() {
-    document.getElementById('apiKeyModal').classList.add('show');
-}
-
-function hideModal() {
-    document.getElementById('apiKeyModal').classList.remove('show');
-}
-
-// ページ読み込み時の処理
-document.addEventListener('DOMContentLoaded', function() {
-    const apiKey = getApiKey();
-    
-    // APIキーが保存されていない場合はモーダルを表示
-    if (!apiKey) {
-        showModal();
-    }
-    
-    // 設定ボタンのクリックイベント
-    document.getElementById('settingsBtn').addEventListener('click', function() {
-        const currentKey = getApiKey();
-        if (currentKey) {
-            document.getElementById('apiKeyInput').value = currentKey;
-        }
-        showModal();
-    });
-    
-    // APIキー表示/非表示の切り替え
-    document.getElementById('toggleApiKeyVisibility').addEventListener('click', function() {
-        const input = document.getElementById('apiKeyInput');
-        if (input.type === 'password') {
-            input.type = 'text';
-            this.textContent = '🙈 非表示';
-        } else {
-            input.type = 'password';
-            this.textContent = '👁️ 表示';
-        }
-    });
-    
-    // 保存ボタンのクリックイベント
-    document.getElementById('saveApiKey').addEventListener('click', function() {
-        const apiKey = document.getElementById('apiKeyInput').value.trim();
-        
-        if (!apiKey) {
-            alert('APIキーを入力してください。');
-            return;
-        }
-        
-        // 簡単なバリデーション
-        if (!apiKey.startsWith('AIza')) {
-            alert('正しいGoogle Gemini APIキーを入力してください。\nAPIキーは "AIza" で始まります。');
-            return;
-        }
-        
-        saveApiKey(apiKey);
-        alert('APIキーを保存しました! ✨');
-        hideModal();
-    });
-    
-    // 閉じるボタンのクリックイベント
-    document.getElementById('closeModal').addEventListener('click', function() {
-        hideModal();
-    });
-    
-    // モーダル外クリックで閉じる
-    document.getElementById('apiKeyModal').addEventListener('click', function(e) {
-        if (e.target === this) {
-            hideModal();
-        }
-    });
-});
-
-// ============================================================
 // データ定義
 // ============================================================
 
@@ -269,8 +176,88 @@ function calculateFortune(birthdate, birthtime, name) {
     document.getElementById('results').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // 総合運勢（テンプレートベース）
+    // 総合運勢
     displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot);
+    
+    // コピー用テキストを生成
+    generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name);
+}
+
+// コピー用テキストを生成
+function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name) {
+    const kyuseiInfo = kyuseiData[kyusei];
+    const numInfo = numerologyData[num];
+    const westernInfo = westernZodiacData[western];
+    const goseiInfo = goseiData[gosei];
+    const ziweiInfo = ziweiData[ziwei];
+    const tarotInfo = tarotData[tarot];
+    const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
+    
+    let copyText = `【占い結果】2026年版\n`;
+    if (name) {
+        copyText += `お名前: ${name}\n`;
+    }
+    copyText += `生年月日: ${birthdate}`;
+    if (birthtime) {
+        copyText += ` ${birthtime}`;
+    }
+    copyText += `\n\n`;
+    
+    copyText += `━━━━━━━━━━━━━━━━━━━━\n`;
+    copyText += `🌟 九星気学: ${kyusei}\n`;
+    copyText += `${kyuseiInfo.description}\n`;
+    copyText += `ラッキーカラー: ${kyuseiInfo.color}\n`;
+    copyText += `ラッキー方位: ${kyuseiInfo.direction}\n\n`;
+    
+    copyText += `🔢 数秘術: 運命数${num}\n`;
+    copyText += `${numInfo.description}\n\n`;
+    
+    copyText += `🎋 四柱推命\n`;
+    copyText += `年柱: ${shichu.year.k}${shichu.year.s}\n`;
+    copyText += `月柱: ${shichu.month.k}${shichu.month.s}\n`;
+    copyText += `日柱: ${shichu.day.k}${shichu.day.s}\n`;
+    if (shichu.time) {
+        copyText += `時柱: ${shichu.time.k}${shichu.time.s}\n`;
+    }
+    copyText += `五行バランス: ${dominantElement[0]}が${dominantElement[1]}で最も強い\n\n`;
+    
+    copyText += `♈ 西洋占星術: ${western} ${westernInfo.emoji}\n`;
+    copyText += `${westernInfo.description}\n\n`;
+    
+    copyText += `🎭 五星三心占い: ${gosei}\n`;
+    copyText += `${goseiInfo.description}\n\n`;
+    
+    copyText += `🔯 カバラ占術: カバラ数${num}\n`;
+    const kabbalahInfo = kabbalahData[num];
+    copyText += `${kabbalahInfo.description}\n\n`;
+    
+    copyText += `🟣 紫微斗数: ${ziwei}\n`;
+    copyText += `${ziweiInfo.description}\n\n`;
+    
+    copyText += `🃏 2026年のタロット: ${tarot}\n`;
+    copyText += `${tarotInfo.description}\n`;
+    copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+    
+    copyText += `上記の占い結果を基に、2026年の私の運勢を詳しく教えてください。`;
+    
+    document.getElementById('copyText').value = copyText;
+    
+    // コピーボタンのイベントリスナー
+    document.getElementById('copyBtn').onclick = function() {
+        const textarea = document.getElementById('copyText');
+        textarea.select();
+        document.execCommand('copy');
+        
+        // ボタンのテキストを一時的に変更
+        const originalText = this.innerHTML;
+        this.innerHTML = '✅ コピーしました!';
+        this.style.background = 'linear-gradient(135deg, #34a853 0%, #0f9d58 100%)';
+        
+        setTimeout(() => {
+            this.innerHTML = originalText;
+            this.style.background = '';
+        }, 2000);
+    };
 }
 
 // ============================================================
@@ -554,22 +541,14 @@ const fortuneTemplates = {
     ]
 };
 
-async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
+function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
     console.log('総合運勢を生成中...', { kyusei, num, western, gosei });
     
     // ローディング表示
-    document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ AIが総合運勢を鑑定中...</p>';
+    document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ 総合運勢を鑑定中...</p>';
     
-    try {
-        console.log('🔍 API呼び出し開始');
-        
-        // localStorageからAPIキーを取得
-        const GEMINI_API_KEY = getApiKey();
-        
-        if (!GEMINI_API_KEY) {
-            throw new Error('APIキーが設定されていません。右上の⚙️ボタンからAPIキーを設定してください。');
-        }
-        
+    // 少し遅延を入れて鑑定している感を出す
+    setTimeout(() => {
         // 各占術の結果情報を収集
         const kyuseiInfo = kyuseiData[kyusei];
         const numInfo = numerologyData[num];
@@ -581,102 +560,58 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
         // 四柱推命の五行分析
         const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
         
-        // AIへのプロンプト作成
-        const prompt = `以下の占い結果を基に、2026年の総合運勢を温かみのある文章で書いてください。
-
-【占い結果】
-- 九星気学: ${kyusei} - ${kyuseiInfo.description}
-  ラッキーカラー: ${kyuseiInfo.color}、方位: ${kyuseiInfo.direction}
-  
-- 数秘術: ${num} - ${numInfo.description}
-
-- 四柱推命: 年柱${shichu.year.k}${shichu.year.s}、月柱${shichu.month.k}${shichu.month.s}、日柱${shichu.day.k}${shichu.day.s}
-  五行バランス: ${dominantElement[0]}が${dominantElement[1]}で最も強い
-  
-- 西洋占星術: ${western} ${westernInfo.emoji} - ${westernInfo.description}
-
-- 五星三心: ${gosei} - ${goseiInfo.description}
-
-- 紫微斗数: ${ziwei} - ${ziweiInfo.description}
-
-- 2026年のタロット: ${tarot} - ${tarotInfo.description}
-
-【要件】
-1. 親しみやすく、前向きな文章で書いてください
-2. 具体的なアドバイスを含めてください
-3. 2026年の運勢の流れや特徴的な時期について触れてください
-4. 開運のヒントや注意点も盛り込んでください
-5. HTML形式で、段落は<p>タグで囲み、重要な部分は<strong>タグで強調してください
-6. 絵文字(✨、🌟など)を適度に使って華やかにしてください
-7. 文章は400-600文字程度で、読みやすい長さにしてください`;
-
-        console.log('📤 Google Gemini APIにリクエスト送信中...');
+        // ランダム要素の配列
+        const openings = [
+            `あなたの運命には、<strong>${kyusei}</strong>の持つ神秘的な力と、運命数<strong>${num}</strong>が示す特別な使命が宿っています。`,
+            `<strong>${kyusei}</strong>として生まれたあなたには、運命数<strong>${num}</strong>が授けた独自の才能があります。`,
+            `運命数<strong>${num}</strong>と<strong>${kyusei}</strong>の組み合わせは、あなたの人生に特別な意味をもたらします。`,
+            `<strong>${kyusei}</strong>の性質と運命数<strong>${num}</strong>の力が、あなたの中で美しく調和しています。`
+        ];
         
-        // Google Gemini APIを呼び出し (gemini-proモデルを使用)
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: prompt
-                    }]
-                }],
-                generationConfig: {
-                    temperature: 0.9,
-                    maxOutputTokens: 1500,
-                }
-            })
-        });
-
-        console.log('📥 レスポンス受信:', response.status, response.statusText);
+        const yearForecasts = [
+            `2026年は「<strong>${tarot}</strong>」のカードが示すように、${tarotInfo.description}`,
+            `今年のタロット「<strong>${tarot}</strong>」が現れたあなたには、${tarotInfo.description}`,
+            `<strong>${western}</strong> ${westernInfo.emoji}として迎える2026年、${tarotInfo.description}`,
+            `2026年、${westernInfo.description}「<strong>${tarot}</strong>」の力が加わることで、${tarotInfo.description}`
+        ];
         
-        if (!response.ok) {
-            const errorText = await response.text();
-            console.error('❌ API エラーレスポンス:', errorText);
-            
-            // APIキーエラーの場合
-            if (response.status === 400 || response.status === 401) {
-                throw new Error('APIキーが正しくありません。右上の⚙️ボタンから正しいAPIキーを設定してください。');
-            }
-            
-            throw new Error(`API Error: ${response.status} - ${errorText}`);
-        }
-
-        const data = await response.json();
-        console.log('✅ レスポンスデータ:', data);
+        const elements = [
+            `四柱推命では<strong>${dominantElement[0]}</strong>の気が強く現れており、バランスの取れた運気の流れを持っています。`,
+            `<strong>${dominantElement[0]}</strong>の要素が際立つあなたの命式は、安定した運気の基盤を示しています。`,
+            `五行では<strong>${dominantElement[0]}</strong>が優勢で、調和のとれた運命の流れが見られます。`
+        ];
         
-        // レスポンスから文章を取得
-        let fortune = '';
-        if (data.candidates && data.candidates.length > 0 && data.candidates[0].content) {
-            const parts = data.candidates[0].content.parts;
-            fortune = parts.map(part => part.text).join('');
-            console.log('📝 生成された文章:', fortune.substring(0, 100) + '...');
-        } else {
-            console.warn('⚠️ 予期しないレスポンス形式:', data);
-        }
+        const advice = [
+            `<strong>${gosei}</strong>の特性を活かし、${goseiInfo.description}この一年は、その魅力を存分に発揮できるでしょう。`,
+            `五星三心の<strong>${gosei}</strong>として、${goseiInfo.description}この個性を大切にしてください。`,
+            `<strong>${gosei}</strong>の力を信じて進むことで、予想以上の成果が得られます。`
+        ];
         
-        // 生成された文章を表示
-        document.getElementById('totalFortune').innerHTML = fortune || '<p>総合運勢の生成に失敗しました。もう一度お試しください。</p>';
-        console.log('✨ 総合運勢の生成完了');
+        const ziweiFortune = [
+            `紫微斗数の<strong>${ziwei}</strong>は、${ziweiInfo.description}この星の力を借りて、大きな飛躍が期待できます。`,
+            `<strong>${ziwei}</strong>の加護を受けるあなたは、${ziweiInfo.description}チャンスを確実につかむことができるでしょう。`,
+            `<strong>${ziwei}</strong>が示すように、${ziweiInfo.description}運命の流れに身を任せてください。`
+        ];
         
-    } catch (error) {
-        console.error('❌ 総合運勢生成エラー:', error);
-        console.error('❌ エラー詳細:', {
-            name: error.name,
-            message: error.message,
-            stack: error.stack
-        });
+        const conclusions = [
+            `${kyuseiInfo.color}を身につけ、${kyuseiInfo.direction}の方位を意識することで、さらに運気が高まります。2026年は、あなたらしさを大切にしながら、新しい可能性にも目を向けていってください！✨`,
+            `ラッキーカラーの${kyuseiInfo.color}と、幸運の方位${kyuseiInfo.direction}が、あなたの人生をサポートします。自分を信じて、輝かしい一年を過ごしましょう！🌟`,
+            `${kyuseiInfo.color}を取り入れ、${kyuseiInfo.direction}を意識することで、幸運の波に乗れます。この一年が、あなたにとって最高の年になりますように！💫`,
+            `${kyuseiInfo.direction}の方位と${kyuseiInfo.color}の色が、あなたに幸運を運んできます。素晴らしい2026年になることを願っています！✨`
+        ];
         
-        // ユーザーにエラー詳細を表示
-        document.getElementById('totalFortune').innerHTML = `
-            <p style="color: #f5576c; font-weight: bold;">総合運勢の生成中にエラーが発生しました</p>
-            <p style="font-size: 0.95em; color: #666; margin-top: 10px;">${error.message}</p>
-            <p style="font-size: 0.9em; color: #999; margin-top: 15px;">💡 右上の⚙️ボタンからGoogle Gemini APIキーを設定できます</p>
+        // ランダムに組み合わせて総合運勢を生成
+        const fortune = `
+            <p>${openings[Math.floor(Math.random() * openings.length)]}</p>
+            <p><strong>2026年の展望:</strong> ${yearForecasts[Math.floor(Math.random() * yearForecasts.length)]}</p>
+            <p>${elements[Math.floor(Math.random() * elements.length)]} ${ziweiFortune[Math.floor(Math.random() * ziweiFortune.length)]}</p>
+            <p><strong>開運のヒント:</strong> ${advice[Math.floor(Math.random() * advice.length)]}</p>
+            <p>${conclusions[Math.floor(Math.random() * conclusions.length)]}</p>
         `;
-    }
+        
+        document.getElementById('totalFortune').innerHTML = fortune;
+        console.log('✨ 総合運勢の生成完了');
+    }, 1000);
 }
 
 function resetForm() {

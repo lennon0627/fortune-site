@@ -9,44 +9,12 @@
 <body>
     <div class="stars"></div>
     
-    <!-- APIキー設定モーダル -->
-    <div id="apiKeyModal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>🔑 Google Gemini API設定</h2>
-            </div>
-            <div class="modal-body">
-                <p>AI生成の総合運勢を利用するには、Google Gemini APIキーが必要です。</p>
-                <div class="info-box">
-                    <h3>📝 APIキーの取得方法</h3>
-                    <ol>
-                        <li><a href="https://makersuite.google.com/app/apikey" target="_blank">Google AI Studio</a> にアクセス</li>
-                        <li>Googleアカウントでログイン</li>
-                        <li>「Create API Key」をクリック</li>
-                        <li>APIキーをコピーして下に貼り付け</li>
-                    </ol>
-                    <p class="note">💡 月60リクエストまで完全無料です!</p>
-                </div>
-                <div class="input-group">
-                    <label for="apiKeyInput">Google Gemini APIキー</label>
-                    <input type="password" id="apiKeyInput" placeholder="AIza...">
-                    <button type="button" id="toggleApiKeyVisibility" class="toggle-btn">👁️ 表示</button>
-                </div>
-                <div class="modal-actions">
-                    <button id="saveApiKey" class="btn-primary">保存</button>
-                    <button id="closeModal" class="btn-secondary">後で設定</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="container">
         <header class="header">
             <h1 class="title">
                 <span class="title-main">究極の運勢占い</span>
                 <span class="title-sub">8種類の占術で完全鑑定 ✨</span>
             </h1>
-            <button id="settingsBtn" class="settings-btn" title="API設定">⚙️</button>
         </header>
 
         <div class="fortune-card">
@@ -145,6 +113,21 @@
             <div class="result-section total">
                 <h3 class="section-title"><span class="icon">💫</span>総合運勢</h3>
                 <div class="result-content" id="totalFortune"></div>
+            </div>
+
+            <!-- コピー用テキストセクション -->
+            <div class="result-section copy-section">
+                <h3 class="section-title"><span class="icon">📋</span>占い結果をコピー</h3>
+                <div class="result-content">
+                    <p style="margin-bottom: 15px;">AIで詳しく占いたい場合は、下記の結果をコピーしてご利用ください</p>
+                    <textarea id="copyText" class="copy-textarea" readonly></textarea>
+                    <div class="copy-actions">
+                        <button id="copyBtn" class="copy-btn">📋 結果をコピー</button>
+                        <a href="https://gemini.google.com" target="_blank" class="gemini-btn">
+                            <span class="gemini-icon">✨</span> Geminiで占う
+                        </a>
+                    </div>
+                </div>
             </div>
 
             <button class="reset-btn" onclick="resetForm()">もう一度占う</button>
