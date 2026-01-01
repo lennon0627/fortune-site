@@ -468,6 +468,8 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
     document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ AIが総合運勢を鑑定中...</p>';
     
     try {
+        console.log('🔍 API呼び出し開始');
+        
         // 各占術の結果情報を収集
         const kyuseiInfo = kyuseiData[kyusei];
         const numInfo = numerologyData[num];
@@ -508,6 +510,8 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
 6. 絵文字(✨、🌟など)を適度に使って華やかにしてください
 7. 文章は400-600文字程度で、読みやすい長さにしてください`;
 
+        console.log('📤 リクエスト送信中...');
+        
         // Anthropic APIを呼び出し
         const response = await fetch("https://api.anthropic.com/v1/messages", {
             method: "POST",
@@ -523,7 +527,16 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
             })
         });
 
+        console.log('📥 レスポンス受信:', response.status, response.statusText);
+        
+        if (!response.ok) {
+            const errorText = await response.text();
+            console.error('❌ API エラーレスポンス:', errorText);
+            throw new Error(`API Error: ${response.status} - ${errorText}`);
+        }
+
         const data = await response.json();
+        console.log('✅ レスポンスデータ:', data);
         
         // レスポンスから文章を取得
         let fortune = '';
@@ -532,15 +545,29 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
                 .filter(item => item.type === "text")
                 .map(item => item.text)
                 .join("");
+            console.log('📝 生成された文章:', fortune.substring(0, 100) + '...');
+        } else {
+            console.warn('⚠️ data.contentが空またはundefined');
         }
         
         // 生成された文章を表示
         document.getElementById('totalFortune').innerHTML = fortune || '<p>総合運勢の生成に失敗しました。もう一度お試しください。</p>';
-        console.log('総合運勢の生成完了');
+        console.log('✨ 総合運勢の生成完了');
         
     } catch (error) {
-        console.error('総合運勢生成エラー:', error);
-        document.getElementById('totalFortune').innerHTML = '<p>総合運勢の生成中にエラーが発生しました。もう一度お試しください。</p>';
+        console.error('❌ 総合運勢生成エラー:', error);
+        console.error('❌ エラー詳細:', {
+            name: error.name,
+            message: error.message,
+            stack: error.stack
+        });
+        
+        // ユーザーにエラー詳細を表示
+        document.getElementById('totalFortune').innerHTML = `
+            <p style="color: #f5576c;">総合運勢の生成中にエラーが発生しました。</p>
+            <p style="font-size: 0.9em; color: #666;">エラー: ${error.message}</p>
+            <p style="font-size: 0.9em; color: #666;">ブラウザのコンソール(F12キー)を開いて詳細を確認してください。</p>
+        `;
     }
 }
 
