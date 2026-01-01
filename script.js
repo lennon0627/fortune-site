@@ -612,8 +612,8 @@ async function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
 
         console.log('📤 Google Gemini APIにリクエスト送信中...');
         
-        // Google Gemini APIを呼び出し (v1 APIを使用)
-        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`, {
+        // Google Gemini APIを呼び出し (gemini-proモデルを使用)
+        const response = await fetch(`https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=${GEMINI_API_KEY}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
