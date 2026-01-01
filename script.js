@@ -352,7 +352,7 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     copyText += `🟣 紫微斗数: ${ziwei}\n`;
     copyText += `${ziweiInfo.description}\n\n`;
     
-    copyText += `🃏 2026年のタロット: ${tarot}\n`;
+    copyText += `🃏 年運タロット（2026年）: ${tarot}\n`;
     copyText += `${tarotInfo.description}\n`;
     copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
@@ -502,8 +502,31 @@ function calculateZiwei(date, birthtime) {
 
 function calculateTarot(date) {
     const cards = Object.keys(tarotData);
-    const lifePathNum = calculateNumerology(date);
-    const index = lifePathNum % cards.length;
+    
+    // 年運タロット：生年月日 + 占う年（2026年）で計算
+    const currentYear = 2026;
+    const dateStr = date.getFullYear().toString() + 
+                    (date.getMonth() + 1).toString() + 
+                    date.getDate().toString() +
+                    currentYear.toString();
+    
+    // 数秘術的に数字を足していく
+    let sum = 0;
+    for (let char of dateStr) {
+        sum += parseInt(char);
+    }
+    
+    // 1桁になるまで足す（ただし11, 22はそのまま）
+    while (sum > 22 && sum !== 11 && sum !== 22) {
+        let newSum = 0;
+        for (let char of sum.toString()) {
+            newSum += parseInt(char);
+        }
+        sum = newSum;
+    }
+    
+    // タロットカードのインデックスに変換
+    const index = sum % cards.length;
     return cards[index];
 }
 
@@ -694,10 +717,10 @@ function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
         ];
         
         const yearForecasts = [
-            `2026年は「<strong>${tarot}</strong>」のカードが示すように、${tarotInfo.description}`,
-            `今年のタロット「<strong>${tarot}</strong>」が現れたあなたには、${tarotInfo.description}`,
-            `<strong>${western}</strong> ${westernInfo.emoji}として迎える2026年、${tarotInfo.description}`,
-            `2026年、${westernInfo.description}「<strong>${tarot}</strong>」の力が加わることで、${tarotInfo.description}`
+            `2026年は年運タロット「<strong>${tarot}</strong>」が示すように、${tarotInfo.description}`,
+            `今年の年運タロット「<strong>${tarot}</strong>」が現れたあなたには、${tarotInfo.description}`,
+            `<strong>${western}</strong> ${westernInfo.emoji}として迎える2026年、年運タロット「<strong>${tarot}</strong>」の力が加わることで、${tarotInfo.description}`,
+            `2026年、${westernInfo.description}年運タロット「<strong>${tarot}</strong>」が示すように、${tarotInfo.description}`
         ];
         
         const elements = [
