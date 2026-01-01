@@ -137,7 +137,7 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     calculateFortune(birthdate, birthtime, name);
 });
 
-async function calculateFortune(birthdate, birthtime, name) {
+function calculateFortune(birthdate, birthtime, name) {
     const date = new Date(birthdate);
     
     // 1. 九星気学
@@ -176,8 +176,8 @@ async function calculateFortune(birthdate, birthtime, name) {
     document.getElementById('results').classList.remove('hidden');
     window.scrollTo({ top: 0, behavior: 'smooth' });
 
-    // 総合運勢（AI生成）
-    await displayTotal(kyusei, num, western, gosei);
+    // 総合運勢（テンプレートベース）
+    displayTotal(kyusei, num, western, gosei);
 }
 
 // ============================================================
@@ -390,65 +390,107 @@ function displayTarot(card) {
     document.getElementById('tarotDesc').textContent = tarotData[card].description;
 }
 
-async function displayTotal(kyusei, num, western, gosei) {
-    // ローディング表示
-    document.getElementById('totalFortune').innerHTML = '<p>🔮 AI が総合運勢を鑑定中...</p>';
+// ============================================================
+// 総合運勢テンプレート
+// ============================================================
+
+const fortuneTemplates = {
+    kyuseiTraits: {
+        '一白水星': { trait: '柔軟性と適応力', year: '流れに身を任せながらも、内なる意志を大切にする' },
+        '二黒土星': { trait: '包容力と努力', year: '周囲の信頼を得て、安定した基盤を築く' },
+        '三碧木星': { trait: '成長意欲と行動力', year: '新しいチャレンジで大きく飛躍する' },
+        '四緑木星': { trait: '調和と社交性', year: '人間関係が開運の鍵となる' },
+        '五黄土星': { trait: 'リーダーシップと影響力', year: '周囲を導く立場で力を発揮する' },
+        '六白金星': { trait: '責任感と完璧主義', year: '高い理想の実現に向けて着実に前進する' },
+        '七赤金星': { trait: '社交性と魅力', year: '人との出会いが幸運を呼び込む' },
+        '八白土星': { trait: '意志の強さと変革力', year: '大きな変化を起こし、新たなステージへ進む' },
+        '九紫火星': { trait: '直感力と芸術性', year: '情熱を注げることで輝きを放つ' }
+    },
     
-    try {
-        // Claude APIを使って説得力のある総合運勢を生成
-        const prompt = `あなたは経験豊富な占い師です。以下の占い結果から、説得力があり、温かく、前向きで、具体的なアドバイスを含む総合運勢を400-600文字で作成してください。
+    numerologyTraits: {
+        1: { trait: 'リーダーシップ', advice: '自分を信じて新しい道を切り開いてください' },
+        2: { trait: '協調性', advice: '人との調和を大切にすることで道が開けます' },
+        3: { trait: '創造性', advice: '表現力を活かして周囲を明るく照らしましょう' },
+        4: { trait: '堅実さ', advice: 'コツコツと積み重ねることが成功への鍵です' },
+        5: { trait: '自由と変化', advice: '新しい経験を恐れず、柔軟に対応しましょう' },
+        6: { trait: '愛と責任', advice: '大切な人との絆を深めることで幸せが訪れます' },
+        7: { trait: '探究心', advice: '深く考え、真実を追求する姿勢が実を結びます' },
+        8: { trait: '実現力', advice: '野心的な目標に向かって力強く進んでください' },
+        9: { trait: '博愛', advice: '広い視野で物事を捉え、人に尽くすことで運が開けます' },
+        11: { trait: '直感力', advice: 'スピリチュアルな感性を信じて行動しましょう' },
+        22: { trait: 'ビジョン', advice: '大きな夢を実現する力があなたにはあります' }
+    },
+    
+    westernTraits: {
+        '牡羊座': '情熱的に前進',
+        '牡牛座': '安定を築きながら',
+        '双子座': '柔軟に対応',
+        '蟹座': '感情を大切に',
+        '獅子座': '堂々と輝き',
+        '乙女座': '細やかに配慮',
+        '天秤座': 'バランスを保ち',
+        '蠍座': '深く洞察し',
+        '射手座': '自由に冒険',
+        '山羊座': '着実に登り',
+        '水瓶座': '革新的に',
+        '魚座': '想像力豊かに'
+    },
+    
+    goseiAdvice: {
+        '金のイルカ': 'チャレンジ精神を大切にすることで、予想以上の成果が得られます。',
+        '銀のイルカ': '柔軟な姿勢が幸運を引き寄せます。環境の変化を楽しんでください。',
+        '金の鳳凰': '華やかな場面で活躍できる年です。自信を持って前に出ましょう。',
+        '銀の鳳凰': '優雅さと品格を保ちながら、目標に向かって進んでください。',
+        '金のインディアン': '直感を信じて行動することで、良い結果が得られます。',
+        '銀のインディアン': 'マイペースを保ちながら、着実に前進していきましょう。',
+        '金の時計': '計画的に物事を進めることで、大きな成功を手にできます。',
+        '銀の時計': '細部への配慮が、予想外の評価につながります。',
+        '金のカメレオン': 'どんな状況でも力を発揮できる年です。自信を持ってください。',
+        '銀のカメレオン': '変化を楽しみながら、新しい可能性を探ってください。',
+        '金の羅針盤': '明確な目標を持つことで、確実に前進できます。',
+        '銀の羅針盤': '探究心を活かして、新しい知識や経験を積んでください。'
+    },
+    
+    seasonalMessages: [
+        { season: '春', message: '新しい出会いやチャンスが訪れる時期です。積極的に行動しましょう' },
+        { season: '初夏', message: '活動的になれる時期です。エネルギーを存分に発揮してください' },
+        { season: '夏', message: '情熱を燃やせることに集中できる時期です。思い切って挑戦しましょう' },
+        { season: '秋', message: 'これまでの努力が実を結ぶ時期です。成果を楽しみましょう' },
+        { season: '晩秋', message: '収穫の時期です。感謝の気持ちを大切にしてください' },
+        { season: '冬', message: '内省と準備の時期です。来年に向けて力を蓄えてください' }
+    ]
+};
 
-占い結果:
-- 九星気学: ${kyusei} - ${kyuseiData[kyusei].description}
-- 数秘術: 運命数${num} - ${numerologyData[num].description}
-- 西洋占星術: ${western} - ${westernZodiacData[western].description}
-- 五星三心占い: ${gosei} - ${goseiData[gosei].description}
-
-要件:
-1. これらの占術結果の共通点や相互作用を分析
-2. 2026年の運勢として、具体的な展望を提示
-3. 実践的なアドバイスを含める
-4. 励ましと希望を与える内容
-5. 自然な日本語で、押しつけがましくない表現
-
-HTMLタグは使わず、段落は改行で区切ってください。`;
-
-        const response = await fetch("https://api.anthropic.com/v1/messages", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                model: "claude-sonnet-4-20250514",
-                max_tokens: 1000,
-                messages: [
-                    { role: "user", content: prompt }
-                ],
-            })
-        });
-
-        const data = await response.json();
+function displayTotal(kyusei, num, western, gosei) {
+    console.log('総合運勢を生成中...', { kyusei, num, western, gosei });
+    
+    // ローディング表示
+    document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ 総合運勢を鑑定中...</p>';
+    
+    // 少し遅延を入れて鑑定している感を出す
+    setTimeout(() => {
+        const kyuseiInfo = fortuneTemplates.kyuseiTraits[kyusei];
+        const numInfo = fortuneTemplates.numerologyTraits[num];
+        const westernTrait = fortuneTemplates.westernTraits[western];
+        const goseiAdvice = fortuneTemplates.goseiAdvice[gosei];
         
-        if (data.content && data.content[0] && data.content[0].text) {
-            const totalText = data.content[0].text;
-            // 段落に分けてHTMLに変換
-            const paragraphs = totalText.split('\n\n').filter(p => p.trim());
-            const totalHtml = paragraphs.map(p => `<p>${p.trim()}</p>`).join('');
-            document.getElementById('totalFortune').innerHTML = totalHtml;
-        } else {
-            throw new Error('AIからの応答が不正です');
-        }
+        // 季節ごとのアドバイスをランダムに選択
+        const randomSeason = fortuneTemplates.seasonalMessages[Math.floor(Math.random() * fortuneTemplates.seasonalMessages.length)];
         
-    } catch (error) {
-        console.error('総合運勢の生成に失敗:', error);
-        // エラー時はデフォルトの文章を表示
-        const totalHtml = `
-            <p>あなたは<strong>${kyusei}</strong>で、運命数<strong>${num}</strong>の性質を持っています。</p>
-            <p>星座は<strong>${western}</strong>で、五星三心では<strong>${gosei}</strong>に分類されます。</p>
-            <p>これらの占術すべてが、あなたが多面的で魅力的な人物であることを示しています。2026年は、あなたの持つ才能を存分に発揮できる年となるでしょう。自分を信じて、前向きに進んでいってください！✨</p>
+        // パーソナライズされた総合運勢を組み立て
+        const fortune = `
+            <p>あなたの本質には、<strong>${kyusei}</strong>の持つ「${kyuseiInfo.trait}」と、運命数<strong>${num}</strong>が示す「${numInfo.trait}」という特質が融合しています。この組み合わせは、あなたが持つ独自の魅力と可能性を表しています。</p>
+            
+            <p><strong>2026年の展望:</strong> <strong>${western}</strong>として${westernTrait}、${kyuseiInfo.year}年となるでしょう。特に${randomSeason.season}は${randomSeason.message}。</p>
+            
+            <p><strong>開運のヒント:</strong> 五星三心の<strong>${gosei}</strong>の特性から、${goseiAdvice}</p>
+            
+            <p><strong>今年のアドバイス:</strong> ${numInfo.advice}。あなたの持つ${kyuseiInfo.trait}を最大限に活かすことで、2026年は実り多い一年となります。自分らしさを大切にしながら、新しい可能性にも目を向けていってください！✨</p>
         `;
-        document.getElementById('totalFortune').innerHTML = totalHtml;
-    }
+        
+        document.getElementById('totalFortune').innerHTML = fortune;
+        console.log('総合運勢の生成完了');
+    }, 1000);
 }
 
 function resetForm() {
