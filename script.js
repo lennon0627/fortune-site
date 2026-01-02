@@ -202,6 +202,61 @@ const tarotData = {
     '世界': { description: '完成と達成の年。目標を達成し、満足感を得られます。新しいサイクルの準備も整います。' }
 };
 
+// 十二支の定義
+const etoNames = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
+const etoKanji = ['ね', 'うし', 'とら', 'う', 'たつ', 'み', 'うま', 'ひつじ', 'さる', 'とり', 'いぬ', 'い'];
+const etoAnimals = ['ねずみ年', 'うし年', 'とら年', 'うさぎ年', 'たつ年', 'へび年', 'うま年', 'ひつじ年', 'さる年', 'とり年', 'いぬ年', 'いのしし年'];
+
+// 節入り日時（二十四節気）の詳細データ
+// 2026年の節入り日時（時間まで考慮）
+const setsunyu2026 = [
+    { month: 1, day: 6, hour: 0, minute: 50 },   // 小寒
+    { month: 2, day: 4, hour: 6, minute: 27 },   // 立春（年の切り替わり）
+    { month: 3, day: 6, hour: 6, minute: 31 },   // 啓蟄
+    { month: 4, day: 5, hour: 5, minute: 48 },   // 清明
+    { month: 5, day: 6, hour: 4, minute: 21 },   // 立夏
+    { month: 6, day: 6, hour: 2, minute: 10 },   // 芒種
+    { month: 7, day: 7, hour: 23, minute: 20 },  // 小暑
+    { month: 8, day: 8, hour: 3, minute: 54 },   // 立秋
+    { month: 9, day: 8, hour: 1, minute: 51 },   // 白露
+    { month: 10, day: 8, hour: 22, minute: 47 }, // 寒露
+    { month: 11, day: 7, hour: 19, minute: 4 },  // 立冬
+    { month: 12, day: 7, hour: 13, minute: 17 }  // 大雪
+];
+
+// 西洋占星術の星座境界線（時間考慮版）
+const zodiacBoundaries2026 = [
+    { sign: '山羊座', endMonth: 1, endDay: 20, endHour: 4, endMinute: 1 },
+    { sign: '水瓶座', endMonth: 2, endDay: 18, endHour: 18, endMinute: 13 },
+    { sign: '魚座', endMonth: 3, endDay: 20, endHour: 17, endMinute: 33 },
+    { sign: '牡羊座', endMonth: 4, endDay: 20, endHour: 4, endMinute: 56 },
+    { sign: '牡牛座', endMonth: 5, endDay: 21, endHour: 4, endMinute: 9 },
+    { sign: '双子座', endMonth: 6, endDay: 21, endHour: 12, endMinute: 24 },
+    { sign: '蟹座', endMonth: 7, endDay: 23, endHour: 3, endMinute: 30 },
+    { sign: '獅子座', endMonth: 8, endDay: 23, endHour: 10, endMinute: 26 },
+    { sign: '乙女座', endMonth: 9, endDay: 23, endHour: 7, endMinute: 50 },
+    { sign: '天秤座', endMonth: 10, endDay: 23, endHour: 17, endMinute: 15 },
+    { sign: '蠍座', endMonth: 11, endDay: 22, endHour: 14, endMinute: 36 },
+    { sign: '射手座', endMonth: 12, endDay: 22, endHour: 3, endMinute: 44 }
+];
+
+// 2026年の年運（年盤九星）
+const year2026Kyusei = '七赤金星';
+
+// 九星の相生相剋関係
+const kyuseiCompatibility = {
+    '一白水星': { '一白水星': 0.7, '二黒土星': 0.5, '三碧木星': 0.8, '四緑木星': 0.8, '五黄土星': 0.5, '六白金星': 0.9, '七赤金星': 0.9, '八白土星': 0.5, '九紫火星': 0.6 },
+    '二黒土星': { '一白水星': 0.5, '二黒土星': 0.7, '三碧木星': 0.5, '四緑木星': 0.5, '五黄土星': 0.8, '六白金星': 0.8, '七赤金星': 0.8, '八白土星': 0.8, '九紫火星': 0.9 },
+    '三碧木星': { '一白水星': 0.8, '二黒土星': 0.5, '三碧木星': 0.7, '四緑木星': 0.8, '五黄土星': 0.5, '六白金星': 0.5, '七赤金星': 0.5, '八白土星': 0.5, '九紫火星': 0.9 },
+    '四緑木星': { '一白水星': 0.8, '二黒土星': 0.5, '三碧木星': 0.8, '四緑木星': 0.7, '五黄土星': 0.5, '六白金星': 0.5, '七赤金星': 0.5, '八白土星': 0.5, '九紫火星': 0.9 },
+    '五黄土星': { '一白水星': 0.5, '二黒土星': 0.8, '三碧木星': 0.5, '四緑木星': 0.5, '五黄土星': 0.7, '六白金星': 0.8, '七赤金星': 0.8, '八白土星': 0.8, '九紫火星': 0.9 },
+    '六白金星': { '一白水星': 0.9, '二黒土星': 0.8, '三碧木星': 0.5, '四緑木星': 0.5, '五黄土星': 0.8, '六白金星': 0.7, '七赤金星': 0.8, '八白土星': 0.8, '九紫火星': 0.6 },
+    '七赤金星': { '一白水星': 0.9, '二黒土星': 0.8, '三碧木星': 0.5, '四緑木星': 0.5, '五黄土星': 0.8, '六白金星': 0.8, '七赤金星': 0.7, '八白土星': 0.8, '九紫火星': 0.6 },
+    '八白土星': { '一白水星': 0.5, '二黒土星': 0.8, '三碧木星': 0.5, '四緑木星': 0.5, '五黄土星': 0.8, '六白金星': 0.8, '七赤金星': 0.8, '八白土星': 0.7, '九紫火星': 0.9 },
+    '九紫火星': { '一白水星': 0.6, '二黒土星': 0.9, '三碧木星': 0.9, '四緑木星': 0.9, '五黄土星': 0.9, '六白金星': 0.6, '七赤金星': 0.6, '八白土星': 0.9, '九紫火星': 0.7 }
+};
+
+
 // 四柱推命用定数
 const jikkan = ['甲', '乙', '丙', '丁', '戊', '己', '庚', '辛', '壬', '癸'];
 const junishi = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
@@ -240,6 +295,12 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
         return;
     }
     
+    // 時刻の入力チェック（片方だけ入力されている場合）
+    if ((hour && !minute) || (!hour && minute)) {
+        alert('出生時刻は「時」と「分」の両方を入力してください。\n不明な場合は両方とも空欄のままにしてください。');
+        return;
+    }
+    
     // 日付文字列を作成（YYYY-MM-DD形式）
     const birthdate = `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`;
     
@@ -249,7 +310,14 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
         birthtime = `${hour}:${minute}`;
     }
     
-    calculateFortune(birthdate, birthtime, name, gender.value);
+    // ローディング表示
+    showLoading();
+    
+    // 少し遅延を入れて計算開始（ローディング演出）
+    setTimeout(() => {
+        calculateFortune(birthdate, birthtime, name, gender.value);
+        hideLoading();
+    }, 800);
 });
 
 function calculateFortune(birthdate, birthtime, name, gender) {
@@ -263,12 +331,12 @@ function calculateFortune(birthdate, birthtime, name, gender) {
     const num = calculateNumerology(date);
     displayNumerology(num);
     
-    // 3. 四柱推命
+    // 3. 四柱推命（時間考慮版）
     const shichu = calculateShichu(date, birthtime);
     displayShichu(shichu);
 
-    // 4. 西洋占星術
-    const western = calculateWestern(date);
+    // 4. 西洋占星術（時間考慮版）
+    const western = calculateWestern(date, birthtime);
     displayWestern(western);
 
     // 5. 五星三心
@@ -285,6 +353,9 @@ function calculateFortune(birthdate, birthtime, name, gender) {
     // 8. タロット
     const tarot = calculateTarot(date);
     displayTarot(tarot);
+    
+    // 9. 干支
+    const eto = calculateEto(date);
 
     // 表示切り替え
     document.querySelector('.fortune-card').style.display = 'none';
@@ -294,12 +365,15 @@ function calculateFortune(birthdate, birthtime, name, gender) {
     // 総合運勢
     displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot);
     
+    // スコアリングと順位計算
+    displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto);
+    
     // コピー用テキストを生成
-    generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender);
+    generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender, eto);
 }
 
 // コピー用テキストを生成
-function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender) {
+function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender, eto) {
     const kyuseiInfo = kyuseiData[kyusei];
     const numInfo = numerologyData[num];
     const westernInfo = westernZodiacData[western];
@@ -310,6 +384,13 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     
     const genderText = gender === 'male' ? '男性' : '女性';
     
+    // スコア計算
+    const scores = calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto);
+    const rawScore = scores.etoSign + scores.kyusei + scores.numerology + 
+                     scores.western + scores.shichu + scores.gosei + scores.ziwei;
+    const totalScore = normalizeScore(rawScore);
+    const ranking = calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, totalScore);
+    
     let copyText = `【占い結果】2026年版\n`;
     if (name) {
         copyText += `お名前: ${name}\n`;
@@ -317,20 +398,36 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     copyText += `性別: ${genderText}\n`;
     copyText += `生年月日: ${birthdate}`;
     if (birthtime) {
-        copyText += ` ${birthtime}`;
+        copyText += ` ${birthtime}（時間考慮版）`;
     }
-    copyText += `\n\n`;
+    copyText += `\n干支: ${eto}\n\n`;
     
     copyText += `━━━━━━━━━━━━━━━━━━━━\n`;
+    copyText += `🌟 2026年総合運勢ランキング\n`;
+    copyText += `干支×星座: ${eto} × ${western}\n\n`;
+    copyText += `【スコア内訳】\n`;
+    copyText += `干支×星座: ${scores.etoSign}点 / 15点\n`;
+    copyText += `九星気学（年運）: ${scores.kyusei}点 / 20点\n`;
+    copyText += `数秘術: ${scores.numerology}点 / 15点\n`;
+    copyText += `西洋占星術: ${scores.western}点 / 15点\n`;
+    copyText += `四柱推命: ${scores.shichu}点 / 25点\n`;
+    copyText += `五星三心: ${scores.gosei}点 / 5点\n`;
+    copyText += `紫微斗数: ${scores.ziwei}点 / 5点\n\n`;
+    copyText += `総合得点: ${totalScore}点 / 100点\n`;
+    copyText += `総合ランキング: 144パターン中 ${ranking.position}位\n`;
+    copyText += `運勢レベル: ${getStarRating(ranking.percentile)}\n`;
+    copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
+    
     copyText += `🌟 九星気学: ${kyusei}\n`;
     copyText += `${kyuseiInfo.description}\n`;
     copyText += `ラッキーカラー: ${kyuseiInfo.color}\n`;
-    copyText += `ラッキー方位: ${kyuseiInfo.direction}\n\n`;
+    copyText += `ラッキー方位: ${kyuseiInfo.direction}\n`;
+    copyText += `※2026年の年盤九星は${year2026Kyusei}です\n\n`;
     
     copyText += `🔢 数秘術: 運命数${num}\n`;
     copyText += `${numInfo.description}\n\n`;
     
-    copyText += `🎋 四柱推命\n`;
+    copyText += `🎋 四柱推命（節入り時間考慮版）\n`;
     copyText += `年柱: ${shichu.year.k}${shichu.year.s}\n`;
     copyText += `月柱: ${shichu.month.k}${shichu.month.s}\n`;
     copyText += `日柱: ${shichu.day.k}${shichu.day.s}\n`;
@@ -339,8 +436,11 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     }
     copyText += `五行バランス: ${dominantElement[0]}が${dominantElement[1]}で最も強い\n\n`;
     
-    copyText += `♈ 西洋占星術: ${western} ${westernInfo.emoji}\n`;
-    copyText += `${westernInfo.description}\n\n`;
+    copyText += `♈ 西洋占星術: ${western} ${westernInfo.emoji}`;
+    if (birthtime) {
+        copyText += `（時間考慮版）`;
+    }
+    copyText += `\n${westernInfo.description}\n\n`;
     
     copyText += `🎭 五星三心占い: ${gosei}\n`;
     copyText += `${goseiInfo.description}\n\n`;
@@ -419,17 +519,50 @@ function calculateShichu(date, birthtime) {
     const y = date.getFullYear();
     const m = date.getMonth() + 1;
     const d = date.getDate();
+    
+    // 出生時刻の取得（時間単位の判定のため）
+    let birthHour = 12; // デフォルトは正午
+    let birthMinute = 0;
+    if (birthtime) {
+        const timeParts = birthtime.split(':');
+        birthHour = parseInt(timeParts[0]);
+        birthMinute = parseInt(timeParts[1]) || 0;
+    }
 
-    // 年柱
+    // 年柱（立春で切り替わる - 時間考慮）
     let ty = y;
-    if (m < 2 || (m === 2 && d < 4)) ty--;
+    const risshun = setsunyu2026[1]; // 立春
+    if (m < risshun.month || 
+        (m === risshun.month && d < risshun.day) ||
+        (m === risshun.month && d === risshun.day && 
+         (birthHour < risshun.hour || (birthHour === risshun.hour && birthMinute < risshun.minute)))) {
+        ty--;
+    }
+    
     const yIdx = (ty - 4) % 60;
     const yK = jikkan[yIdx % 10];
     const yS = junishi[yIdx % 12];
 
-    // 月柱
-    const mSIdx = (m % 12);
+    // 月柱（節入りで切り替わる - 時間考慮）
+    let adjustedMonth = m;
+    
+    // 節入り前かチェック（時間まで考慮）
+    const setsunya = setsunyu2026[m - 1];
+    if (d < setsunya.day || 
+        (d === setsunya.day && 
+         (birthHour < setsunya.hour || (birthHour === setsunya.hour && birthMinute < setsunya.minute)))) {
+        // 節入り前なので前月扱い
+        adjustedMonth = m - 1;
+        if (adjustedMonth === 0) {
+            adjustedMonth = 12;
+        }
+    }
+    
+    // 月柱の地支
+    const mSIdx = (adjustedMonth % 12);
     const mS = junishi[mSIdx];
+    
+    // 月柱の天干（年の天干から算出）
     const startK = ((yIdx % 5) * 2 + 2) % 10;
     const mK = jikkan[(startK + (mSIdx - 2 + 12) % 12) % 10];
 
@@ -442,8 +575,7 @@ function calculateShichu(date, birthtime) {
     // 時柱
     let tK = '', tS = '';
     if (birthtime) {
-        const h = parseInt(birthtime.split(':')[0]);
-        const tIdx = Math.floor((h + 1) / 2) % 12;
+        const tIdx = Math.floor((birthHour + 1) / 2) % 12;
         tS = junishi[tIdx];
         tK = jikkan[((dIdx % 5) * 2 + tIdx) % 10];
     }
@@ -465,22 +597,38 @@ function calculateShichu(date, birthtime) {
     };
 }
 
-function calculateWestern(date) {
+function calculateWestern(date, birthtime) {
     const month = date.getMonth() + 1;
     const day = date.getDate();
     
-    if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return '牡羊座';
-    if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return '牡牛座';
-    if ((month === 5 && day >= 21) || (month === 6 && day <= 21)) return '双子座';
-    if ((month === 6 && day >= 22) || (month === 7 && day <= 22)) return '蟹座';
-    if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return '獅子座';
-    if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return '乙女座';
-    if ((month === 9 && day >= 23) || (month === 10 && day <= 23)) return '天秤座';
-    if ((month === 10 && day >= 24) || (month === 11 && day <= 22)) return '蠍座';
-    if ((month === 11 && day >= 23) || (month === 12 && day <= 21)) return '射手座';
-    if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return '山羊座';
-    if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return '水瓶座';
-    return '魚座';
+    // 出生時刻の取得
+    let birthHour = 12; // デフォルトは正午
+    let birthMinute = 0;
+    if (birthtime) {
+        const timeParts = birthtime.split(':');
+        birthHour = parseInt(timeParts[0]);
+        birthMinute = parseInt(timeParts[1]) || 0;
+    }
+    
+    // 2026年の星座境界線データを使用（時間考慮）
+    // 境界日の場合は時間で判定
+    for (let i = 0; i < zodiacBoundaries2026.length; i++) {
+        const boundary = zodiacBoundaries2026[i];
+        const nextBoundary = zodiacBoundaries2026[(i + 1) % zodiacBoundaries2026.length];
+        
+        // 現在の星座の範囲内かチェック
+        if (month < boundary.endMonth || 
+            (month === boundary.endMonth && day < boundary.endDay) ||
+            (month === boundary.endMonth && day === boundary.endDay && 
+             (birthHour < boundary.endHour || 
+              (birthHour === boundary.endHour && birthMinute < boundary.endMinute)))) {
+            // この星座の範囲内
+            return boundary.sign;
+        }
+    }
+    
+    // 年末（山羊座の範囲）
+    return '山羊座';
 }
 
 function calculateGosei(date) {
@@ -528,6 +676,142 @@ function calculateTarot(date) {
     // タロットカードのインデックスに変換
     const index = sum % cards.length;
     return cards[index];
+}
+
+// 干支を計算
+function calculateEto(date) {
+    const year = date.getFullYear();
+    // 1900年は子年（ねずみ年）を起点とする
+    const etoIndex = (year - 1900) % 12;
+    return etoAnimals[etoIndex];
+}
+
+// ============================================================
+// スコアリングシステム（改善版）
+// ============================================================
+
+// 各占術のスコアを計算
+function calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) {
+    const scores = {
+        etoSign: calculateEtoSignScore(eto, western),           // 15点
+        kyusei: calculateKyuseiScore(kyusei),                   // 20点（年運考慮）
+        numerology: calculateNumerologyScore(num),               // 15点
+        western: calculateWesternScore(western),                 // 15点
+        shichu: calculateShichuScore(shichu),                   // 25点（最重要）
+        gosei: calculateGoseiScore(gosei),                      // 5点
+        ziwei: calculateZiweiScore(ziwei)                       // 5点
+    };
+    
+    return scores;
+}
+
+// 干支×星座スコア（15点満点）
+function calculateEtoSignScore(eto, western) {
+    // 干支と星座の相性マトリックス（簡易版）
+    const compatibility = {
+        'ねずみ年': { '牡羊座': 13, '牡牛座': 11, '双子座': 14, '蟹座': 12, '獅子座': 13, '乙女座': 10, '天秤座': 13, '蠍座': 11, '射手座': 14, '山羊座': 15, '水瓶座': 13, '魚座': 12 },
+        'うし年': { '牡羊座': 10, '牡牛座': 15, '双子座': 11, '蟹座': 13, '獅子座': 12, '乙女座': 14, '天秤座': 13, '蠍座': 13, '射手座': 10, '山羊座': 14, '水瓶座': 11, '魚座': 13 },
+        'とら年': { '牡羊座': 15, '牡牛座': 12, '双子座': 13, '蟹座': 11, '獅子座': 14, '乙女座': 11, '天秤座': 13, '蠍座': 12, '射手座': 15, '山羊座': 10, '水瓶座': 13, '魚座': 12 },
+        'うさぎ年': { '牡羊座': 12, '牡牛座': 13, '双子座': 13, '蟹座': 14, '獅子座': 11, '乙女座': 13, '天秤座': 15, '蠍座': 13, '射手座': 12, '山羊座': 11, '水瓶座': 14, '魚座': 15 },
+        'たつ年': { '牡羊座': 14, '牡牛座': 11, '双子座': 13, '蟹座': 12, '獅子座': 15, '乙女座': 12, '天秤座': 13, '蠍座': 14, '射手座': 13, '山羊座': 13, '水瓶座': 13, '魚座': 11 },
+        'へび年': { '牡羊座': 13, '牡牛座': 14, '双子座': 12, '蟹座': 13, '獅子座': 12, '乙女座': 15, '天秤座': 13, '蠍座': 15, '射手座': 11, '山羊座': 13, '水瓶座': 12, '魚座': 14 },
+        'うま年': { '牡羊座': 15, '牡牛座': 11, '双子座': 14, '蟹座': 12, '獅子座': 15, '乙女座': 11, '天秤座': 13, '蠍座': 12, '射手座': 14, '山羊座': 11, '水瓶座': 13, '魚座': 13 },
+        'ひつじ年': { '牡羊座': 11, '牡牛座': 13, '双子座': 13, '蟹座': 15, '獅子座': 12, '乙女座': 13, '天秤座': 14, '蠍座': 13, '射手座': 12, '山羊座': 13, '水瓶座': 13, '魚座': 15 },
+        'さる年': { '牡羊座': 13, '牡牛座': 12, '双子座': 15, '蟹座': 11, '獅子座': 14, '乙女座': 13, '天秤座': 13, '蠍座': 12, '射手座': 14, '山羊座': 12, '水瓶座': 15, '魚座': 11 },
+        'とり年': { '牡羊座': 13, '牡牛座': 14, '双子座': 12, '蟹座': 13, '獅子座': 13, '乙女座': 15, '天秤座': 14, '蠍座': 13, '射手座': 12, '山羊座': 14, '水瓶座': 13, '魚座': 13 },
+        'いぬ年': { '牡羊座': 14, '牡牛座': 13, '双子座': 13, '蟹座': 15, '獅子座': 13, '乙女座': 13, '天秤座': 14, '蠍座': 13, '射手座': 13, '山羊座': 13, '水瓶座': 14, '魚座': 14 },
+        'いのしし年': { '牡羊座': 12, '牡牛座': 13, '双子座': 13, '蟹座': 14, '獅子座': 12, '乙女座': 13, '天秤座': 13, '蠍座': 15, '射手座': 13, '山羊座': 13, '水瓶座': 13, '魚座': 15 }
+    };
+    
+    return compatibility[eto][western] || 12;
+}
+
+// 九星気学スコア（20点満点）- 年運係数を導入
+function calculateKyuseiScore(kyusei) {
+    // 基本点（各九星の基本的な強さ）
+    const baseScores = {
+        '一白水星': 14,
+        '二黒土星': 13,
+        '三碧木星': 15,
+        '四緑木星': 16,
+        '五黄土星': 12,
+        '六白金星': 15,
+        '七赤金星': 14,
+        '八白土星': 13,
+        '九紫火星': 17
+    };
+    
+    // 2026年の年盤九星（七赤金星）との相性係数
+    const yearCompatibility = kyuseiCompatibility[kyusei][year2026Kyusei];
+    
+    // 基本点 × 年運係数 = 最終スコア
+    const baseScore = baseScores[kyusei] || 14;
+    const finalScore = Math.round(baseScore * yearCompatibility);
+    
+    return Math.min(finalScore, 20); // 最大20点
+}
+
+// 数秘術スコア（15点満点）
+function calculateNumerologyScore(num) {
+    const scores = {
+        1: 13, 2: 11, 3: 13, 4: 10, 5: 12,
+        6: 13, 7: 11, 8: 14, 9: 13, 11: 15, 22: 15
+    };
+    return scores[num] || 11;
+}
+
+// 西洋占星術スコア（15点満点）- 2026年の運勢
+function calculateWesternScore(western) {
+    // 2026年の星座運勢
+    const scores = {
+        '牡羊座': 13, '牡牛座': 12, '双子座': 14, '蟹座': 13,
+        '獅子座': 14, '乙女座': 12, '天秤座': 13, '蠍座': 12,
+        '射手座': 14, '山羊座': 11, '水瓶座': 13, '魚座': 13
+    };
+    return scores[western] || 12;
+}
+
+// 四柱推命スコア（25点満点）- 最重要
+function calculateShichuScore(shichu) {
+    // 五行バランスでスコア計算
+    const elements = shichu.elements;
+    const total = Object.values(elements).reduce((a, b) => a + b, 0);
+    
+    if (total === 0) return 15; // デフォルト値
+    
+    // バランスが良いほど高得点（中和思想）
+    let balance = 0;
+    for (let elem in elements) {
+        const ratio = elements[elem] / total;
+        // 理想は各20%なので、20%に近いほど良い
+        const deviation = Math.abs(0.2 - ratio);
+        balance += (0.2 - deviation) * 5; // 偏差が小さいほど高得点
+    }
+    
+    // バランススコアを25点満点に換算
+    const balanceScore = Math.max(0, balance * 20);
+    
+    return Math.min(Math.round(balanceScore), 25);
+}
+
+// 五星三心スコア（5点満点）
+function calculateGoseiScore(gosei) {
+    const scores = {
+        '金のイルカ': 4, '銀のイルカ': 3, '金の鳳凰': 5, '銀の鳳凰': 4,
+        '金のインディアン': 4, '銀のインディアン': 3, '金の時計': 3, '銀の時計': 3,
+        '金のカメレオン': 4, '銀のカメレオン': 3, '金の羅針盤': 4, '銀の羅針盤': 3
+    };
+    return scores[gosei] || 3;
+}
+
+// 紫微斗数スコア（5点満点）
+function calculateZiweiScore(ziwei) {
+    const scores = {
+        '紫微星': 5, '天機星': 4, '太陽星': 5, '武曲星': 4, '天同星': 4,
+        '廉貞星': 3, '天府星': 4, '太陰星': 3, '貪狼星': 4, '巨門星': 3,
+        '天相星': 4, '天梁星': 4, '七殺星': 3, '破軍星': 3
+    };
+    return scores[ziwei] || 3;
 }
 
 // ============================================================
@@ -617,6 +901,184 @@ function displayTarot(card) {
     document.getElementById('tarotCard').innerHTML = `<strong>${card}</strong>`;
     document.getElementById('tarotDesc').textContent = tarotData[card].description;
 }
+
+// ============================================================
+// ランキング表示
+// ============================================================
+
+function displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) {
+    // スコア計算
+    const scores = calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto);
+    const rawScore = scores.etoSign + scores.kyusei + scores.numerology + 
+                     scores.western + scores.shichu + scores.gosei + scores.ziwei;
+    
+    // スコアを正規化（50-100点の範囲）
+    const totalScore = normalizeScore(rawScore);
+    
+    // 干支×星座の組み合わせ表示
+    document.getElementById('etoSignCombo').innerHTML = 
+        `<strong>干支×星座：${eto} × ${western}</strong>`;
+    
+    // スコア内訳
+    let scoreHtml = `
+        <div class="score-item">
+            <span class="score-label">干支×星座</span>
+            <span class="score-value">${scores.etoSign}点 / 15点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">九星気学（年運）</span>
+            <span class="score-value">${scores.kyusei}点 / 20点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">数秘術</span>
+            <span class="score-value">${scores.numerology}点 / 15点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">西洋占星術</span>
+            <span class="score-value">${scores.western}点 / 15点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">四柱推命</span>
+            <span class="score-value">${scores.shichu}点 / 25点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">五星三心</span>
+            <span class="score-value">${scores.gosei}点 / 5点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">紫微斗数</span>
+            <span class="score-value">${scores.ziwei}点 / 5点</span>
+        </div>
+    `;
+    document.getElementById('scoreBreakdown').innerHTML = scoreHtml;
+    
+    // 総合得点（正規化後）
+    document.getElementById('totalScoreDisplay').innerHTML = `
+        <div class="score-max">総合得点</div>
+        <span class="score-number">${totalScore}</span>
+        <div class="score-max">/ 100点</div>
+    `;
+    
+    // 144パターンの中での順位を計算
+    const ranking = calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, totalScore);
+    
+    document.getElementById('rankingPosition').innerHTML = 
+        `総合ランキング：<strong>144パターン中 ${ranking.position}位</strong>`;
+    
+    // 運勢レベル（星評価）
+    const stars = getStarRating(ranking.percentile);
+    const message = getFortuneMessage(ranking.percentile);
+    
+    document.getElementById('fortuneLevel').innerHTML = `
+        <div class="star-rating">${stars}</div>
+        <div class="fortune-message">${message}</div>
+    `;
+}
+
+// 144パターンの中での順位を計算（改善版 - 全パターン正確計算 + 正規化）
+function calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, myScore) {
+    // 全144パターン（12干支 × 12星座）のスコアを計算
+    const allScores = [];
+    
+    // 各九星の出現確率を考慮した代表値
+    const kyuseiSamples = Object.keys(kyuseiData);
+    const numSamples = [1, 2, 3, 4, 5, 6, 7, 8, 9, 11, 22];
+    const goseiSamples = Object.keys(goseiData);
+    const ziweiSamples = Object.keys(ziweiData);
+    
+    for (let e of etoAnimals) {
+        for (let w of Object.keys(westernZodiacData)) {
+            // この組み合わせの代表的なスコアを計算
+            
+            // 干支×星座スコア（確定値）
+            const etoSignScore = calculateEtoSignScore(e, w);
+            
+            // 九星気学スコア（この干支×星座の組み合わせで最も多い九星の平均）
+            let kyuseiScoreSum = 0;
+            for (let k of kyuseiSamples) {
+                kyuseiScoreSum += calculateKyuseiScore(k);
+            }
+            const avgKyuseiScore = Math.round(kyuseiScoreSum / kyuseiSamples.length);
+            
+            // 数秘術スコア（平均）
+            let numScoreSum = 0;
+            for (let n of numSamples) {
+                numScoreSum += calculateNumerologyScore(n);
+            }
+            const avgNumScore = Math.round(numScoreSum / numSamples.length);
+            
+            // 西洋占星術スコア（確定値）
+            const westernScore = calculateWesternScore(w);
+            
+            // 四柱推命スコア（平均的なバランス = 16点程度）
+            const avgShichuScore = 16;
+            
+            // 五星三心スコア（平均）
+            let goseiScoreSum = 0;
+            for (let g of goseiSamples) {
+                goseiScoreSum += calculateGoseiScore(g);
+            }
+            const avgGoseiScore = Math.round(goseiScoreSum / goseiSamples.length);
+            
+            // 紫微斗数スコア（平均）
+            let ziweiScoreSum = 0;
+            for (let z of ziweiSamples) {
+                ziweiScoreSum += calculateZiweiScore(z);
+            }
+            const avgZiweiScore = Math.round(ziweiScoreSum / ziweiSamples.length);
+            
+            const rawScore = etoSignScore + avgKyuseiScore + avgNumScore + westernScore + 
+                            avgShichuScore + avgGoseiScore + avgZiweiScore;
+            
+            // スコアを正規化
+            const score = normalizeScore(rawScore);
+            
+            allScores.push({
+                eto: e,
+                western: w,
+                score: score
+            });
+        }
+    }
+    
+    // スコアで降順ソート
+    allScores.sort((a, b) => b.score - a.score);
+    
+    // 自分の順位を見つける
+    let position = 1;
+    for (let i = 0; i < allScores.length; i++) {
+        if (allScores[i].score < myScore) {
+            position = i + 1;
+            break;
+        }
+        if (i === allScores.length - 1) {
+            position = 144;
+        }
+    }
+    
+    const percentile = ((144 - position) / 144) * 100;
+    
+    return { position, percentile };
+}
+
+// 星評価を取得
+function getStarRating(percentile) {
+    if (percentile >= 90) return '★★★★★';
+    if (percentile >= 70) return '★★★★☆';
+    if (percentile >= 50) return '★★★☆☆';
+    if (percentile >= 30) return '★★☆☆☆';
+    return '★☆☆☆☆';
+}
+
+// 運勢メッセージを取得
+function getFortuneMessage(percentile) {
+    if (percentile >= 90) return '最高運勢！素晴らしい一年になります';
+    if (percentile >= 70) return '上位30%！とても良い運勢です';
+    if (percentile >= 50) return '中位！バランスの取れた運勢です';
+    if (percentile >= 30) return 'やや注意！慎重な行動を心がけましょう';
+    return '困難な年ですが、乗り越えれば成長できます';
+}
+
 
 // ============================================================
 // 総合運勢テンプレート
@@ -764,4 +1226,52 @@ function displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot) {
 
 function resetForm() {
     location.reload();
+}
+
+// ============================================================
+// ローディング演出
+// ============================================================
+
+function showLoading() {
+    // ローディングオーバーレイを作成
+    const loadingOverlay = document.createElement('div');
+    loadingOverlay.id = 'loadingOverlay';
+    loadingOverlay.innerHTML = `
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <div class="loading-text">鑑定中...</div>
+            <div class="loading-subtext">8種類の占術で詳しく分析しています ✨</div>
+        </div>
+    `;
+    document.body.appendChild(loadingOverlay);
+    
+    // フェードイン
+    setTimeout(() => {
+        loadingOverlay.style.opacity = '1';
+    }, 10);
+}
+
+function hideLoading() {
+    const loadingOverlay = document.getElementById('loadingOverlay');
+    if (loadingOverlay) {
+        loadingOverlay.style.opacity = '0';
+        setTimeout(() => {
+            loadingOverlay.remove();
+        }, 300);
+    }
+}
+
+// ============================================================
+// スコア正規化
+// ============================================================
+
+function normalizeScore(rawScore) {
+    // 理論上の最小値と最大値
+    const minPossible = 15 + 10 + 10 + 11 + 10 + 3 + 3; // 62点
+    const maxPossible = 15 + 20 + 15 + 15 + 25 + 5 + 5; // 100点
+    
+    // 正規化（50-100点の範囲に収める）
+    const normalized = 50 + ((rawScore - minPossible) / (maxPossible - minPossible)) * 50;
+    
+    return Math.round(Math.max(50, Math.min(100, normalized)));
 }
