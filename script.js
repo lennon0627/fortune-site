@@ -977,8 +977,10 @@ function displayShichu(shichu) {
     document.getElementById('shichuDesc').textContent = 
         `五行では${dominant}の気が強く、バランスの取れた命式です。`;
     
-    // 五行レーダーチャートを描画
-    drawGogyouRadarChart(shichu.elements);
+    // 五行レーダーチャートを描画（DOM描画後に実行）
+    setTimeout(() => {
+        drawGogyouRadarChart(shichu.elements);
+    }, 200);
 }
 
 // ============================================================
@@ -987,9 +989,17 @@ function displayShichu(shichu) {
 
 function drawGogyouRadarChart(elements) {
     const canvas = document.getElementById('gogyouRadarChart');
-    if (!canvas) return;
+    if (!canvas) {
+        console.error('Canvas element not found');
+        return;
+    }
     
     const ctx = canvas.getContext('2d');
+    if (!ctx) {
+        console.error('Canvas context not available');
+        return;
+    }
+    
     const centerX = canvas.width / 2;
     const centerY = canvas.height / 2;
     const radius = 100;
@@ -1003,12 +1013,13 @@ function drawGogyouRadarChart(elements) {
         '木': '#4ade80',
         '火': '#f87171',
         '土': '#fbbf24',
-        '金': '#e5e7eb',
+        '金': '#c0c0c0',
         '水': '#60a5fa'
     };
     
-    // 最大値（8要素または6要素）
-    const maxValue = 8;
+    // 最大値を動的に計算（時間ありなら8、なしなら6）
+    const totalElements = Object.values(elements).reduce((a, b) => a + b, 0);
+    const maxValue = totalElements > 6 ? 8 : 6;
     
     // 背景の五角形（ガイドライン）を描画
     ctx.strokeStyle = '#e0e0e0';
