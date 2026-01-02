@@ -390,6 +390,7 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
                      scores.western + scores.shichu + scores.gosei + scores.ziwei;
     const totalScore = normalizeScore(rawScore);
     const ranking = calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, totalScore);
+    const topPercentage = Math.round(100 - ranking.percentile);
     
     let copyText = `【占い結果】2026年版\n`;
     if (name) {
@@ -414,7 +415,7 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     copyText += `五星三心: ${scores.gosei}点 / 5点\n`;
     copyText += `紫微斗数: ${scores.ziwei}点 / 5点\n\n`;
     copyText += `総合得点: ${totalScore}点 / 100点\n`;
-    copyText += `総合ランキング: 144パターン中 ${ranking.position}位\n`;
+    copyText += `総合ランキング: 上位${topPercentage}%\n`;
     copyText += `運勢レベル: ${getStarRating(ranking.percentile)}\n`;
     copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
@@ -959,11 +960,23 @@ function displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) 
         <div class="score-max">/ 100点</div>
     `;
     
-    // 144パターンの中での順位を計算
+    // パーセンタイル計算（上位◯%）
     const ranking = calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, totalScore);
+    const topPercentage = Math.round(100 - ranking.percentile);
     
-    document.getElementById('rankingPosition').innerHTML = 
-        `総合ランキング：<strong>144パターン中 ${ranking.position}位</strong>`;
+    // 上位パーセント表示
+    let rankingText = '';
+    if (topPercentage <= 5) {
+        rankingText = `<strong style="color: #d4af37;">上位${topPercentage}%</strong>（最高レベル）`;
+    } else if (topPercentage <= 20) {
+        rankingText = `<strong style="color: #e17055;">上位${topPercentage}%</strong>（優秀）`;
+    } else if (topPercentage <= 50) {
+        rankingText = `<strong style="color: #667eea;">上位${topPercentage}%</strong>（良好）`;
+    } else {
+        rankingText = `<strong>上位${topPercentage}%</strong>`;
+    }
+    
+    document.getElementById('rankingPosition').innerHTML = `総合ランキング：${rankingText}`;
     
     // 運勢レベル（星評価）
     const stars = getStarRating(ranking.percentile);
