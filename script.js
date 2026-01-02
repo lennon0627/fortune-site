@@ -390,7 +390,16 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
                      scores.western + scores.shichu + scores.gosei + scores.ziwei;
     const totalScore = normalizeScore(rawScore);
     const ranking = calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, totalScore);
-    const topPercentage = Math.round(100 - ranking.percentile);
+    
+    // 表示用のランキングテキスト
+    let rankingText = '';
+    if (ranking.percentile <= 1) {
+        rankingText = 'トップクラス';
+    } else if (ranking.percentile <= 80) {
+        rankingText = `上位${Math.round(ranking.percentile)}%`;
+    } else {
+        rankingText = `下位${Math.round(100 - ranking.percentile)}%`;
+    }
     
     let copyText = `【占い結果】2026年版\n`;
     if (name) {
@@ -415,8 +424,8 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     copyText += `五星三心: ${scores.gosei}点 / 5点\n`;
     copyText += `紫微斗数: ${scores.ziwei}点 / 5点\n\n`;
     copyText += `総合得点: ${totalScore}点 / 100点\n`;
-    copyText += `総合ランキング: 上位${topPercentage}%\n`;
-    copyText += `運勢レベル: ${getStarRating(ranking.percentile)}\n`;
+    copyText += `総合ランキング: ${rankingText}\n`;
+    copyText += `運勢レベル: ${getStarRating(100 - ranking.percentile)}\n`;
     copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
     copyText += `🌟 九星気学: ${kyusei}\n`;
@@ -962,25 +971,29 @@ function displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) 
     
     // パーセンタイル計算（上位◯%）
     const ranking = calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, eto, totalScore);
-    const topPercentage = Math.round(100 - ranking.percentile);
     
-    // 上位パーセント表示
+    // 表示用のテキストを生成
     let rankingText = '';
-    if (topPercentage <= 5) {
-        rankingText = `<strong style="color: #d4af37;">上位${topPercentage}%</strong>（最高レベル）`;
-    } else if (topPercentage <= 20) {
-        rankingText = `<strong style="color: #e17055;">上位${topPercentage}%</strong>（優秀）`;
-    } else if (topPercentage <= 50) {
-        rankingText = `<strong style="color: #667eea;">上位${topPercentage}%</strong>（良好）`;
+    
+    if (ranking.percentile <= 1) {
+        rankingText = `<strong style="color: #d4af37;">トップクラス</strong>（最高レベル）`;
+    } else if (ranking.percentile <= 5) {
+        rankingText = `<strong style="color: #d4af37;">上位${Math.round(ranking.percentile)}%</strong>（最高レベル）`;
+    } else if (ranking.percentile <= 20) {
+        rankingText = `<strong style="color: #e17055;">上位${Math.round(ranking.percentile)}%</strong>（優秀）`;
+    } else if (ranking.percentile <= 50) {
+        rankingText = `<strong style="color: #667eea;">上位${Math.round(ranking.percentile)}%</strong>（良好）`;
+    } else if (ranking.percentile <= 80) {
+        rankingText = `<strong>上位${Math.round(ranking.percentile)}%</strong>（平均的）`;
     } else {
-        rankingText = `<strong>上位${topPercentage}%</strong>`;
+        rankingText = `<strong>下位${Math.round(100 - ranking.percentile)}%</strong>（要注意）`;
     }
     
     document.getElementById('rankingPosition').innerHTML = `総合ランキング：${rankingText}`;
     
     // 運勢レベル（星評価）
-    const stars = getStarRating(ranking.percentile);
-    const message = getFortuneMessage(ranking.percentile);
+    const stars = getStarRating(100 - ranking.percentile);
+    const message = getFortuneMessage(100 - ranking.percentile);
     
     document.getElementById('fortuneLevel').innerHTML = `
         <div class="star-rating">${stars}</div>
@@ -1057,21 +1070,24 @@ function calculateRankingPosition(kyusei, num, western, gosei, shichu, ziwei, et
     // スコアで降順ソート
     allScores.sort((a, b) => b.score - a.score);
     
-    // 自分の順位を見つける
-    let position = 1;
+    // 自分より上位の人数を数える
+    let betterCount = 0;
     for (let i = 0; i < allScores.length; i++) {
-        if (allScores[i].score < myScore) {
-            position = i + 1;
+        if (allScores[i].score > myScore) {
+            betterCount++;
+        } else {
             break;
-        }
-        if (i === allScores.length - 1) {
-            position = 144;
         }
     }
     
-    const percentile = ((144 - position) / 144) * 100;
+    // 上位から何%の位置にいるか（0-100の範囲）
+    // 0% = 最上位、100% = 最下位
+    const percentileFromTop = (betterCount / allScores.length) * 100;
     
-    return { position, percentile };
+    return { 
+        position: betterCount + 1, 
+        percentile: percentileFromTop 
+    };
 }
 
 // 星評価を取得
