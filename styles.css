@@ -388,12 +388,28 @@ body {
 .element-fill {
     height: 100%;
     background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    transition: width 0.5s ease;
+    transition: width 1s ease-out; /* アニメーション時間を1秒に */
 }
 
 .element-count {
     text-align: center;
     font-weight: bold;
+}
+
+/* 五行レーダーチャート */
+.radar-chart-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 30px;
+    padding: 20px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8f0fe 100%);
+    border-radius: 15px;
+}
+
+#gogyouRadarChart {
+    max-width: 100%;
+    height: auto;
 }
 
 /* 総合運勢 */

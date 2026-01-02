@@ -946,14 +946,16 @@ function displayShichu(shichu) {
     document.getElementById('shichuPillars').innerHTML = pillarsHtml;
     
     let elementsHtml = '<div class="element-bars">';
+    const elementWidths = []; // アニメーション用に幅を保存
     for (let elem in shichu.elements) {
         const count = shichu.elements[elem];
         const width = (count / 8) * 100;
+        elementWidths.push(width);
         elementsHtml += `
             <div class="element-item">
                 <span class="element-name">${elem}:</span>
                 <div class="element-bar">
-                    <div class="element-fill" style="width: ${width}%"></div>
+                    <div class="element-fill element-fill-animated" style="width: 0%" data-width="${width}"></div>
                 </div>
                 <span class="element-count">${count}</span>
             </div>
@@ -962,9 +964,146 @@ function displayShichu(shichu) {
     elementsHtml += '</div>';
     document.getElementById('shichuElements').innerHTML = elementsHtml;
     
+    // 五行バーのアニメーション（0%から実際の幅まで伸びる演出）
+    setTimeout(() => {
+        const fills = document.querySelectorAll('.element-fill-animated');
+        fills.forEach(fill => {
+            const targetWidth = fill.getAttribute('data-width');
+            fill.style.width = targetWidth + '%';
+        });
+    }, 100);
+    
     const dominant = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0][0];
     document.getElementById('shichuDesc').textContent = 
         `五行では${dominant}の気が強く、バランスの取れた命式です。`;
+    
+    // 五行レーダーチャートを描画
+    drawGogyouRadarChart(shichu.elements);
+}
+
+// ============================================================
+// 五行バランスのレーダーチャート描画
+// ============================================================
+
+function drawGogyouRadarChart(elements) {
+    const canvas = document.getElementById('gogyouRadarChart');
+    if (!canvas) return;
+    
+    const ctx = canvas.getContext('2d');
+    const centerX = canvas.width / 2;
+    const centerY = canvas.height / 2;
+    const radius = 100;
+    
+    // キャンバスをクリア
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // 五行の順序と色
+    const gogyouOrder = ['木', '火', '土', '金', '水'];
+    const gogyouColors = {
+        '木': '#4ade80',
+        '火': '#f87171',
+        '土': '#fbbf24',
+        '金': '#e5e7eb',
+        '水': '#60a5fa'
+    };
+    
+    // 最大値（8要素または6要素）
+    const maxValue = 8;
+    
+    // 背景の五角形（ガイドライン）を描画
+    ctx.strokeStyle = '#e0e0e0';
+    ctx.lineWidth = 1;
+    for (let i = 1; i <= 4; i++) {
+        ctx.beginPath();
+        const r = (radius / 4) * i;
+        for (let j = 0; j < 5; j++) {
+            const angle = (Math.PI * 2 * j) / 5 - Math.PI / 2;
+            const x = centerX + r * Math.cos(angle);
+            const y = centerY + r * Math.sin(angle);
+            if (j === 0) {
+                ctx.moveTo(x, y);
+            } else {
+                ctx.lineTo(x, y);
+            }
+        }
+        ctx.closePath();
+        ctx.stroke();
+    }
+    
+    // 軸線を描画
+    ctx.strokeStyle = '#d0d0d0';
+    ctx.lineWidth = 1;
+    for (let i = 0; i < 5; i++) {
+        const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+        const x = centerX + radius * Math.cos(angle);
+        const y = centerY + radius * Math.sin(angle);
+        ctx.beginPath();
+        ctx.moveTo(centerX, centerY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+    }
+    
+    // データポリゴンを描画
+    ctx.beginPath();
+    ctx.fillStyle = 'rgba(102, 126, 234, 0.3)';
+    ctx.strokeStyle = '#667eea';
+    ctx.lineWidth = 2;
+    
+    for (let i = 0; i < 5; i++) {
+        const elem = gogyouOrder[i];
+        const value = elements[elem] || 0;
+        const ratio = value / maxValue;
+        const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+        const x = centerX + radius * ratio * Math.cos(angle);
+        const y = centerY + radius * ratio * Math.sin(angle);
+        
+        if (i === 0) {
+            ctx.moveTo(x, y);
+        } else {
+            ctx.lineTo(x, y);
+        }
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+    
+    // データポイントを描画
+    for (let i = 0; i < 5; i++) {
+        const elem = gogyouOrder[i];
+        const value = elements[elem] || 0;
+        const ratio = value / maxValue;
+        const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+        const x = centerX + radius * ratio * Math.cos(angle);
+        const y = centerY + radius * ratio * Math.sin(angle);
+        
+        // ポイント
+        ctx.beginPath();
+        ctx.arc(x, y, 5, 0, Math.PI * 2);
+        ctx.fillStyle = gogyouColors[elem];
+        ctx.fill();
+        ctx.strokeStyle = '#667eea';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+    }
+    
+    // ラベルを描画
+    ctx.fillStyle = '#333';
+    ctx.font = 'bold 16px sans-serif';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    
+    for (let i = 0; i < 5; i++) {
+        const elem = gogyouOrder[i];
+        const value = elements[elem] || 0;
+        const angle = (Math.PI * 2 * i) / 5 - Math.PI / 2;
+        const labelRadius = radius + 30;
+        const x = centerX + labelRadius * Math.cos(angle);
+        const y = centerY + labelRadius * Math.sin(angle);
+        
+        // 五行名と値
+        ctx.fillStyle = gogyouColors[elem];
+        ctx.fillText(`${elem}(${value})`, x, y);
+    }
 }
 
 function displayWestern(sign) {
@@ -1386,8 +1525,9 @@ function normalizeScore(rawScore) {
     const minPossible = 15 + 10 + 10 + 11 + 10 + 3 + 3; // 62点
     const maxPossible = 15 + 20 + 15 + 15 + 25 + 5 + 5; // 100点
     
-    // 正規化（50-100点の範囲に収める）
-    const normalized = 50 + ((rawScore - minPossible) / (maxPossible - minPossible)) * 50;
+    // 正規化（60-100点の範囲に収める）
+    // 60点起点にすることで、平均的な運勢が75点前後になる
+    const normalized = 60 + ((rawScore - minPossible) / (maxPossible - minPossible)) * 40;
     
-    return Math.round(Math.max(50, Math.min(100, normalized)));
+    return Math.round(Math.max(60, Math.min(100, normalized)));
 }
