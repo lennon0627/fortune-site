@@ -243,6 +243,9 @@ const zodiacBoundaries2026 = [
 // 2026年の年運（年盤九星）
 const year2026Kyusei = '七赤金星';
 
+// 2026年の干支（丙午）
+const year2026Eto = '午'; // 十二支のみ
+
 // 九星の相生相剋関係
 const kyuseiCompatibility = {
     '一白水星': { '一白水星': 0.7, '二黒土星': 0.5, '三碧木星': 0.8, '四緑木星': 0.8, '五黄土星': 0.5, '六白金星': 0.9, '七赤金星': 0.9, '八白土星': 0.5, '九紫火星': 0.6 },
@@ -366,7 +369,7 @@ function calculateFortune(birthdate, birthtime, name, gender) {
     displayTotal(kyusei, num, western, gosei, shichu, ziwei, tarot);
     
     // スコアリングと順位計算
-    displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto);
+    displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto, gender);
     
     // コピー用テキストを生成
     generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, birthdate, birthtime, name, gender, eto);
@@ -385,7 +388,7 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     const genderText = gender === 'male' ? '男性' : '女性';
     
     // スコア計算
-    const scores = calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto);
+    const scores = calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto, gender);
     const rawScore = scores.etoSign + scores.kyusei + scores.numerology + 
                      scores.western + scores.shichu + scores.gosei + scores.ziwei;
     const totalScore = normalizeScore(rawScore);
@@ -444,7 +447,13 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     if (shichu.time) {
         copyText += `時柱: ${shichu.time.k}${shichu.time.s}\n`;
     }
-    copyText += `五行バランス: ${dominantElement[0]}が${dominantElement[1]}で最も強い\n\n`;
+    copyText += `五行バランス: ${dominantElement[0]}が${dominantElement[1]}で最も強い\n`;
+    
+    // 空亡情報
+    if (scores.kubouPenalty) {
+        copyText += `⚠️ 2026年は空亡（天中殺）の年です。試練の年ですが、乗り越えれば大きな成長があります。\n`;
+    }
+    copyText += `\n`;
     
     copyText += `♈ 西洋占星術: ${western} ${westernInfo.emoji}`;
     if (birthtime) {
@@ -467,12 +476,20 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
     copyText += `━━━━━━━━━━━━━━━━━━━━\n\n`;
     
     copyText += `上記の占い結果を基に、私の運勢を詳しく教えてください。
+
+【重要ポイント】
+私の五行バランスでは「${dominantElement[0]}」が${dominantElement[1]}個で最も強く出ています。
+この要素が私の性格、適職、人間関係、健康面にどう影響しているか、専門的な視点で分析してください。
+
+【鑑定内容】
 1.「これまでの人生」と「これからの人生」を、命式・数・星・方位の流れを統合して、人生の物語として伝えてください。
 ・人生の転機年
 ・天職・晩年運
 ・魂のテーマ(使命)
-2.(占った年)の運勢と月別バイオリズム(仕事・金運・吉方位)
-3.最終メッセージ`;
+
+2. 2026年の運勢と月別バイオリズム(仕事・金運・吉方位)
+
+3. 最終メッセージ`;
     
     document.getElementById('copyText').value = copyText;
     
@@ -555,6 +572,7 @@ function calculateShichu(date, birthtime) {
 
     // 月柱（節入りで切り替わる - 時間考慮）
     let adjustedMonth = m;
+    let adjustedYear = ty; // 月柱計算用の年（節入り調整済み）
     
     // 節入り前かチェック（時間まで考慮）
     const setsunya = setsunyu2026[m - 1];
@@ -565,6 +583,7 @@ function calculateShichu(date, birthtime) {
         adjustedMonth = m - 1;
         if (adjustedMonth === 0) {
             adjustedMonth = 12;
+            adjustedYear--; // 12月になる場合は年も前年にする
         }
     }
     
@@ -572,8 +591,9 @@ function calculateShichu(date, birthtime) {
     const mSIdx = (adjustedMonth % 12);
     const mS = junishi[mSIdx];
     
-    // 月柱の天干（年の天干から算出）
-    const startK = ((yIdx % 5) * 2 + 2) % 10;
+    // 月柱の天干（調整後の年の天干から算出）
+    const adjustedYIdx = (adjustedYear - 4) % 60;
+    const startK = ((adjustedYIdx % 5) * 2 + 2) % 10;
     const mK = jikkan[(startK + (mSIdx - 2 + 12) % 12) % 10];
 
     // 日柱
@@ -590,13 +610,23 @@ function calculateShichu(date, birthtime) {
         tK = jikkan[((dIdx % 5) * 2 + tIdx) % 10];
     }
 
-    // 五行集計
+    // 五行集計（時間不明の場合は時柱を除外）
     const counts = { '木':0, '火':0, '土':0, '金':0, '水':0 };
-    [yK, yS, mK, mS, dK, dS, tK, tS].forEach(c => {
-        for(let g in gogyou) {
-            if(gogyou[g].includes(c)) counts[g]++;
-        }
-    });
+    if (birthtime) {
+        // 時間あり：8要素で計算
+        [yK, yS, mK, mS, dK, dS, tK, tS].forEach(c => {
+            for(let g in gogyou) {
+                if(gogyou[g].includes(c)) counts[g]++;
+            }
+        });
+    } else {
+        // 時間なし：6要素（年月日の干支のみ）で計算
+        [yK, yS, mK, mS, dK, dS].forEach(c => {
+            for(let g in gogyou) {
+                if(gogyou[g].includes(c)) counts[g]++;
+            }
+        });
+    }
 
     return { 
         year: {k:yK, s:yS}, 
@@ -605,6 +635,33 @@ function calculateShichu(date, birthtime) {
         time: tK ? {k:tK, s:tS} : null, 
         elements: counts 
     };
+}
+
+// ============================================================
+// 空亡（天中殺）の計算
+// ============================================================
+
+function calculateKubou(dayK, dayS) {
+    // 日柱の天干・地支から空亡を算出
+    const kIdx = jikkan.indexOf(dayK);
+    const sIdx = junishi.indexOf(dayS);
+    
+    if (kIdx === -1 || sIdx === -1) {
+        return []; // 計算不可
+    }
+    
+    // 日柱の干支番号から空亡の地支を計算
+    const no = (sIdx - kIdx + 12) % 12;
+    const kubou1 = junishi[(no + 10) % 12];
+    const kubou2 = junishi[(no + 11) % 12];
+    
+    return [kubou1, kubou2];
+}
+
+// 2026年が空亡の年かチェック
+function isKubouYear(shichu) {
+    const kubou = calculateKubou(shichu.day.k, shichu.day.s);
+    return kubou.includes(year2026Eto);
 }
 
 function calculateWestern(date, birthtime) {
@@ -701,16 +758,24 @@ function calculateEto(date) {
 // ============================================================
 
 // 各占術のスコアを計算
-function calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) {
+function calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto, gender) {
     const scores = {
         etoSign: calculateEtoSignScore(eto, western),           // 15点
         kyusei: calculateKyuseiScore(kyusei),                   // 20点（年運考慮）
         numerology: calculateNumerologyScore(num),               // 15点
         western: calculateWesternScore(western),                 // 15点
-        shichu: calculateShichuScore(shichu),                   // 25点（最重要）
+        shichu: calculateShichuScore(shichu, gender),           // 25点（最重要）
         gosei: calculateGoseiScore(gosei),                      // 5点
         ziwei: calculateZiweiScore(ziwei)                       // 5点
     };
+    
+    // 空亡（天中殺）チェック - 2026年が空亡の年なら減点
+    if (isKubouYear(shichu)) {
+        scores.shichu = Math.max(10, scores.shichu - 3); // 3点減点（最低10点）
+        scores.kubouPenalty = true; // 空亡フラグ
+    } else {
+        scores.kubouPenalty = false;
+    }
     
     return scores;
 }
@@ -781,8 +846,8 @@ function calculateWesternScore(western) {
     return scores[western] || 12;
 }
 
-// 四柱推命スコア（25点満点）- 最重要
-function calculateShichuScore(shichu) {
+// 四柱推命スコア（25点満点）- 最重要 + 性別考慮
+function calculateShichuScore(shichu, gender) {
     // 五行バランスでスコア計算
     const elements = shichu.elements;
     const total = Object.values(elements).reduce((a, b) => a + b, 0);
@@ -799,7 +864,24 @@ function calculateShichuScore(shichu) {
     }
     
     // バランススコアを25点満点に換算
-    const balanceScore = Math.max(0, balance * 20);
+    let balanceScore = Math.max(0, balance * 20);
+    
+    // 性別による重み付け調整
+    if (gender === 'male') {
+        // 男性：火・金が強いとプラス補正
+        const fireRatio = elements['火'] / total;
+        const metalRatio = elements['金'] / total;
+        if (fireRatio > 0.25 || metalRatio > 0.25) {
+            balanceScore += 1; // +1点
+        }
+    } else if (gender === 'female') {
+        // 女性：水・木が強いとプラス補正
+        const waterRatio = elements['水'] / total;
+        const woodRatio = elements['木'] / total;
+        if (waterRatio > 0.25 || woodRatio > 0.25) {
+            balanceScore += 1; // +1点
+        }
+    }
     
     return Math.min(Math.round(balanceScore), 25);
 }
@@ -916,9 +998,9 @@ function displayTarot(card) {
 // ランキング表示
 // ============================================================
 
-function displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) {
+function displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto, gender) {
     // スコア計算
-    const scores = calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto);
+    const scores = calculateScores(kyusei, num, western, gosei, shichu, ziwei, tarot, eto, gender);
     const rawScore = scores.etoSign + scores.kyusei + scores.numerology + 
                      scores.western + scores.shichu + scores.gosei + scores.ziwei;
     
@@ -993,7 +1075,12 @@ function displayRanking(kyusei, num, western, gosei, shichu, ziwei, tarot, eto) 
     
     // 運勢レベル（星評価）
     const stars = getStarRating(100 - ranking.percentile);
-    const message = getFortuneMessage(100 - ranking.percentile);
+    let message = getFortuneMessage(100 - ranking.percentile);
+    
+    // 空亡（天中殺）の場合は警告メッセージを追加
+    if (scores.kubouPenalty) {
+        message += '<br><br><strong style="color: #e74c3c;">⚠️ 2026年は空亡（天中殺）の年です</strong><br>試練の年ですが、乗り越えれば大きな成長があります。慎重な行動を心がけましょう。';
+    }
     
     document.getElementById('fortuneLevel').innerHTML = `
         <div class="star-rating">${stars}</div>

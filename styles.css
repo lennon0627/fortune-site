@@ -148,7 +148,7 @@ body {
     padding: 12px 15px;
     border: 2px solid #e0e0e0;
     border-radius: 10px;
-    font-size: 1em;
+    font-size: 16px; /* iOS対策：16px以上で自動ズーム防止 */
     background: white;
     cursor: pointer;
     transition: all 0.3s ease;
@@ -788,6 +788,6 @@ body {
     .date-selects select,
     .time-selects select {
         min-width: 60px;
-        font-size: 0.95em;
+        font-size: 16px; /* iOS対策：16px以上で自動ズーム防止 */
     }
 }
