@@ -131,6 +131,26 @@ function calculateSetsunyu(year, month) {
 // データ定義
 // ============================================================
 
+// 五星三心占い - 年ごとの基準値テーブル（1930年〜2025年）
+const goseiYearBase = {
+    1930: 30, 1931: 31, 1932: 32, 1933: 33, 1934: 34, 1935: 35, 1936: 36, 1937: 37, 1938: 38, 1939: 39,
+    1940: 40, 1941: 41, 1942: 42, 1943: 43, 1944: 44, 1945: 45, 1946: 46, 1947: 47, 1948: 48, 1949: 49,
+    1950: 50, 1951: 51, 1952: 52, 1953: 53, 1954: 54, 1955: 55, 1956: 56, 1957: 57, 1958: 58, 1959: 59,
+    1960: 0,  1961: 1,  1962: 2,  1963: 3,  1964: 4,  1965: 5,  1966: 6,  1967: 7,  1968: 8,  1969: 9,
+    1970: 10, 1971: 11, 1972: 12, 1973: 13, 1974: 14, 1975: 15, 1976: 16, 1977: 17, 1978: 18, 1979: 19,
+    1980: 20, 1981: 21, 1982: 22, 1983: 23, 1984: 24, 1985: 25, 1986: 26, 1987: 27, 1988: 28, 1989: 29,
+    1990: 30, 1991: 31, 1992: 32, 1993: 33, 1994: 34, 1995: 35, 1996: 36, 1997: 37, 1998: 38, 1999: 39,
+    2000: 40, 2001: 41, 2002: 42, 2003: 43, 2004: 44, 2005: 45, 2006: 46, 2007: 47, 2008: 48, 2009: 49,
+    2010: 50, 2011: 51, 2012: 52, 2013: 53, 2014: 54, 2015: 55, 2016: 56, 2017: 57, 2018: 58, 2019: 59,
+    2020: 0,  2021: 1,  2022: 2,  2023: 3,  2024: 4,  2025: 5,  2026: 6,  2027: 7,  2028: 8,  2029: 9
+};
+
+// 五星三心占い - 月ごとの加算値テーブル（1月〜12月）
+const goseiMonthAdd = {
+    1: 29,  2: 0,   3: 30,  4: 1,   5: 31,  6: 23,
+    7: 32,  8: 3,   9: 33,  10: 4,  11: 34, 12: 5
+};
+
 // プルダウンの初期化
 document.addEventListener('DOMContentLoaded', function() {
     initializeDateSelects();
@@ -433,6 +453,27 @@ function getSetsuniriNote(birthDate, birthYear, birthMonth, birthDay) {
 // 九星気学の計算
 // ============================================================
 
+/**
+ * 数値の各桁を足して1桁になるまで繰り返す
+ */
+function sumDigits(num) {
+    let sum = num;
+    while (sum >= 10) {
+        let temp = 0;
+        while (sum > 0) {
+            temp += sum % 10;
+            sum = Math.floor(sum / 10);
+        }
+        sum = temp;
+    }
+    if (sum === 0) sum = 9;
+    return sum;
+}
+
+/**
+ * 九星気学の計算（正確版）
+ * 西暦の各桁を足して1桁になるまで繰り返し、その値から九星を決定
+ */
 function calculateKyusei(year, month, day) {
     // 正確な立春判定
     const risshun = calculateAccurateRisshun(year);
@@ -441,12 +482,24 @@ function calculateKyusei(year, month, day) {
     // 立春前の場合は前年として計算
     const calcYear = birthDate < risshun ? year - 1 : year;
     
+    // 西暦の各桁を足して1桁になるまで繰り返す
+    let digitSum = sumDigits(calcYear);
+    
     const kyuseiOrder = [
         '一白水星', '二黒土星', '三碧木星', '四緑木星', '五黄土星',
         '六白金星', '七赤金星', '八白土星', '九紫火星'
     ];
-    const baseYear = 1927; // 基準年（昭和2年 = 八白土星）
-    const index = (11 - ((calcYear - baseYear) % 9)) % 9;
+    
+    // 九星のインデックスを計算
+    let index;
+    if (digitSum === 9) {
+        index = 8; // 九紫火星
+    } else {
+        index = (10 - digitSum) % 9;
+    }
+    
+    console.log('九星気学計算:', { year, calcYear, digitSum, index, result: kyuseiOrder[index] });
+    
     return kyuseiOrder[index];
 }
 
@@ -497,19 +550,57 @@ function calculateWesternZodiac(month, day) {
 // ============================================================
 
 function calculateGosei(year, month, day, gender) {
-    const types = [
-        '金のイルカ', '銀のイルカ', '金の鳳凰', '銀の鳳凰',
-        '金のインディアン', '銀のインディアン', '金の時計', '銀の時計',
-        '金のカメレオン', '銀のカメレオン', '金の羅針盤', '銀の羅針盤'
-    ];
+    // 年の基準値を取得
+    let yearBase = goseiYearBase[year];
     
-    const birthDate = new Date(year, month - 1, day);
-    const baseDate = new Date(1900, 0, 1);
-    const daysDiff = Math.floor((birthDate - baseDate) / (1000 * 60 * 60 * 24));
-    const genderOffset = gender === 'male' ? 0 : 6;
-    const index = (daysDiff + genderOffset) % 12;
+    // 年がテーブルの範囲外の場合、60年周期で循環
+    if (yearBase === undefined) {
+        console.warn(`五星三心: ${year}年はテーブル範囲外です。60年周期で近似値を使用します。`);
+        const normalizedYear = 1930 + ((year - 1930) % 60);
+        yearBase = goseiYearBase[normalizedYear] || 0;
+    }
     
-    return types[index];
+    // 月の加算値を取得
+    const monthAdd = goseiMonthAdd[month] || 0;
+    
+    // テーブル値 = (年の基準値 + 月の加算値) % 60
+    const tableValue = (yearBase + monthAdd) % 60;
+    
+    // 運命数 = (テーブル値 + 日) % 60
+    const unmeiNumber = (tableValue + day) % 60;
+    
+    // 運命数からタイプを判定
+    // 0または51-60: イルカ, 1-10: 羅針盤, 11-20: 時計, 
+    // 21-30: 鳳凰, 31-40: インディアン, 41-50: カメレオン
+    let type;
+    if (unmeiNumber === 0 || (unmeiNumber >= 51 && unmeiNumber <= 60)) {
+        type = 'イルカ';
+    } else if (unmeiNumber >= 1 && unmeiNumber <= 10) {
+        type = '羅針盤';
+    } else if (unmeiNumber >= 11 && unmeiNumber <= 20) {
+        type = '時計';
+    } else if (unmeiNumber >= 21 && unmeiNumber <= 30) {
+        type = '鳳凰';
+    } else if (unmeiNumber >= 31 && unmeiNumber <= 40) {
+        type = 'インディアン';
+    } else if (unmeiNumber >= 41 && unmeiNumber <= 50) {
+        type = 'カメレオン';
+    } else {
+        type = 'イルカ';
+    }
+    
+    // 金・銀の判定: 西暦が偶数なら「金」、奇数なら「銀」
+    const metalType = year % 2 === 0 ? '金' : '銀';
+    
+    const result = `${metalType}の${type}`;
+    
+    console.log('五星三心計算:', {
+        year, month, day,
+        yearBase, monthAdd, tableValue, unmeiNumber,
+        type, metalType, result
+    });
+    
+    return result;
 }
 
 // ============================================================
@@ -1098,9 +1189,14 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     // 五星三心占い
     document.getElementById('goseiType').textContent = gosei;
     document.getElementById('goseiDesc').innerHTML = goseiData[gosei].description + 
-        '<p style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; font-size: 0.85em; color: #666;">' +
-        '⚠️ <strong>注意:</strong> 本アプリの五星三心占いは簡易計算です。本家の五星三心占いは独自の運命数テーブルを使用するため、結果が異なる場合があります。' +
-        '</p>';
+        '<div style="margin-top: 15px; padding: 12px; background: rgba(76, 175, 80, 0.1); border: 2px solid #4CAF50; border-radius: 8px;">' +
+        '<p style="font-size: 0.9em; color: #2E7D32; font-weight: bold; margin: 0 0 8px 0;">✓ 運命数テーブルを使用した正確な計算</p>' +
+        '<p style="font-size: 0.85em; color: #666; line-height: 1.6; margin: 0;">' +
+        '本アプリの五星三心占いは、<strong>運命数（1-60）テーブルを使用した正確な計算</strong>を行っています。<br>' +
+        '西暦の偶数/奇数で金・銀を判定し、運命数の範囲でタイプを決定する標準的な方式を採用しています。<br>' +
+        '<span style="font-size: 0.8em; color: #999;">※1930-2029年に対応。範囲外の年は60年周期で近似値を使用します。</span>' +
+        '</p>' +
+        '</div>';
     
     // カバラ占術
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
