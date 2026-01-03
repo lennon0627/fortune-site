@@ -1024,6 +1024,38 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
     }, 1500);
 });
 
+
+// ============================================================
+// DOM参照の安全ラッパー（要素が無い場合でも落とさない）
+// ============================================================
+function safeGet(id) {
+    return document.getElementById(id);
+}
+function safeSetText(id, value) {
+    const el = safeGet(id);
+    if (!el) {
+        console.warn(`[UI] #${id} が見つかりません（HTML側のid不足の可能性）`);
+        return;
+    }
+    el.textContent = value ?? '';
+}
+function safeSetHTML(id, value) {
+    const el = safeGet(id);
+    if (!el) {
+        console.warn(`[UI] #${id} が見つかりません（HTML側のid不足の可能性）`);
+        return;
+    }
+    el.innerHTML = value ?? '';
+}
+function safeQuerySetHTML(selector, value) {
+    const el = document.querySelector(selector);
+    if (!el) {
+        console.warn(`[UI] ${selector} が見つかりません（HTML側のclass不足の可能性）`);
+        return;
+    }
+    el.innerHTML = value ?? '';
+}
+
 // ============================================================
 // 結果表示
 // ============================================================
@@ -1031,13 +1063,13 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
 function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
     // 九星気学
     const kyuseiInfo = kyuseiData[kyusei];
-    document.getElementById('kyuseiStar').textContent = kyusei;
-    document.getElementById('kyuseiDesc').innerHTML = kyuseiInfo.description;
-    document.getElementById('kyuseiColor').textContent = kyuseiInfo.color;
-    document.getElementById('kyuseiDirection').textContent = kyuseiInfo.direction;
+    safeSetText('kyuseiStar', kyusei);
+    safeSetHTML('kyuseiDesc', kyuseiInfo.description);
+    safeSetText('kyuseiColor', kyuseiInfo.color);
+    safeSetText('kyuseiDirection', kyuseiInfo.direction);
     
     // ラッキーアイテムを追加表示
-    document.querySelector('.lucky-info').innerHTML = `
+    safeQuerySetHTML('.lucky-info', `
         <div class="luck-item">ラッキーカラー: <span>${kyuseiInfo.color}</span></div>
         <div class="luck-item">ラッキー方位: <span>${kyuseiInfo.direction}</span></div>
         <div class="luck-item">ラッキーフード: <span>${kyuseiInfo.luckyFood}</span></div>
@@ -1098,7 +1130,7 @@ function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, 
     document.getElementById('westernDesc').innerHTML = westernInfo.description;
     
     // 五星三心占い
-    document.getElementById('goseiType').textContent = gosei;
+    safeSetText('goseiType', gosei);
     document.getElementById('goseiDesc').innerHTML = goseiData[gosei].description + 
         '<div style="margin-top: 15px; padding: 12px; background: rgba(76, 175, 80, 0.1); border: 2px solid #4CAF50; border-radius: 8px;">' +
         '<p style="font-size: 0.9em; color: #2E7D32; font-weight: bold; margin: 0 0 8px 0;">✓ 運命数テーブルを使用した正確な計算</p>' +
@@ -1111,13 +1143,13 @@ function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, 
     
     // カバラ数秘術
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
-    document.getElementById('kabbalahDesc').innerHTML = kabbalahData[kabbalah].description;
+    safeSetHTML('kabbalahDesc', kabbalahData[kabbalah].description);
     
     // 宿曜占星術
     const sukuyoInfo = sukuyoData[sukuyo];
     document.getElementById('sukuyoStar').textContent = `${sukuyo}宿`;
-    document.getElementById('sukuyoDesc').innerHTML = sukuyoInfo.description;
-    document.getElementById('sukuyoFortune').innerHTML = sukuyoInfo.fortune2026;
+    safeSetHTML('sukuyoDesc', sukuyoInfo.description);
+    safeSetHTML('sukuyoFortune', sukuyoInfo.fortune2026);
     document.getElementById('sukuyoWork').innerHTML = sukuyoInfo.work;
     document.getElementById('sukuyoLove').innerHTML = sukuyoInfo.love;
     
@@ -1155,7 +1187,7 @@ function displayElements(elements) {
     });
     html += '</div>';
     
-    document.getElementById('shichuElements').innerHTML = html;
+    safeSetHTML('shichuElements', html);
     
     // アニメーション付きでバーを伸ばす
     setTimeout(() => {
@@ -1486,10 +1518,10 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
     const fortuneLevel = getFortuneLevel(totalScore);
     
     const westernEmoji = westernZodiacData[western].emoji;
-    document.getElementById('etoSignCombo').innerHTML = 
+    safeSetHTML('etoSignCombo', 
         `<strong>${userName}さんの2026年運勢</strong><br>${birthEto}年生まれ × ${western}${westernEmoji}`;
     
-    document.getElementById('scoreBreakdown').innerHTML = `
+    safeSetHTML('scoreBreakdown', `
         <div class="score-item">
             <span class="score-label">四柱推命（五行バランス）</span>
             <span class="score-value">${scores.shichu}点</span>
@@ -1512,7 +1544,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
         </div>
     `;
     
-    document.getElementById('totalScoreDisplay').innerHTML = `
+    safeSetHTML('totalScoreDisplay', `
         総合スコア
         <span class="score-number">${totalScore}</span>
         <span class="score-max">/ 100点</span>
@@ -1521,7 +1553,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
     document.getElementById('rankingPosition').textContent = 
         `108通りの組み合わせ中 ${ranking}位`;
     
-    document.getElementById('fortuneLevel').innerHTML = `
+    safeSetHTML('fortuneLevel', `
         <div class="star-rating">${fortuneLevel.stars}</div>
         <div class="fortune-message">${fortuneLevel.message}</div>
     `;
@@ -1713,7 +1745,7 @@ function hideLoading() {
 function normalizeScore(rawScore) {
     const normalized = 60 + ((rawScore - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * 40;
     return Math.round(Math.max(60, Math.min(100, normalized)));
-}
+}}
 
 // ============================================================
 // 宿曜占星術（27宿）
