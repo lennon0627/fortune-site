@@ -1713,7 +1713,7 @@ function hideLoading() {
 function normalizeScore(rawScore) {
     const normalized = 60 + ((rawScore - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * 40;
     return Math.round(Math.max(60, Math.min(100, normalized)));
-}}
+}
 
 // ============================================================
 // 宿曜占星術（27宿）
