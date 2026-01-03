@@ -543,30 +543,32 @@ function calculateJulianDayNumber(year, month, day) {
 /**
  * 空亡（天中殺）の計算
  * 
+ * 空亡は「日柱の干支（天干と地支の組み合わせ）」によって決まる
+ * 例：甲子(きのえね)と丙子(ひのえね)は同じ「子」だが空亡が異なる
+ * 
+ * @param {string} dayKan - 日柱の天干
  * @param {string} dayShi - 日柱の地支
  * @returns {Array} 空亡の地支2つ
  */
-function calculateKubou(dayShi) {
-    const kubouPairs = [
-        ['戌', '亥'], // 子丑の空亡
-        ['申', '酉'], // 寅卯の空亡
-        ['午', '未'], // 辰巳の空亡
-        ['辰', '巳'], // 午未の空亡
-        ['寅', '卯'], // 申酉の空亡
-        ['子', '丑']  // 戌亥の空亡
-    ];
+function calculateKubou(dayKan, dayShi) {
+    const kanIndex = jikkanList.indexOf(dayKan); // 0-9
+    const shiIndex = etoList.indexOf(dayShi);    // 0-11
     
-    const shiIndex = etoList.indexOf(dayShi);
-    
-    // エラーハンドリング: dayShiが見つからない場合
-    if (shiIndex === -1) {
-        console.error('空亡計算エラー: 無効な地支:', dayShi);
+    // エラーハンドリング
+    if (kanIndex === -1 || shiIndex === -1) {
+        console.error('空亡計算エラー: 無効な干支:', { dayKan, dayShi });
         return ['--', '--'];
     }
     
-    const pairIndex = Math.floor(shiIndex / 2);
+    // (12 + 地支の番号 - 天干の番号) % 12 で、その旬の始まりの番号を出す
+    let base = (12 + shiIndex - kanIndex) % 12;
     
-    return kubouPairs[pairIndex] || ['--', '--'];
+    // 空亡は旬ごとに決まる
+    // 甲子旬(base=0)→戌亥空亡、甲戌旬(base=10)→申酉空亡...
+    const kubouList = ['戌亥', '申酉', '午未', '辰巳', '寅卯', '子丑'];
+    const kubouIndex = Math.floor(base / 2);
+    
+    return kubouList[kubouIndex] ? kubouList[kubouIndex].split('') : ['--', '--'];
 }
 
 /**
@@ -701,8 +703,8 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
         dayShi: dayShi
     });
     
-    // 空亡の計算
-    const kubou = calculateKubou(dayShi);
+    // 空亡の計算（日干と日支の組み合わせで判定）
+    const kubou = calculateKubou(dayKan, dayShi);
     
     // 大運の計算（10年ごとの運勢の流れ）
     const taiunInfo = calculateTaiun(calcYear, month, day, yearKan, yearShi);
@@ -780,7 +782,7 @@ function getEto(year, month, day) {
 // ============================================================
 
 function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shichu, kabbalah, ziwei, tarot) {
-    const eto2026 = getEto(2026, 2, 4);
+    // 生まれ年の干支を取得（スコア計算には使用しないが、参考情報として保持）
     const birthEto = getEto(birthYear, 2, 4);
     
     // 1. 干支×タロットの相性（15点固定）
@@ -1343,6 +1345,48 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
         
         const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
         
+        // 五行バランスに基づいたパーソナライズされたアドバイス
+        const elementAdvice = {
+            '木': {
+                strong: 'あなたは「木」のエネルギーが強く、成長意欲と創造性に満ちています。新しいことに挑戦する力がある反面、時には柔軟性を持って周囲と協調することも大切です。',
+                weak: '「木」のエネルギーが少なめなので、積極性を高めることで運気が上昇します。植物を育てたり、緑の多い場所で過ごすと良いでしょう。'
+            },
+            '火': {
+                strong: 'あなたは「火」のエネルギーが強く、情熱的で行動力があります。明るく人を惹きつける魅力がある反面、時には冷静さを保ち、心身の休息を大切にしましょう。',
+                weak: '「火」のエネルギーが少なめなので、積極的に人と交流し、明るい色を取り入れると運気が高まります。太陽の光を浴びることも効果的です。'
+            },
+            '土': {
+                strong: 'あなたは「土」のエネルギーが強く、安定感と信頼性があります。着実に物事を進める力がある反面、変化を恐れず新しいことにも挑戦すると、さらに運気が開けます。',
+                weak: '「土」のエネルギーが少なめなので、規則正しい生活と地に足のついた行動を心がけると良いでしょう。陶芸や園芸などもおすすめです。'
+            },
+            '金': {
+                strong: 'あなたは「金」のエネルギーが強く、決断力と正義感があります。物事を明確に判断する力がある反面、時には柔軟な対応や感情的な配慮も意識すると人間関係が円滑になります。',
+                weak: '「金」のエネルギーが少なめなので、整理整頓や計画性を高めると運気が上がります。金属製のアクセサリーを身につけるのも良いでしょう。'
+            },
+            '水': {
+                strong: 'あなたは「水」のエネルギーが強く、知恵と柔軟性に優れています。状況に応じて変化できる力がある反面、時には意志を強く持ち、流されすぎないよう注意しましょう。',
+                weak: '「水」のエネルギーが少なめなので、学びや知識を深めることで運気が高まります。水辺で過ごしたり、水分補給を意識するのも効果的です。'
+            }
+        };
+        
+        // 最も多い五行と最も少ない五行を特定
+        const sortedElements = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1]);
+        const strongestElement = sortedElements[0];
+        const weakestElement = sortedElements[sortedElements.length - 1];
+        
+        // バランスの良し悪しを判定
+        const isBalanced = strongestElement[1] - weakestElement[1] <= 2;
+        
+        let gogyouAdvice;
+        if (isBalanced) {
+            gogyouAdvice = `五行のバランスが非常に良く、調和のとれた運気を持っています。このバランスを保つことで、さらなる幸運を引き寄せることができるでしょう。`;
+        } else {
+            gogyouAdvice = elementAdvice[strongestElement[0]].strong;
+            if (weakestElement[1] === 0) {
+                gogyouAdvice += ` また、${elementAdvice[weakestElement[0]].weak}`;
+            }
+        }
+        
         const openings = [
             `${userName}さんの運命には、<strong>${kyusei}</strong>の持つ神秘的な力と、運命数<strong>${num}</strong>が示す特別な使命が宿っています。`,
             `<strong>${kyusei}</strong>として生まれた${userName}さんには、運命数<strong>${num}</strong>が授けた独自の才能があります。`,
@@ -1385,6 +1429,7 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
             <p>${openings[Math.floor(Math.random() * openings.length)]}</p>
             <p><strong>2026年の展望:</strong> ${yearForecasts[Math.floor(Math.random() * yearForecasts.length)]}</p>
             <p>${elements[Math.floor(Math.random() * elements.length)]} ${ziweiFortune[Math.floor(Math.random() * ziweiFortune.length)]}</p>
+            <p><strong>五行バランスからのアドバイス:</strong> ${gogyouAdvice}</p>
             <p><strong>開運のヒント:</strong> ${advice[Math.floor(Math.random() * advice.length)]}</p>
             <p>${conclusions[Math.floor(Math.random() * conclusions.length)]}</p>
         `;
