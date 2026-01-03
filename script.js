@@ -829,34 +829,34 @@ function getEto(year, month, day) {
 }
 
 // ============================================================
-// 総合スコアの計算（6つの占術で100点満点）
+// 総合スコアの計算（5つの占術で100点満点）
 // ============================================================
 
-function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shichu, kabbalah) {
+function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah) {
     // 生まれ年の干支を取得（参考情報として保持）
     const birthEto = getEto(birthYear, 2, 4);
     
-    // 1. 四柱推命の五行バランス（15-30点）★最重要
+    // 1. 四柱推命の五行バランス（25-35点）★最重要
     const elementValues = Object.values(shichu.elements);
     const maxElement = Math.max(...elementValues);
     const minElement = Math.min(...elementValues);
     const balance = maxElement - minElement;
-    // バランスが良いほど高得点（最大30点、最小15点）
-    const shichuScore = Math.max(15, 30 - balance * 2);
+    // バランスが良いほど高得点（最大35点、最小25点）
+    const shichuScore = Math.max(25, 35 - balance * 1.5);
     
-    // 2. 九星×西洋占星術の組み合わせ（15-25点）★重要
+    // 2. 九星×西洋占星術の組み合わせ（20-30点）★重要
     const kyuseiWesternCombos = {
-        '一白水星': { '蟹座': 25, '蠍座': 23, '魚座': 24, '牡牛座': 20, '乙女座': 21, '山羊座': 22 },
-        '二黒土星': { '牡牛座': 25, '乙女座': 24, '山羊座': 23, '蟹座': 20, '蠍座': 21, '魚座': 22 },
-        '三碧木星': { '牡羊座': 25, '獅子座': 24, '射手座': 23, '双子座': 21, '水瓶座': 22, '天秤座': 20 },
-        '四緑木星': { '双子座': 25, '天秤座': 24, '水瓶座': 23, '牡羊座': 21, '獅子座': 22, '射手座': 20 },
-        '五黄土星': { '山羊座': 25, '牡牛座': 23, '乙女座': 22, '獅子座': 21, '蟹座': 20, '蠍座': 21 },
-        '六白金星': { '天秤座': 25, '水瓶座': 24, '双子座': 23, '牡牛座': 20, '乙女座': 21, '山羊座': 22 },
-        '七赤金星': { '獅子座': 25, '射手座': 24, '牡羊座': 23, '双子座': 21, '天秤座': 22, '水瓶座': 20 },
-        '八白土星': { '山羊座': 25, '牡牛座': 24, '乙女座': 23, '蠍座': 21, '蟹座': 22, '魚座': 20 },
-        '九紫火星': { '牡羊座': 25, '獅子座': 24, '射手座': 23, '天秤座': 21, '双子座': 22, '水瓶座': 20 }
+        '一白水星': { '蟹座': 30, '蠍座': 28, '魚座': 29, '牡牛座': 25, '乙女座': 26, '山羊座': 27 },
+        '二黒土星': { '牡牛座': 30, '乙女座': 29, '山羊座': 28, '蟹座': 25, '蠍座': 26, '魚座': 27 },
+        '三碧木星': { '牡羊座': 30, '獅子座': 29, '射手座': 28, '双子座': 26, '水瓶座': 27, '天秤座': 25 },
+        '四緑木星': { '双子座': 30, '天秤座': 29, '水瓶座': 28, '牡羊座': 26, '獅子座': 27, '射手座': 25 },
+        '五黄土星': { '山羊座': 30, '牡牛座': 28, '乙女座': 27, '獅子座': 26, '蟹座': 25, '蠍座': 26 },
+        '六白金星': { '天秤座': 30, '水瓶座': 29, '双子座': 28, '牡牛座': 25, '乙女座': 26, '山羊座': 27 },
+        '七赤金星': { '獅子座': 30, '射手座': 29, '牡羊座': 28, '双子座': 26, '天秤座': 27, '水瓶座': 25 },
+        '八白土星': { '山羊座': 30, '牡牛座': 29, '乙女座': 28, '蠍座': 26, '蟹座': 27, '魚座': 25 },
+        '九紫火星': { '牡羊座': 30, '獅子座': 29, '射手座': 28, '天秤座': 26, '双子座': 27, '水瓶座': 25 }
     };
-    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 18;
+    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 23;
     
     // 3. 五星三心（15-20点）★重要
     const goseiScores = {
@@ -866,26 +866,20 @@ function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shic
     };
     const goseiScore = goseiScores[gosei] || 16;
     
-    // 4. 数秘術（12-18点）
-    const numerologyScores = {
-        1: 18, 2: 15, 3: 17, 4: 14, 5: 16,
-        6: 15, 7: 14, 8: 17, 9: 16, 11: 18, 22: 18
+    // 4. カバラ数秘術（10-15点）
+    const kabbalahScores = {
+        1: 15, 2: 12, 3: 14, 4: 11, 5: 13,
+        6: 12, 7: 11, 8: 14, 9: 13, 11: 15, 22: 15
     };
-    const numerologyScore = numerologyScores[numerology] || 13;
-    
-    // 5. カバラ占術（5-7点）
-    const kabbalahScore = kabbalah === 11 || kabbalah === 22 ? 7 : 
-                          kabbalah === 1 || kabbalah === 9 ? 6 : 5;
+    const kabbalahScore = kabbalahScores[kabbalah] || 10;
     
     // 合計（最大約100点）
-    const rawScore = shichuScore + kyuseiWesternScore + goseiScore + 
-                     numerologyScore + kabbalahScore;
+    const rawScore = shichuScore + kyuseiWesternScore + goseiScore + kabbalahScore;
     
     return {
         shichu: shichuScore,
         kyuseiWestern: kyuseiWesternScore,
         gosei: goseiScore,
-        numerology: numerologyScore,
         kabbalah: kabbalahScore,
         total: rawScore,
         percentage: Math.round(rawScore) // 100点満点
@@ -984,7 +978,6 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
         try {
             // 各占術の計算
             const kyusei = calculateKyusei(year, month, day);
-            const numerology = calculateNumerology(year, month, day);
             const western = calculateWesternZodiac(month, day);
             const gosei = calculateGosei(year, month, day, gender);
             const shichu = calculateShichu(year, month, day, hour, minute);
@@ -994,7 +987,7 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
             const birthEto = getEto(year, month, day);
             
             // 結果を表示
-            displayResults(name, kyusei, numerology, western, gosei, shichu, kabbalah, birthEto, year, month, day, hour, minute);
+            displayResults(name, kyusei, western, gosei, shichu, kabbalah, birthEto, year, month, day, hour, minute);
             
             // フォームを非表示にして結果を表示
             document.querySelector('.fortune-card').style.display = 'none';
@@ -1024,7 +1017,7 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
 // 結果表示
 // ============================================================
 
-function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
+function displayResults(name, kyusei, western, gosei, shichu, kabbalah, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
     // 九星気学
     const kyuseiInfo = kyuseiData[kyusei];
     document.getElementById('kyuseiStar').textContent = kyusei;
@@ -1039,10 +1032,6 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, bir
         <div class="luck-item">ラッキーフード: <span>${kyuseiInfo.luckyFood}</span></div>
         <div class="luck-item">ラッキーアクション: <span>${kyuseiInfo.luckyAction}</span></div>
     `;
-    
-    // 数秘術
-    document.getElementById('numerologyNumber').textContent = `運命数: ${num}`;
-    document.getElementById('numerologyDesc').innerHTML = numerologyData[num].description;
     
     // 四柱推命（厳密版）
     const birthDateTime = new Date(birthYear, birthMonth - 1, birthDay, birthHour, birthMinute);
@@ -1109,18 +1098,18 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, bir
         '</p>' +
         '</div>';
     
-    // カバラ占術
+    // カバラ数秘術
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
     document.getElementById('kabbalahDesc').innerHTML = kabbalahData[kabbalah].description;
     
     // 総合運勢
-    displayTotal(name, kyusei, num, western, gosei, shichu);
+    displayTotal(name, kyusei, western, gosei, shichu, kabbalah);
     
     // ランキング表示
-    displayRanking(name, birthYear, birthEto, western, kyusei, num, gosei, shichu, kabbalah);
+    displayRanking(name, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah);
     
     // コピー用テキスト生成
-    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, num, western, gosei, shichu, kabbalah, birthEto);
+    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, western, gosei, shichu, kabbalah, birthEto);
 }
 
 // ============================================================
@@ -1364,8 +1353,8 @@ const fortuneTemplates = {
     }
 };
 
-function displayTotal(userName, kyusei, num, western, gosei, shichu) {
-    console.log('総合運勢を生成中...', { userName, kyusei, num, western, gosei });
+function displayTotal(userName, kyusei, western, gosei, shichu, kabbalah) {
+    console.log('総合運勢を生成中...', { userName, kyusei, western, gosei, kabbalah });
     
     // ローディング表示
     document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ 総合運勢を鑑定中...</p>';
@@ -1373,7 +1362,7 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu) {
     // 少し遅延を入れて鑑定している感を出す
     setTimeout(() => {
         const kyuseiInfo = kyuseiData[kyusei];
-        const numInfo = numerologyData[num];
+        const kabbalahInfo = kabbalahData[kabbalah];
         const westernInfo = westernZodiacData[western];
         const goseiInfo = goseiData[gosei];
         
@@ -1422,17 +1411,17 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu) {
         }
         
         const openings = [
-            `${userName}さんの運命には、<strong>${kyusei}</strong>の持つ神秘的な力と、運命数<strong>${num}</strong>が示す特別な使命が宿っています。`,
-            `<strong>${kyusei}</strong>として生まれた${userName}さんには、運命数<strong>${num}</strong>が授けた独自の才能があります。`,
-            `${userName}さんは運命数<strong>${num}</strong>と<strong>${kyusei}</strong>の組み合わせにより、特別な人生の意味を持っています。`,
-            `<strong>${kyusei}</strong>の性質と運命数<strong>${num}</strong>の力が、${userName}さんの中で美しく調和しています。`
+            `${userName}さんの運命には、<strong>${kyusei}</strong>の持つ神秘的な力と、カバラ数秘術の運命数<strong>${kabbalah}</strong>が示す特別な使命が宿っています。`,
+            `<strong>${kyusei}</strong>として生まれた${userName}さんには、カバラ運命数<strong>${kabbalah}</strong>が授けた独自の才能があります。`,
+            `${userName}さんはカバラ運命数<strong>${kabbalah}</strong>と<strong>${kyusei}</strong>の組み合わせにより、特別な人生の意味を持っています。`,
+            `<strong>${kyusei}</strong>の性質とカバラ運命数<strong>${kabbalah}</strong>の力が、${userName}さんの中で美しく調和しています。`
         ];
         
         const yearForecasts = [
             `2026年は<strong>${western}</strong> ${westernInfo.emoji}として、${westernInfo.description}充実した一年を過ごせるでしょう。`,
             `${userName}さんの今年は<strong>${western}</strong>の特性が活きる年です。${westernInfo.description}チャンスを確実につかんでください。`,
             `<strong>${gosei}</strong>として迎える2026年、${goseiInfo.description}大きな飛躍が期待できます。`,
-            `${userName}さんの2026年は、運命数<strong>${num}</strong>の力が最大限に発揮される年です。${numInfo.description}自信を持って前進しましょう。`
+            `${userName}さんの2026年は、カバラ運命数<strong>${kabbalah}</strong>の力が最大限に発揮される年です。${kabbalahInfo.description}自信を持って前進しましょう。`
         ];
         
         const elements = [
@@ -1471,8 +1460,8 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu) {
 // ランキング表示
 // ============================================================
 
-function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gosei, shichu, kabbalah) {
-    const scores = calculateTotalScore(birthYear, kyusei, num, western, gosei, shichu, kabbalah);
+function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah) {
+    const scores = calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah);
     const totalScore = scores.percentage;
     const ranking = calculateRanking(totalScore);
     const fortuneLevel = getFortuneLevel(totalScore);
@@ -1495,11 +1484,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gos
             <span class="score-value">${scores.gosei}点</span>
         </div>
         <div class="score-item">
-            <span class="score-label">数秘術</span>
-            <span class="score-value">${scores.numerology}点</span>
-        </div>
-        <div class="score-item">
-            <span class="score-label">カバラ占術</span>
+            <span class="score-label">カバラ数秘術</span>
             <span class="score-value">${scores.kabbalah}点</span>
         </div>
     `;
@@ -1523,7 +1508,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gos
 // コピー用テキスト生成
 // ============================================================
 
-function generateCopyText(userName, year, month, day, hour, minute, kyusei, num, western, gosei, shichu, kabbalah, birthEto) {
+function generateCopyText(userName, year, month, day, hour, minute, kyusei, western, gosei, shichu, kabbalah, birthEto) {
     const westernEmoji = westernZodiacData[western].emoji;
     const timeStr = hour !== 12 || minute !== 0 ? ` ${hour}時${minute}分` : '';
     
@@ -1534,7 +1519,7 @@ function generateCopyText(userName, year, month, day, hour, minute, kyusei, num,
 西洋占星術: ${western}${westernEmoji}
 
 ━━━━━━━━━━━━━━━━
-📊 6種類の占術による総合鑑定
+📊 5種類の占術による総合鑑定
 ━━━━━━━━━━━━━━━━
 
 🌟 九星気学: ${kyusei}
@@ -1543,9 +1528,6 @@ ${kyuseiData[kyusei].description}
 ラッキー方位: ${kyuseiData[kyusei].direction}
 ラッキーフード: ${kyuseiData[kyusei].luckyFood}
 ラッキーアクション: ${kyuseiData[kyusei].luckyAction}
-
-🔢 数秘術: 運命数${num}
-${numerologyData[num].description}
 
 🎋 四柱推命
 年柱: ${shichu.year} / 月柱: ${shichu.month}
@@ -1560,7 +1542,7 @@ ${westernZodiacData[western].description}
 🎭 五星三心占い: ${gosei}
 ${goseiData[gosei].description}
 
-🔯 カバラ占術: 運命数${kabbalah}
+🔯 カバラ数秘術: 運命数${kabbalah}
 ${kabbalahData[kabbalah].description}
 
 ━━━━━━━━━━━━━━━━
@@ -1573,7 +1555,7 @@ ${kabbalahData[kabbalah].description}
 ━━━━━━━━━━━━━━━━
 【推奨プロンプト】
 
-あなたは熟練の占術師です。上記の6種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
+あなたは熟練の占術師です。上記の5種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
 
 特に以下の点について教えてください：
 1. 2026年の総合運勢と主要な運気の流れ
