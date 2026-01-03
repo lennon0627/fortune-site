@@ -1074,7 +1074,7 @@ function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, 
         <div class="luck-item">ラッキー方位: <span>${kyuseiInfo.direction}</span></div>
         <div class="luck-item">ラッキーフード: <span>${kyuseiInfo.luckyFood}</span></div>
         <div class="luck-item">ラッキーアクション: <span>${kyuseiInfo.luckyAction}</span></div>
-    `;
+    `);
     
     // 四柱推命（厳密版）
     const birthDateTime = new Date(birthYear, birthMonth - 1, birthDay, birthHour, birthMinute);
