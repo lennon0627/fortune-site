@@ -549,10 +549,12 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
     const monthKan = jikkanList[monthKanIndex];
     const monthShi = etoList[(calcMonth + 1) % 12];
     
-    // 日柱 - ユリウス通日を使用した正確な計算
+    // 日柱 - ユリウス通日を使用した計算（※配列インデックスは整数化する）
     const jdn = calculateJulianDayNumber(year, month, day);
-    const dayKanIndex = (jdn + 9) % 10;  // 基準日からの干支計算
-    const dayShiIndex = (jdn + 1) % 12;
+    // calculateJulianDayNumber は .5 を含む値になるため、そのままだと % の結果が小数になり配列参照が壊れる
+    const jdnInt = Math.floor(jdn + 0.5);
+    const dayKanIndex = (jdnInt + 9) % 10;  // 基準日からの干支計算
+    const dayShiIndex = (jdnInt + 1) % 12;
     const dayKan = jikkanList[dayKanIndex];
     const dayShi = etoList[dayShiIndex];
     
@@ -617,48 +619,16 @@ function calculateKubou(dayShi) {
         ['寅', '卯'], // 申酉の空亡
         ['子', '丑']  // 戌亥の空亡
     ];
-    
-    const shiIndex = etoList.indexOf(dayShi);
-    const pairIndex = Math.floor(shiIndex / 2);
-    
-    return kubouPairs[pairIndex];
-}
 
-/**
- * 大運の計算
- * 人生の10年ごとの運勢の流れ
- */
-function calculateTaiun(year, month, day, yearKan, yearShi) {
-    const currentYear = new Date().getFullYear();
-    const age = currentYear - year;
-    
-    // 大運の開始年齢（性別と陰陽によって異なるが、ここでは簡易版）
-    const taiunStart = 8; // 一般的に8歳前後で大運が始まる
-    
-    if (age < taiunStart) {
-        return {
-            current: '初年運',
-            description: 'まだ大運期に入っていません'
-        };
+    const shiIndex = etoList.indexOf(dayShi);
+    if (shiIndex < 0) {
+        // 万が一計算に失敗した場合でも画面を落とさない
+        console.warn('空亡計算に失敗しました: dayShi=', dayShi);
+        return [];
     }
-    
-    // 現在の大運期数
-    const taiunNumber = Math.floor((age - taiunStart) / 10);
-    
-    // 大運の干支を計算（月柱から順次変化）
-    const taiunKanIndex = (jikkanList.indexOf(yearKan) + taiunNumber + 1) % 10;
-    const taiunShiIndex = (etoList.indexOf(yearShi) + taiunNumber + 1) % 12;
-    
-    const taiunKanshi = jikkanList[taiunKanIndex] + etoList[taiunShiIndex];
-    const startAge = taiunStart + (taiunNumber * 10);
-    const endAge = startAge + 9;
-    
-    return {
-        current: taiunKanshi,
-        period: `${startAge}歳〜${endAge}歳`,
-        number: taiunNumber + 1,
-        description: `第${taiunNumber + 1}大運期（${taiunKanshi}）`
-    };
+
+    const pairIndex = Math.floor(shiIndex / 2);
+    return kubouPairs[pairIndex];
 }
 
 // ============================================================
@@ -927,13 +897,33 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
 // 結果表示
 // ============================================================
 
+// DOM操作ヘルパー（HTML側のID差異があっても落ちないようにする）
+function setTextById(id, value) {
+    const el = document.getElementById(id);
+    if (!el) {
+        console.warn(`Element not found: #${id}`);
+        return;
+    }
+    el.textContent = value ?? '';
+}
+
+function setHtmlById(id, html) {
+    const el = document.getElementById(id);
+    if (!el) {
+        console.warn(`Element not found: #${id}`);
+        return;
+    }
+    el.innerHTML = html ?? '';
+}
+
+
 function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziwei, tarot, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
     // 九星気学
     const kyuseiInfo = kyuseiData[kyusei];
-    document.getElementById('kyuseiStar').textContent = kyusei;
-    document.getElementById('kyuseiDesc').innerHTML = kyuseiInfo.description;
-    document.getElementById('kyuseiColor').textContent = kyuseiInfo.color;
-    document.getElementById('kyuseiDirection').textContent = kyuseiInfo.direction;
+    setTextById('kyuseiStar', kyusei);
+    setHtmlById('kyuseiDesc', kyuseiInfo.description);
+    setTextById('kyuseiColor', kyuseiInfo.color);
+    setTextById('kyuseiDirection', kyuseiInfo.direction);
     
     // ラッキーアイテムを追加表示
     document.querySelector('.lucky-info').innerHTML = `
@@ -944,8 +934,8 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     `;
     
     // 数秘術
-    document.getElementById('numerologyNumber').textContent = `運命数: ${num}`;
-    document.getElementById('numerologyDesc').innerHTML = numerologyData[num].description;
+    setTextById('numerologyNumber', `運命数: ${num}`);
+    setHtmlById('numerologyDesc', numerologyData[num]?.description ?? '');
     
     // 四柱推命（厳密版）
     const birthDateTime = new Date(birthYear, birthMonth - 1, birthDay, birthHour, birthMinute);
@@ -978,7 +968,7 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
         </div>
         ${taiunDisplay}
         <div class="kubou-display">
-            <strong>空亡（天中殺）:</strong> ${shichu.kubou.join('・')}
+            <strong>空亡（天中殺）:</strong> ${(shichu.kubou && shichu.kubou.length ? shichu.kubou : ['—']).join('・')}
             <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
                 ※空亡は運気の空白期間で、慎重な行動が求められる時期を示します
             </p>
@@ -993,24 +983,24 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     
     // 西洋占星術
     const westernInfo = westernZodiacData[western];
-    document.getElementById('westernSign').textContent = `${western} ${westernInfo.emoji}`;
-    document.getElementById('westernDesc').innerHTML = westernInfo.description;
+    setTextById('westernSign', `${western} ${westernInfo?.emoji ?? ''}`);
+    setHtmlById('westernDesc', westernInfo?.description ?? '');
     
     // 五星三心占い
-    document.getElementById('goseiType').textContent = gosei;
-    document.getElementById('goseiDesc').innerHTML = goseiData[gosei].description;
+    setTextById('goseiType', gosei);
+    setHtmlById('goseiDesc', goseiData[gosei]?.description ?? '');
     
     // カバラ占術
-    document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
-    document.getElementById('kabbalahDesc').innerHTML = kabbalahData[kabbalah].description;
+    setTextById('kabbalahNumber', `運命数: ${kabbalah}`);
+    setHtmlById('kabbalahDesc', kabbalahData[kabbalah]?.description ?? '');
     
     // 紫微斗数
-    document.getElementById('ziweiStar').textContent = ziwei;
-    document.getElementById('ziweiDesc').innerHTML = ziweiData[ziwei].description;
+    setTextById('ziweiStar', ziwei);
+    setHtmlById('ziweiDesc', ziweiData[ziwei]?.description ?? '');
     
     // 年運タロット
-    document.getElementById('tarotCard').textContent = tarot;
-    document.getElementById('tarotDesc').innerHTML = tarotData[tarot].description;
+    setTextById('tarotCard', tarot);
+    setHtmlById('tarotDesc', tarotData[tarot]?.description ?? '');
     
     // 総合運勢
     displayTotal(name, kyusei, num, western, gosei, shichu, ziwei, tarot);
@@ -1046,7 +1036,7 @@ function displayElements(elements) {
     });
     html += '</div>';
     
-    document.getElementById('shichuElements').innerHTML = html;
+    setHtmlById('shichuElements', html);
     
     // アニメーション付きでバーを伸ばす
     setTimeout(() => {
@@ -1392,7 +1382,7 @@ ${numerologyData[num].description}
 🎋 四柱推命
 年柱: ${shichu.year} / 月柱: ${shichu.month}
 日柱: ${shichu.day} / 時柱: ${shichu.hour}
-空亡: ${shichu.kubou.join('・')}
+空亡: ${(shichu.kubou && shichu.kubou.length ? shichu.kubou : ['—']).join('・')}
 五行バランス: 木${shichu.elements['木']} 火${shichu.elements['火']} 土${shichu.elements['土']} 金${shichu.elements['金']} 水${shichu.elements['水']}
 ${shichu.taiun ? `大運: ${shichu.taiun.description} (${shichu.taiun.period})` : ''}
 
