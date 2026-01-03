@@ -1519,9 +1519,8 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
     
     const westernEmoji = westernZodiacData[western].emoji;
     safeSetHTML('etoSignCombo', 
-        `<strong>${userName}さんの2026年運勢</strong><br>${birthEto}年生まれ × ${western}${westernEmoji}`;
-    
-    safeSetHTML('scoreBreakdown', `
+        `<strong>${userName}さんの2026年運勢</strong><br>${birthEto}年生まれ × ${western}${westernEmoji}`);
+safeSetHTML('scoreBreakdown', `
         <div class="score-item">
             <span class="score-label">四柱推命（五行バランス）</span>
             <span class="score-value">${scores.shichu}点</span>
@@ -1542,21 +1541,19 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
             <span class="score-label">カバラ数秘術</span>
             <span class="score-value">${scores.kabbalah}点</span>
         </div>
-    `;
-    
-    safeSetHTML('totalScoreDisplay', `
+    `);
+safeSetHTML('totalScoreDisplay', `
         総合スコア
         <span class="score-number">${totalScore}</span>
         <span class="score-max">/ 100点</span>
-    `;
-    
-    document.getElementById('rankingPosition').textContent = 
+    `);
+document.getElementById('rankingPosition').textContent = 
         `108通りの組み合わせ中 ${ranking}位`;
     
     safeSetHTML('fortuneLevel', `
         <div class="star-rating">${fortuneLevel.stars}</div>
         <div class="fortune-message">${fortuneLevel.message}</div>
-    `;
+    `);
 }
 
 // ============================================================
@@ -1745,7 +1742,7 @@ function hideLoading() {
 function normalizeScore(rawScore) {
     const normalized = 60 + ((rawScore - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * 40;
     return Math.round(Math.max(60, Math.min(100, normalized)));
-}}
+}
 
 // ============================================================
 // 宿曜占星術（27宿）
