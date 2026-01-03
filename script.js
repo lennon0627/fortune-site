@@ -505,6 +505,8 @@ function calculateGosei(year, month, day, gender) {
  * 天文学的計算の基準となる日数
  */
 function calculateJulianDayNumber(year, month, day) {
+    console.log('ユリウス日計算 入力:', { year, month, day });
+    
     let y = year;
     let m = month;
     
@@ -516,9 +518,12 @@ function calculateJulianDayNumber(year, month, day) {
     const a = Math.floor(y / 100);
     const b = 2 - a + Math.floor(a / 4);
     
-    return Math.floor(365.25 * (y + 4716)) + 
+    const jdn = Math.floor(365.25 * (y + 4716)) + 
            Math.floor(30.6001 * (m + 1)) + 
            day + b - 1524.5;
+    
+    console.log('ユリウス日計算 結果:', jdn);
+    return jdn;
 }
 
 /**
@@ -538,9 +543,16 @@ function calculateKubou(dayShi) {
     ];
     
     const shiIndex = etoList.indexOf(dayShi);
+    
+    // エラーハンドリング: dayShiが見つからない場合
+    if (shiIndex === -1) {
+        console.error('空亡計算エラー: 無効な地支:', dayShi);
+        return ['--', '--'];
+    }
+    
     const pairIndex = Math.floor(shiIndex / 2);
     
-    return kubouPairs[pairIndex];
+    return kubouPairs[pairIndex] || ['--', '--'];
 }
 
 /**
@@ -581,6 +593,16 @@ function calculateTaiun(year, month, day, yearKan, yearShi) {
 }
 
 function calculateShichu(year, month, day, hour = 12, minute = 0) {
+    // デバッグ: 入力値を確認
+    console.log('calculateShichu 入力値:', { year, month, day, hour, minute });
+    console.log('型チェック:', {
+        yearType: typeof year,
+        monthType: typeof month,
+        dayType: typeof day,
+        hourType: typeof hour,
+        minuteType: typeof minute
+    });
+    
     // 正確な立春判定
     const risshun = calculateAccurateRisshun(year);
     const birthDate = new Date(year, month - 1, day, hour, minute);
@@ -609,11 +631,14 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
     const monthShi = etoList[(calcMonth + 1) % 12];
     
     // 日柱 - ユリウス通日を使用した正確な計算
+    console.log('ユリウス日計算前:', { year, month, day });
     const jdn = calculateJulianDayNumber(year, month, day);
+    console.log('ユリウス日計算結果:', jdn);
     const dayKanIndex = (jdn + 9) % 10;  // 基準日からの干支計算
     const dayShiIndex = (jdn + 1) % 12;
     const dayKan = jikkanList[dayKanIndex];
     const dayShi = etoList[dayShiIndex];
+    console.log('日柱計算結果:', { dayKan, dayShi, dayKanIndex, dayShiIndex });
     
     // 時柱 - 子の刻（23-1時）の日跨ぎ処理を正確に
     let hourIndex;
@@ -641,6 +666,15 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
         if (gogyou[char]) {
             elements[gogyou[char]]++;
         }
+    });
+    
+    // デバッグログ
+    console.log('四柱推命計算:', {
+        year: yearKan + yearShi,
+        month: monthKan + monthShi,
+        day: dayKan + dayShi,
+        hour: hourKan + hourShi,
+        dayShi: dayShi
     });
     
     // 空亡の計算
@@ -852,11 +886,24 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
     const minuteValue = document.getElementById('birthMinute').value;
     const hour = hourValue ? parseInt(hourValue) : 12;
     const minute = minuteValue ? parseInt(minuteValue) : 0;
+    
+    // デバッグ: 取得した値を確認
+    console.log('フォームから取得した値:', {
+        year,
+        month,
+        day,
+        hour,
+        minute,
+        yearRaw: document.getElementById('birthYear').value,
+        monthRaw: document.getElementById('birthMonth').value,
+        dayRaw: document.getElementById('birthDay').value
+    });
     const gender = document.querySelector('input[name="gender"]:checked').value;
     const name = document.getElementById('name').value.trim() || 'あなた';
     
     // バリデーション
-    if (!year || !month || !day) {
+    if (!year || !month || !day || isNaN(year) || isNaN(month) || isNaN(day)) {
+        console.error('バリデーションエラー:', { year, month, day });
         alert('生年月日を正しく入力してください');
         submitBtn.disabled = false;
         submitBtn.style.opacity = '1';
@@ -978,7 +1025,7 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
         </div>
         ${taiunDisplay}
         <div class="kubou-display">
-            <strong>空亡（天中殺）:</strong> ${shichu.kubou.join('・')}
+            <strong>空亡（天中殺）:</strong> ${shichu.kubou && Array.isArray(shichu.kubou) ? shichu.kubou.join('・') : '--・--'}
             <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
                 ※空亡は運気の空白期間で、慎重な行動が求められる時期を示します
             </p>
@@ -1392,7 +1439,7 @@ ${numerologyData[num].description}
 🎋 四柱推命
 年柱: ${shichu.year} / 月柱: ${shichu.month}
 日柱: ${shichu.day} / 時柱: ${shichu.hour}
-空亡: ${shichu.kubou.join('・')}
+空亡: ${shichu.kubou && Array.isArray(shichu.kubou) ? shichu.kubou.join('・') : '--・--'}
 五行バランス: 木${shichu.elements['木']} 火${shichu.elements['火']} 土${shichu.elements['土']} 金${shichu.elements['金']} 水${shichu.elements['水']}
 ${shichu.taiun ? `大運: ${shichu.taiun.description} (${shichu.taiun.period})` : ''}
 
