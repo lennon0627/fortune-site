@@ -522,6 +522,28 @@ function calculateJulianDayNumber(year, month, day) {
 }
 
 /**
+ * 空亡（天中殺）の計算
+ * 
+ * @param {string} dayShi - 日柱の地支
+ * @returns {Array} 空亡の地支2つ
+ */
+function calculateKubou(dayShi) {
+    const kubouPairs = [
+        ['戌', '亥'], // 子丑の空亡
+        ['申', '酉'], // 寅卯の空亡
+        ['午', '未'], // 辰巳の空亡
+        ['辰', '巳'], // 午未の空亡
+        ['寅', '卯'], // 申酉の空亡
+        ['子', '丑']  // 戌亥の空亡
+    ];
+    
+    const shiIndex = etoList.indexOf(dayShi);
+    const pairIndex = Math.floor(shiIndex / 2);
+    
+    return kubouPairs[pairIndex];
+}
+
+/**
  * 大運の計算
  * 人生の10年ごとの運勢の流れ
  */
@@ -638,30 +660,6 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
         note: `立春: ${risshun.getMonth() + 1}/${risshun.getDate()} ${risshun.getHours()}:${String(risshun.getMinutes()).padStart(2, '0')}`
     };
 }
-
-/**
- * 空亡（天中殺）の計算
- * 
- * @param {string} dayShi - 日柱の地支
- * @returns {Array} 空亡の地支2つ
- */
-function calculateKubou(dayShi) {
-    const kubouPairs = [
-        ['戌', '亥'], // 子丑の空亡
-        ['申', '酉'], // 寅卯の空亡
-        ['午', '未'], // 辰巳の空亡
-        ['辰', '巳'], // 午未の空亡
-        ['寅', '卯'], // 申酉の空亡
-        ['子', '丑']  // 戌亥の空亡
-    ];
-    
-    const shiIndex = etoList.indexOf(dayShi);
-    const pairIndex = Math.floor(shiIndex / 2);
-    
-    return kubouPairs[pairIndex];
-}
-
-
 
 // ============================================================
 // カバラ数秘術の計算
