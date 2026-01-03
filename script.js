@@ -838,24 +838,12 @@ function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shic
 function calculateRanking(score) {
     const totalCombinations = 144;
     
-    let estimatedRank;
-    if (score >= 90) {
-        estimatedRank = Math.floor(Math.random() * 14) + 1;
-    } else if (score >= 85) {
-        estimatedRank = Math.floor(Math.random() * 15) + 15;
-    } else if (score >= 80) {
-        estimatedRank = Math.floor(Math.random() * 14) + 30;
-    } else if (score >= 75) {
-        estimatedRank = Math.floor(Math.random() * 20) + 44;
-    } else if (score >= 70) {
-        estimatedRank = Math.floor(Math.random() * 24) + 64;
-    } else if (score >= 65) {
-        estimatedRank = Math.floor(Math.random() * 28) + 88;
-    } else {
-        estimatedRank = Math.floor(Math.random() * 28) + 116;
-    }
+    // スコアから決定的に順位を計算（同じスコアなら必ず同じ順位）
+    // 線形マッピング: スコア100→1位、スコア60→144位
+    const rank = Math.round(totalCombinations - ((score - 60) / 40) * (totalCombinations - 1));
     
-    return estimatedRank;
+    // 1-144の範囲に収める
+    return Math.max(1, Math.min(totalCombinations, rank));
 }
 
 function getFortuneLevel(score) {
@@ -1116,16 +1104,33 @@ function drawRadarChart(elements) {
     if (!canvas) return;
     
     const ctx = canvas.getContext('2d');
-    const centerX = canvas.width / 2;
-    const centerY = canvas.height / 2;
+    
+    // Retina対応とレスポンシブ対応
+    const dpr = window.devicePixelRatio || 1;
+    const container = canvas.parentElement;
+    const size = Math.min(container.clientWidth, 300); // 最大300px
+    
+    // CSSサイズを設定
+    canvas.style.width = size + 'px';
+    canvas.style.height = size + 'px';
+    
+    // 実際のキャンバスサイズをRetina対応
+    canvas.width = size * dpr;
+    canvas.height = size * dpr;
+    
+    // スケーリング
+    ctx.scale(dpr, dpr);
+    
+    const centerX = size / 2;
+    const centerY = size / 2;
     const radius = Math.min(centerX, centerY) - 40;
     
     // キャンバスをクリア
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, size, size);
     
     // 背景色（より透過）
     ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.fillRect(0, 0, size, size);
     
     const elementOrder = ['木', '火', '土', '金', '水'];
     const maxCount = Math.max(...Object.values(elements), 4);
@@ -1490,6 +1495,34 @@ ${tarotData[tarot].description}
             copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
         }, 2000);
     };
+    
+    // AIボタンにクリック時のリマインド機能を追加
+    document.querySelectorAll('.ai-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            const copyText = document.getElementById('copyText').value;
+            if (!copyText) return;
+            
+            // 結果がコピー済みかチェック
+            const isCopied = copyBtn.innerHTML.includes('コピーしました');
+            
+            if (!isCopied) {
+                // まだコピーしていない場合、確認ダイアログを表示
+                const confirmed = confirm('結果をクリップボードにコピーしてからAIサイトに移動しますか？\n\n「OK」を押すと自動でコピーして移動します。');
+                if (confirmed) {
+                    // 自動でコピー
+                    document.getElementById('copyText').select();
+                    document.execCommand('copy');
+                    
+                    // フィードバック表示
+                    copyBtn.innerHTML = '✅ コピーしました！';
+                    copyBtn.style.background = 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)';
+                } else {
+                    // キャンセルされた場合は移動しない
+                    e.preventDefault();
+                }
+            }
+        });
+    });
 }
 
 function resetForm() {
