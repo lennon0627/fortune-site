@@ -1036,7 +1036,10 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     
     // 五星三心占い
     document.getElementById('goseiType').textContent = gosei;
-    document.getElementById('goseiDesc').innerHTML = goseiData[gosei].description;
+    document.getElementById('goseiDesc').innerHTML = goseiData[gosei].description + 
+        '<p style="margin-top: 15px; padding: 10px; background: rgba(255, 193, 7, 0.1); border-left: 3px solid #ffc107; font-size: 0.85em; color: #666;">' +
+        '⚠️ <strong>注意:</strong> 本アプリの五星三心占いは簡易計算です。本家の五星三心占いは独自の運命数テーブルを使用するため、結果が異なる場合があります。' +
+        '</p>';
     
     // カバラ占術
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
@@ -1470,13 +1473,28 @@ ${tarotData[tarot].description}
 💬 AIで詳しく占いたい方へ
 ━━━━━━━━━━━━━━━━
 
-上記の結果をAI（ChatGPT、Gemini等）に送信し、以下のように質問してみてください：
+上記の結果をAI（ChatGPT、Gemini等）にコピー＆ペーストして、
+以下のプロンプトと一緒に送信してください：
 
-「上記の占い結果をもとに、2026年の恋愛運、仕事運、金運、健康運について詳しく教えてください」
+━━━━━━━━━━━━━━━━
+【推奨プロンプト】
 
-「${userName}さんの性格的な特徴と、人生で大切にすべきことを教えてください」
+あなたは熟練の占術師です。上記の8種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
 
-「2026年に特に注意すべき時期や、チャンスが訪れる時期を教えてください」`;
+特に以下の点について教えてください：
+1. 2026年の総合運勢と主要な運気の流れ
+2. 恋愛運・仕事運・金運・健康運の詳細
+3. ${userName}さんの性格的な特徴と才能
+4. 2026年に特に注意すべき時期と開運のタイミング
+5. 人生で大切にすべきことと、今後の指針
+
+━━━━━━━━━━━━━━━━
+
+【その他の質問例】
+・「私に向いている職業や適性を教えてください」
+・「人間関係で気をつけるべきことは何ですか？」
+・「運気を上げるための具体的なアクションを教えてください」
+・「2026年の月ごとの運勢の変化を教えてください」`;
     
     document.getElementById('copyText').value = copyText;
     
