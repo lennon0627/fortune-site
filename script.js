@@ -1376,8 +1376,8 @@ function displayTotal(userName, kyusei, gosei, shichu, kabbalah, sukuyo) {
     setTimeout(() => {
         const kyuseiInfo = kyuseiData[kyusei];
         const kabbalahInfo = kabbalahData[kabbalah];
-        const westernInfo = westernZodiacData[western];
         const goseiInfo = goseiData[gosei];
+        const sukuyoInfo = sukuyoData[sukuyo];
         
         const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
         
@@ -1431,8 +1431,8 @@ function displayTotal(userName, kyusei, gosei, shichu, kabbalah, sukuyo) {
         ];
         
         const yearForecasts = [
-            `2026年は<strong>${western}</strong> ${westernInfo.emoji}として、${westernInfo.description}充実した一年を過ごせるでしょう。`,
-            `${userName}さんの今年は<strong>${western}</strong>の特性が活きる年です。${westernInfo.description}チャンスを確実につかんでください。`,
+            `2026年は<strong>${sukuyo}宿</strong>として、${sukuyoInfo.fortune2026}充実した一年を過ごせるでしょう。`,
+            `${userName}さんの今年は<strong>${sukuyo}宿</strong>の特性が活きる年です。${sukuyoInfo.fortune2026}チャンスを確実につかんでください。`,
             `<strong>${gosei}</strong>として迎える2026年、${goseiInfo.description}大きな飛躍が期待できます。`,
             `${userName}さんの2026年は、カバラ運命数<strong>${kabbalah}</strong>の力が最大限に発揮される年です。${kabbalahInfo.description}自信を持って前進しましょう。`
         ];
