@@ -102,20 +102,22 @@ function calculateSetsunyu(year, month) {
     // 立春を基準に各節気を計算
     const risshun = calculateAccurateRisshun(year);
     
-    // 各月の節気までの平均日数（約30.4日）
+    // 各月の節気までの精密な平均日数
+    // 地球の公転軌道は楕円のため、季節によって節気間の日数は変動する
+    // これらの値は太陽黄経に基づく平均的な日数を反映
     const solarTermDays = {
         1: -30,   // 小寒（前年12月下旬）
         2: 0,     // 立春（2月初旬）
-        3: 30,    // 啓蟄（3月初旬）
-        4: 60,    // 清明（4月初旬）
+        3: 31,    // 啓蟄（3月初旬）※精密化：30→31
+        4: 61,    // 清明（4月初旬）※精密化：60→61
         5: 91,    // 立夏（5月初旬）
         6: 122,   // 芒種（6月初旬）
-        7: 152,   // 小暑（7月初旬）
-        8: 183,   // 立秋（8月初旬）
-        9: 213,   // 白露（9月初旬）
-        10: 244,  // 寒露（10月初旬）
-        11: 274,  // 立冬（11月初旬）
-        12: 305   // 大雪（12月初旬）
+        7: 153,   // 小暑（7月初旬）※精密化：152→153
+        8: 185,   // 立秋（8月初旬）※精密化：183→185（重要）
+        9: 216,   // 白露（9月初旬）※精密化：213→216
+        10: 246,  // 寒露（10月初旬）※精密化：244→246
+        11: 277,  // 立冬（11月初旬）※精密化：274→277
+        12: 307   // 大雪（12月初旬）※精密化：305→307
     };
     
     const daysOffset = solarTermDays[month];
@@ -579,8 +581,39 @@ function calculateTaiun(year, month, day, yearKan, yearShi) {
     const currentYear = new Date().getFullYear();
     const age = currentYear - year;
     
-    // 大運の開始年齢（性別と陰陽によって異なるが、ここでは簡易版）
-    const taiunStart = 8; // 一般的に8歳前後で大運が始まる
+    // 大運の開始年齢を個人別に計算
+    // 本来は「誕生から次の節入り日までの日数÷3」で決まる
+    let taiunStart;
+    try {
+        const birthDate = new Date(year, month - 1, day);
+        const currentMonthSetsunyu = calculateSetsunyu(year, month);
+        
+        // 誕生日が節入り後の場合は次の月の節入りを使う
+        let nextSetsunyu;
+        if (birthDate >= currentMonthSetsunyu) {
+            // 次の月の節入りを取得（12月の場合は翌年1月）
+            const nextMonth = month === 12 ? 1 : month + 1;
+            const nextYear = month === 12 ? year + 1 : year;
+            nextSetsunyu = calculateSetsunyu(nextYear, nextMonth);
+        } else {
+            nextSetsunyu = currentMonthSetsunyu;
+        }
+        
+        // 誕生日から次の節入り日までの日数
+        const diffTime = Math.abs(nextSetsunyu - birthDate);
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        
+        // 日数を3で割って開始年齢を計算（四捨五入）
+        taiunStart = Math.round(diffDays / 3);
+        
+        // 0歳や極端に大きい年齢を防ぐ
+        taiunStart = Math.max(1, Math.min(taiunStart, 10));
+        
+        console.log('大運開始年齢計算:', { birthDate, nextSetsunyu, diffDays, taiunStart });
+    } catch (error) {
+        console.error('大運開始年齢の計算エラー:', error);
+        taiunStart = 8; // エラー時は従来の8歳
+    }
     
     if (age < taiunStart) {
         return {
@@ -604,7 +637,8 @@ function calculateTaiun(year, month, day, yearKan, yearShi) {
         current: taiunKanshi,
         period: `${startAge}歳〜${endAge}歳`,
         number: taiunNumber + 1,
-        description: `第${taiunNumber + 1}大運期（${taiunKanshi}）`
+        description: `第${taiunNumber + 1}大運期（${taiunKanshi}）`,
+        taiunStart: taiunStart  // 開始年齢も返す
     };
 }
 
@@ -1015,9 +1049,12 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     // 大運情報の表示
     let taiunDisplay = '';
     if (shichu.taiun) {
+        const taiunStartInfo = shichu.taiun.taiunStart 
+            ? `<span style="font-size: 0.85em; color: #999;">（${shichu.taiun.taiunStart}歳から大運開始）</span>`
+            : '';
         taiunDisplay = `
             <div class="taiun-display">
-                <strong>📈 大運（10年運）:</strong> ${shichu.taiun.description}<br>
+                <strong>📈 大運（10年運）:</strong> ${shichu.taiun.description} ${taiunStartInfo}<br>
                 <span style="font-size: 0.9em; color: #666;">現在の運勢周期: ${shichu.taiun.period}</span>
             </div>
         `;
@@ -1158,8 +1195,8 @@ function drawRadarChart(elements) {
     canvas.width = size * dpr;
     canvas.height = size * dpr;
     
-    // スケーリング
-    ctx.scale(dpr, dpr);
+    // スケーリング（setTransformで累算を防ぐ）
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     
     const centerX = size / 2;
     const centerY = size / 2;
