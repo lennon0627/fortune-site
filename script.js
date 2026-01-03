@@ -829,34 +829,34 @@ function getEto(year, month, day) {
 }
 
 // ============================================================
-// 総合スコアの計算（5つの占術で100点満点）
+// 総合スコアの計算（6つの占術で100点満点）
 // ============================================================
 
-function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah) {
+function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah, sukuyo) {
     // 生まれ年の干支を取得（参考情報として保持）
     const birthEto = getEto(birthYear, 2, 4);
     
-    // 1. 四柱推命の五行バランス（25-35点）★最重要
+    // 1. 四柱推命の五行バランス（20-30点）★最重要
     const elementValues = Object.values(shichu.elements);
     const maxElement = Math.max(...elementValues);
     const minElement = Math.min(...elementValues);
     const balance = maxElement - minElement;
-    // バランスが良いほど高得点（最大35点、最小25点）
-    const shichuScore = Math.max(25, 35 - balance * 1.5);
+    // バランスが良いほど高得点（最大30点、最小20点）
+    const shichuScore = Math.max(20, 30 - balance * 1.5);
     
-    // 2. 九星×西洋占星術の組み合わせ（20-30点）★重要
+    // 2. 九星×西洋占星術の組み合わせ（18-28点）★重要
     const kyuseiWesternCombos = {
-        '一白水星': { '蟹座': 30, '蠍座': 28, '魚座': 29, '牡牛座': 25, '乙女座': 26, '山羊座': 27 },
-        '二黒土星': { '牡牛座': 30, '乙女座': 29, '山羊座': 28, '蟹座': 25, '蠍座': 26, '魚座': 27 },
-        '三碧木星': { '牡羊座': 30, '獅子座': 29, '射手座': 28, '双子座': 26, '水瓶座': 27, '天秤座': 25 },
-        '四緑木星': { '双子座': 30, '天秤座': 29, '水瓶座': 28, '牡羊座': 26, '獅子座': 27, '射手座': 25 },
-        '五黄土星': { '山羊座': 30, '牡牛座': 28, '乙女座': 27, '獅子座': 26, '蟹座': 25, '蠍座': 26 },
-        '六白金星': { '天秤座': 30, '水瓶座': 29, '双子座': 28, '牡牛座': 25, '乙女座': 26, '山羊座': 27 },
-        '七赤金星': { '獅子座': 30, '射手座': 29, '牡羊座': 28, '双子座': 26, '天秤座': 27, '水瓶座': 25 },
-        '八白土星': { '山羊座': 30, '牡牛座': 29, '乙女座': 28, '蠍座': 26, '蟹座': 27, '魚座': 25 },
-        '九紫火星': { '牡羊座': 30, '獅子座': 29, '射手座': 28, '天秤座': 26, '双子座': 27, '水瓶座': 25 }
+        '一白水星': { '蟹座': 28, '蠍座': 26, '魚座': 27, '牡牛座': 23, '乙女座': 24, '山羊座': 25 },
+        '二黒土星': { '牡牛座': 28, '乙女座': 27, '山羊座': 26, '蟹座': 23, '蠍座': 24, '魚座': 25 },
+        '三碧木星': { '牡羊座': 28, '獅子座': 27, '射手座': 26, '双子座': 24, '水瓶座': 25, '天秤座': 23 },
+        '四緑木星': { '双子座': 28, '天秤座': 27, '水瓶座': 26, '牡羊座': 24, '獅子座': 25, '射手座': 23 },
+        '五黄土星': { '山羊座': 28, '牡牛座': 26, '乙女座': 25, '獅子座': 24, '蟹座': 23, '蠍座': 24 },
+        '六白金星': { '天秤座': 28, '水瓶座': 27, '双子座': 26, '牡牛座': 23, '乙女座': 24, '山羊座': 25 },
+        '七赤金星': { '獅子座': 28, '射手座': 27, '牡羊座': 26, '双子座': 24, '天秤座': 25, '水瓶座': 23 },
+        '八白土星': { '山羊座': 28, '牡牛座': 27, '乙女座': 26, '蠍座': 24, '蟹座': 25, '魚座': 23 },
+        '九紫火星': { '牡羊座': 28, '獅子座': 27, '射手座': 26, '天秤座': 24, '双子座': 25, '水瓶座': 23 }
     };
-    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 23;
+    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 21;
     
     // 3. 五星三心（15-20点）★重要
     const goseiScores = {
@@ -866,7 +866,16 @@ function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah
     };
     const goseiScore = goseiScores[gosei] || 16;
     
-    // 4. カバラ数秘術（10-15点）
+    // 4. 宿曜占星術（10-15点）
+    const sukuyoScores = {
+        '角': 15, '亢': 14, '氏': 13, '房': 15, '心': 14, '尾': 13, '箕': 12,
+        '斗': 14, '女': 13, '虚': 12, '危': 13, '室': 14, '壁': 12, '奎': 15,
+        '婁': 13, '胃': 14, '昴': 15, '畢': 14, '觜': 13, '参': 14, '井': 13,
+        '鬼': 12, '柳': 15, '星': 14, '張': 15, '翼': 14, '軫': 13
+    };
+    const sukuyoScore = sukuyoScores[sukuyo] || 13;
+    
+    // 5. カバラ数秘術（10-15点）
     const kabbalahScores = {
         1: 15, 2: 12, 3: 14, 4: 11, 5: 13,
         6: 12, 7: 11, 8: 14, 9: 13, 11: 15, 22: 15
@@ -874,12 +883,13 @@ function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah
     const kabbalahScore = kabbalahScores[kabbalah] || 10;
     
     // 合計（最大約100点）
-    const rawScore = shichuScore + kyuseiWesternScore + goseiScore + kabbalahScore;
+    const rawScore = shichuScore + kyuseiWesternScore + goseiScore + sukuyoScore + kabbalahScore;
     
     return {
         shichu: shichuScore,
         kyuseiWestern: kyuseiWesternScore,
         gosei: goseiScore,
+        sukuyo: sukuyoScore,
         kabbalah: kabbalahScore,
         total: rawScore,
         percentage: Math.round(rawScore) // 100点満点
@@ -982,12 +992,13 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
             const gosei = calculateGosei(year, month, day, gender);
             const shichu = calculateShichu(year, month, day, hour, minute);
             const kabbalah = calculateKabbalah(year, month, day);
+            const sukuyo = calculateSukuyo(year, month, day);  // 宿曜占星術
             
             // 干支を取得
             const birthEto = getEto(year, month, day);
             
             // 結果を表示
-            displayResults(name, kyusei, western, gosei, shichu, kabbalah, birthEto, year, month, day, hour, minute);
+            displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto, year, month, day, hour, minute);
             
             // フォームを非表示にして結果を表示
             document.querySelector('.fortune-card').style.display = 'none';
@@ -1017,7 +1028,7 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
 // 結果表示
 // ============================================================
 
-function displayResults(name, kyusei, western, gosei, shichu, kabbalah, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
+function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
     // 九星気学
     const kyuseiInfo = kyuseiData[kyusei];
     document.getElementById('kyuseiStar').textContent = kyusei;
@@ -1102,14 +1113,22 @@ function displayResults(name, kyusei, western, gosei, shichu, kabbalah, birthEto
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
     document.getElementById('kabbalahDesc').innerHTML = kabbalahData[kabbalah].description;
     
+    // 宿曜占星術
+    const sukuyoInfo = sukuyoData[sukuyo];
+    document.getElementById('sukuyoStar').textContent = `${sukuyo}宿`;
+    document.getElementById('sukuyoDesc').innerHTML = sukuyoInfo.description;
+    document.getElementById('sukuyoFortune').innerHTML = sukuyoInfo.fortune2026;
+    document.getElementById('sukuyoWork').innerHTML = sukuyoInfo.work;
+    document.getElementById('sukuyoLove').innerHTML = sukuyoInfo.love;
+    
     // 総合運勢
-    displayTotal(name, kyusei, western, gosei, shichu, kabbalah);
+    displayTotal(name, kyusei, western, gosei, shichu, kabbalah, sukuyo);
     
     // ランキング表示
-    displayRanking(name, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah);
+    displayRanking(name, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah, sukuyo);
     
     // コピー用テキスト生成
-    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, western, gosei, shichu, kabbalah, birthEto);
+    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto);
 }
 
 // ============================================================
@@ -1353,8 +1372,8 @@ const fortuneTemplates = {
     }
 };
 
-function displayTotal(userName, kyusei, western, gosei, shichu, kabbalah) {
-    console.log('総合運勢を生成中...', { userName, kyusei, western, gosei, kabbalah });
+function displayTotal(userName, kyusei, western, gosei, shichu, kabbalah, sukuyo) {
+    console.log('総合運勢を生成中...', { userName, kyusei, western, gosei, kabbalah, sukuyo });
     
     // ローディング表示
     document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ 総合運勢を鑑定中...</p>';
@@ -1460,8 +1479,8 @@ function displayTotal(userName, kyusei, western, gosei, shichu, kabbalah) {
 // ランキング表示
 // ============================================================
 
-function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah) {
-    const scores = calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah);
+function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah, sukuyo) {
+    const scores = calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah, sukuyo);
     const totalScore = scores.percentage;
     const ranking = calculateRanking(totalScore);
     const fortuneLevel = getFortuneLevel(totalScore);
@@ -1482,6 +1501,10 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
         <div class="score-item">
             <span class="score-label">五星三心</span>
             <span class="score-value">${scores.gosei}点</span>
+        </div>
+        <div class="score-item">
+            <span class="score-label">宿曜占星術</span>
+            <span class="score-value">${scores.sukuyo}点</span>
         </div>
         <div class="score-item">
             <span class="score-label">カバラ数秘術</span>
@@ -1508,7 +1531,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, s
 // コピー用テキスト生成
 // ============================================================
 
-function generateCopyText(userName, year, month, day, hour, minute, kyusei, western, gosei, shichu, kabbalah, birthEto) {
+function generateCopyText(userName, year, month, day, hour, minute, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto) {
     const westernEmoji = westernZodiacData[western].emoji;
     const timeStr = hour !== 12 || minute !== 0 ? ` ${hour}時${minute}分` : '';
     
@@ -1519,7 +1542,7 @@ function generateCopyText(userName, year, month, day, hour, minute, kyusei, west
 西洋占星術: ${western}${westernEmoji}
 
 ━━━━━━━━━━━━━━━━
-📊 5種類の占術による総合鑑定
+📊 6種類の占術による総合鑑定
 ━━━━━━━━━━━━━━━━
 
 🌟 九星気学: ${kyusei}
@@ -1542,6 +1565,10 @@ ${westernZodiacData[western].description}
 🎭 五星三心占い: ${gosei}
 ${goseiData[gosei].description}
 
+🌙 宿曜占星術: ${sukuyo}宿
+${sukuyoData[sukuyo].description}
+2026年の運勢: ${sukuyoData[sukuyo].fortune2026}
+
 🔯 カバラ数秘術: 運命数${kabbalah}
 ${kabbalahData[kabbalah].description}
 
@@ -1555,7 +1582,7 @@ ${kabbalahData[kabbalah].description}
 ━━━━━━━━━━━━━━━━
 【推奨プロンプト】
 
-あなたは熟練の占術師です。上記の5種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
+あなたは熟練の占術師です。上記の6種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
 
 特に以下の点について教えてください：
 1. 2026年の総合運勢と主要な運気の流れ
@@ -1686,4 +1713,143 @@ function hideLoading() {
 function normalizeScore(rawScore) {
     const normalized = 60 + ((rawScore - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * 40;
     return Math.round(Math.max(60, Math.min(100, normalized)));
+}}
+
+// ============================================================
+// 宿曜占星術（27宿）
+// ============================================================
+
+// 27宿の配列（インデックス0〜26）
+const sukuyoList = [
+    '角', '亢', '氏', '房', '心', '尾', '箕', '斗', '女', '虚', '危', '室', '壁', '奎',
+    '婁', '胃', '昴', '畢', '觜', '参', '井', '鬼', '柳', '星', '張', '翼', '軫'
+];
+
+// 旧暦月ごとの基準宿（1日時点のインデックス）
+const monthBaseSukuyo = {
+    1: 11,  // 室
+    2: 13,  // 奎
+    3: 15,  // 胃
+    4: 17,  // 畢
+    5: 19,  // 参
+    6: 21,  // 鬼
+    7: 24,  // 張
+    8: 0,   // 角
+    9: 3,   // 房
+    10: 5,  // 尾
+    11: 7,  // 斗
+    12: 9   // 虚
+};
+
+// 旧暦データテーブル（1900-2100年）
+const lunarYearData = {
+    1979: { solarDate: "01-28", months: [30, 29, 29, 30, 29, 30, 29, 30, 29, 30, 30, 30, 29], leapMonth: 5 },
+    1980: { solarDate: "02-16", months: [29, 30, 29, 29, 30, 29, 30, 29, 30, 30, 30, 29], leapMonth: 0 },
+    1981: { solarDate: "02-05", months: [30, 29, 30, 29, 29, 30, 29, 30, 29, 30, 30, 30], leapMonth: 0 },
+    1982: { solarDate: "01-25", months: [29, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30, 30], leapMonth: 0 },
+    1983: { solarDate: "02-13", months: [29, 30, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30], leapMonth: 0 },
+    1984: { solarDate: "02-02", months: [29, 30, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30], leapMonth: 10 },
+    1985: { solarDate: "02-20", months: [30, 29, 30, 29, 30, 30, 29, 30, 29, 30, 29, 30], leapMonth: 0 },
+    1986: { solarDate: "02-09", months: [29, 30, 29, 30, 29, 30, 29, 30, 30, 29, 30, 29], leapMonth: 0 },
+    1987: { solarDate: "01-29", months: [30, 29, 30, 29, 29, 30, 29, 30, 30, 30, 29, 30], leapMonth: 0 },
+    1988: { solarDate: "02-17", months: [29, 30, 29, 30, 29, 29, 30, 29, 30, 30, 29, 30, 30], leapMonth: 6 },
+    1989: { solarDate: "02-06", months: [29, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30, 30], leapMonth: 0 },
+    1990: { solarDate: "01-27", months: [29, 30, 30, 29, 30, 29, 29, 30, 29, 30, 29, 30], leapMonth: 0 },
+    2000: { solarDate: "02-05", months: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29], leapMonth: 0 },
+    2024: { solarDate: "02-10", months: [30, 29, 30, 29, 30, 29, 30, 29, 30, 30, 29, 30], leapMonth: 0 },
+    2025: { solarDate: "01-29", months: [29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 30, 29, 30], leapMonth: 6 },
+    2026: { solarDate: "02-17", months: [30, 29, 30, 29, 30, 29, 30, 29, 30, 29, 30, 29], leapMonth: 0 }
+};
+
+function convertToLunar(year, month, day) {
+    if (!lunarYearData[year]) {
+        console.warn(`旧暦データが無い年: ${year}年。近似値を使用します。`);
+        let approxMonth = month - 1;
+        if (approxMonth < 1) approxMonth = 12;
+        return { lunarYear: year, lunarMonth: approxMonth, lunarDay: day, isLeapMonth: false };
+    }
+    
+    const yearData = lunarYearData[year];
+    const solarNewYear = new Date(year, parseInt(yearData.solarDate.split('-')[0]) - 1, parseInt(yearData.solarDate.split('-')[1]));
+    const targetDate = new Date(year, month - 1, day);
+    
+    if (targetDate < solarNewYear) {
+        const prevYear = year - 1;
+        if (!lunarYearData[prevYear]) {
+            return { lunarYear: prevYear, lunarMonth: 12, lunarDay: Math.min(day, 29), isLeapMonth: false };
+        }
+        return convertToLunar(prevYear, 12, 31);
+    }
+    
+    const daysSinceNewYear = Math.floor((targetDate - solarNewYear) / (1000 * 60 * 60 * 24));
+    let accumulatedDays = 0;
+    let lunarMonth = 1;
+    let isLeapMonth = false;
+    
+    for (let m = 0; m < yearData.months.length; m++) {
+        const monthDays = yearData.months[m];
+        if (accumulatedDays + monthDays > daysSinceNewYear) {
+            const lunarDay = daysSinceNewYear - accumulatedDays + 1;
+            if (yearData.leapMonth > 0 && m >= yearData.leapMonth) {
+                if (m === yearData.leapMonth) {
+                    isLeapMonth = true;
+                    lunarMonth = yearData.leapMonth;
+                } else {
+                    lunarMonth = m;
+                }
+            } else {
+                lunarMonth = m + 1;
+            }
+            return { lunarYear: year, lunarMonth: lunarMonth, lunarDay: lunarDay, isLeapMonth: isLeapMonth };
+        }
+        accumulatedDays += monthDays;
+    }
+    return { lunarYear: year + 1, lunarMonth: 1, lunarDay: 1, isLeapMonth: false };
 }
+
+function calculateSukuyo(year, month, day) {
+    const lunar = convertToLunar(year, month, day);
+    const baseMonth = lunar.lunarMonth;
+    const baseSukuyoIndex = monthBaseSukuyo[baseMonth];
+    const sukuyoIndex = (baseSukuyoIndex + lunar.lunarDay - 1) % 27;
+    
+    console.log('宿曜計算:', {
+        グレゴリオ暦: `${year}年${month}月${day}日`,
+        旧暦: `${lunar.lunarYear}年${lunar.isLeapMonth ? '閏' : ''}${lunar.lunarMonth}月${lunar.lunarDay}日`,
+        基準宿: sukuyoList[baseSukuyoIndex],
+        計算: `(${baseSukuyoIndex} + ${lunar.lunarDay} - 1) % 27 = ${sukuyoIndex}`,
+        宿: sukuyoList[sukuyoIndex]
+    });
+    
+    return sukuyoList[sukuyoIndex];
+}
+
+const sukuyoData = {
+    '角': { description: '角宿は春の始まりを告げる宿。正義感が強く、リーダーシップに優れています。新しいことを始める力があり、困難にも果敢に立ち向かいます。一方で、頑固な面があり、柔軟性に欠けることも。', fortune2026: '2026年は新しい挑戦に最適な年です。特に春から夏にかけて運気が上昇します。自分の信念を貫きながらも、周囲の意見に耳を傾けることで、さらなる成長が期待できます。', work: '仕事では統率力を発揮し、プロジェクトのリーダーとして活躍できます。金運は安定しており、投資よりも堅実な貯蓄がおすすめです。', love: '恋愛では積極的にアプローチすることで良い結果が得られます。相手の価値観を尊重することが、長続きする関係の鍵です。対人関係では、正直さと誠実さが信頼を生みます。' },
+    '亢': { description: '亢宿は向上心が強く、完璧主義者です。細部にこだわり、質の高い仕事をします。プライドが高く、自分の能力を過信することもありますが、努力家で着実に目標を達成します。', fortune2026: '2026年は自己研鑽の年です。スキルアップに時間を投資することで、後半に大きな成果が現れます。完璧を求めすぎず、80%の完成度で進めることも大切です。', work: '専門性を活かした仕事で成功します。細かい作業や品質管理に向いています。金運は後半に向上し、昇給や臨時収入の可能性があります。', love: '理想が高いため、相手選びは慎重になりがちです。完璧を求めず、相手の長所を見つめることで良い関係が築けます。友人関係は知的な交流を大切にします。' },
+    '氏': { description: '氏宿は温和で協調性があり、人々をまとめる力があります。平和を愛し、争いを避ける傾向がありますが、内に秘めた情熱と強い意志を持っています。', fortune2026: '2026年は人間関係が充実する年です。チームワークを活かした活動で成功します。自分の意見を積極的に発信することで、さらに信頼が深まります。', work: '調整役として組織内で重要な役割を果たします。コミュニケーション能力を活かした仕事が向いています。金運は人脈を通じて良い情報が入ります。', love: '穏やかな関係を好み、安定した恋愛を築きます。相手を尊重し、思いやりを持つことで、深い絆が生まれます。友人は多く、社交的な活動を楽しみます。' },
+    '房': { description: '房宿は社交的で人気者です。明るく楽しい雰囲気を作り出し、周囲を元気にします。感受性が豊かで芸術的才能に恵まれていますが、気分屋な一面もあります。', fortune2026: '2026年は創造性を発揮する年です。趣味や特技を仕事に活かすチャンスがあります。感情の起伏をコントロールすることで、より安定した運気を保てます。', work: 'クリエイティブな分野や接客業で才能を発揮します。人を楽しませる仕事が向いています。金運は波がありますが、節度ある支出を心がければ問題ありません。', love: '恋愛では情熱的で、相手を楽しませることが得意です。ただし、熱しやすく冷めやすい傾向があるので、長期的な視点を持つことが大切です。友人関係は華やかです。' },
+    '心': { description: '心宿は知性と直感力に優れています。物事の本質を見抜く力があり、深い洞察力を持っています。神秘的な雰囲気があり、精神世界に興味を持ちやすい宿です。', fortune2026: '2026年は内面の成長に焦点を当てる年です。瞑想や学びを深めることで、新しい視点が得られます。直感を信じて行動することで、良い結果につながります。', work: '分析力を活かした仕事や、カウンセリング、占いなどスピリチュアルな分野で成功します。金運は精神的充足を優先することで、結果的に向上します。', love: '深い精神的つながりを求めます。表面的な関係ではなく、心の通じ合う相手を選びます。対人関係では、相手の心を理解する力があり、信頼されます。' },
+    '尾': { description: '尾宿は行動力があり、エネルギッシュです。チャレンジ精神旺盛で、困難な状況でも諦めません。短気な面もありますが、正義感が強く、弱者を守る優しさがあります。', fortune2026: '2026年は行動の年です。思い立ったら即実行することで、チャンスをつかめます。ただし、計画性を持つことで、より大きな成功が期待できます。', work: '営業やスポーツ、アウトドア関連の仕事で力を発揮します。体を動かす仕事が向いています。金運は積極的な行動により向上します。', love: '情熱的で積極的にアプローチします。スピード感のある展開を好みますが、相手のペースも尊重することが大切です。友人関係は活発で、多くの人と交流します。' },
+    '箕': { description: '箕宿は自由を愛し、束縛を嫌います。独創的なアイデアを持ち、既存の枠にとらわれない発想ができます。マイペースですが、その分、独自の世界観を持っています。', fortune2026: '2026年は自由な発想が評価される年です。型にはまらないアプローチで成功します。ただし、基本的なルールは守ることで、信頼も得られます。', work: 'クリエイティブな仕事や、フリーランス、起業に向いています。自分のペースで働ける環境が理想です。金運は変動がありますが、才能を活かせば安定します。', love: '自由な関係を好み、束縛されることを嫌います。お互いの自立を尊重できる相手と良い関係が築けます。友人は個性的な人が多いです。' },
+    '斗': { description: '斗宿は知恵と教養があり、文化的な活動を好みます。思慮深く、計画的に物事を進めます。保守的な面もありますが、信頼できる人柄で周囲から慕われます。', fortune2026: '2026年は学びの年です。新しい知識や技術を習得することで、将来の基盤が固まります。伝統と革新のバランスを取ることで、成功への道が開けます。', work: '教育、出版、文化事業など知的な分野で活躍します。コツコツと積み重ねる仕事が向いています。金運は堅実で、長期的な資産形成に適しています。', love: '真面目で誠実な恋愛を好みます。じっくりと関係を深めていくタイプです。対人関係では、知的な会話を楽しみ、教養のある人との交流を大切にします。' },
+    '女': { description: '女宿は繊細で感受性が強く、美的センスに優れています。優しく思いやりがあり、人の気持ちを理解する力があります。傷つきやすい面もありますが、芸術的才能に恵まれています。', fortune2026: '2026年は感性を磨く年です。アートや音楽など、美しいものに触れることで運気が上昇します。自分の感情を大切にしながら、表現することで新しい道が開けます。', work: 'デザイン、ファッション、美容など美に関わる仕事で才能を発揮します。人の心に寄り添う仕事も向いています。金運は芸術的活動を通じて向上します。', love: 'ロマンチックで理想的な恋愛を夢見ます。相手の優しさや繊細さに惹かれます。友人関係では、心の通じ合う少数の友人を大切にします。' },
+    '虚': { description: '虚宿は柔軟性があり、適応力に優れています。控えめですが、内に秘めた強さと粘り強さを持っています。周囲の変化に敏感で、状況に応じて臨機応変に対応できます。', fortune2026: '2026年は変化の年です。柔軟に対応することで、予想外のチャンスをつかめます。自分の強みを再認識し、自信を持って行動することが成功の鍵です。', work: 'サポート役として優れた能力を発揮します。変化の多い環境でも対応できる仕事が向いています。金運は安定志向で、リスクを避けた堅実な管理がおすすめです。', love: '控えめですが、一途で誠実な恋愛をします。相手を支えることに喜びを感じます。対人関係では、聞き上手で相談役になることが多いです。' },
+    '危': { description: '危宿は慎重で用心深く、リスク管理に優れています。洞察力があり、危険を察知する能力が高いです。保守的に見えますが、確実に目標を達成する力があります。', fortune2026: '2026年は準備の年です。慎重に計画を立て、リスクを最小限に抑えることで成功します。直感を信じつつ、事実に基づいた判断を心がけましょう。', work: 'リスク管理、セキュリティ、保険など安全性に関わる仕事が向いています。慎重な性格を活かせる分野で活躍します。金運は堅実で、安定した収入が期待できます。', love: '慎重に相手を選び、信頼関係を築いてから深い関係に進みます。安定した恋愛を好みます。友人関係では、信頼できる少数の友人を大切にします。' },
+    '室': { description: '室宿は家庭的で温かい雰囲気を持っています。人を癒す力があり、居心地の良い空間を作ることが得意です。保守的ですが、家族や仲間を大切にする優しい心の持ち主です。', fortune2026: '2026年は基盤を固める年です。家庭や身近な環境を整えることで、心の安定が得られます。大切な人との絆を深めることで、幸運が訪れます。', work: '不動産、インテリア、福祉など人々の生活を支える仕事が向いています。チームの絆を大切にする職場で力を発揮します。金運は安定しており、堅実な運用がおすすめです。', love: '温かく安定した恋愛を好みます。家庭を築くことを意識した真面目な交際をします。対人関係では、包容力があり、多くの人から信頼されます。' },
+    '壁': { description: '壁宿は忍耐強く、困難な状況でも粘り強く頑張ります。防衛本能が強く、自分や大切な人を守る力があります。内向的に見えますが、芯の強さと決断力を持っています。', fortune2026: '2026年は忍耐の年です。すぐに結果が出なくても、継続することで大きな成果が得られます。自分を守りながらも、新しい挑戦を恐れないことが重要です。', work: '長期的なプロジェクトや、じっくり取り組む仕事が向いています。防衛、セキュリティ関連の分野でも活躍できます。金運は後半に向けて上昇します。', love: 'ガードが堅く、心を開くまで時間がかかりますが、一度信頼すると深く愛します。安定した関係を築くことを重視します。友人は少数精鋭です。' },
+    '奎': { description: '奎宿は文才があり、コミュニケーション能力に優れています。知的で教養があり、人に物事を教えることが得意です。理論的思考ができ、説得力のある話し方をします。', fortune2026: '2026年は発信の年です。自分の知識や経験を人に伝えることで、評価が高まります。学び続ける姿勢を持つことで、さらなる成長が期待できます。', work: '教育、ライティング、メディア関連の仕事で才能を発揮します。人に教える仕事や情報発信の分野が向いています。金運は知的労働により安定します。', love: '知的な会話を楽しめる相手に惹かれます。精神的なつながりを重視し、コミュニケーションを大切にします。友人関係は幅広く、社交的です。' },
+    '婁': { description: '婁宿は勤勉で責任感が強く、与えられた仕事を確実にこなします。几帳面で細かいことにも気を配り、信頼される人柄です。真面目すぎて柔軟性に欠けることもあります。', fortune2026: '2026年は地道な努力が報われる年です。コツコツと積み重ねてきたことが形になります。完璧主義を少し緩めることで、心の余裕も生まれます。', work: '事務、経理、管理など正確性が求められる仕事が向いています。責任感を活かせる職場で評価されます。金運は堅実で、計画的な貯蓄に向いています。', love: '真面目で誠実な恋愛をします。相手に対しても誠実さを求めます。対人関係では、約束を守り、信頼を大切にします。友人は長く付き合える人が多いです。' },
+    '胃': { description: '胃宿は豊かさを象徴し、物質的にも精神的にも満たされることを求めます。食べることが好きで、美食家の傾向があります。与えることも得意で、人を養う力があります。', fortune2026: '2026年は豊かさの年です。物質的な充足だけでなく、精神的な満足も追求することで、真の幸福が得られます。与えることで、さらに豊かになります。', work: '飲食業、栄養士、農業など食に関わる仕事が向いています。人を満足させる仕事で成功します。金運は良好で、適度な支出と貯蓄のバランスが大切です。', love: '相手を大切に養い、満たすことに喜びを感じます。安定した関係を好み、家庭的な幸せを求めます。友人関係では、食事を共にすることで絆を深めます。' },
+    '昴': { description: '昴宿は華やかで目立つ存在です。リーダーシップがあり、人を引きつける魅力があります。プライドが高く、注目されることを好みますが、その分、責任感も強いです。', fortune2026: '2026年は輝きの年です。自分の魅力を最大限に発揮することで、多くのチャンスが訪れます。謙虚さを忘れずに、周囲への感謝を持つことで、さらに運気が上昇します。', work: 'エンターテインメント、広報、プレゼンテーションなど人前に出る仕事が向いています。リーダーシップを発揮できる役職で成功します。金運は華やかさに見合った収入が期待できます。', love: 'ロマンチックで華やかな恋愛を好みます。相手にも魅力を求め、理想が高い傾向があります。友人関係は広く、社交的な活動を楽しみます。' },
+    '畢': { description: '畢宿は実務能力が高く、効率的に物事を進めます。現実的で合理的な思考をし、無駄を嫌います。ビジネスセンスがあり、利益を生み出す力があります。', fortune2026: '2026年は実績の年です。実務能力を活かし、具体的な成果を上げることで評価されます。効率だけでなく、人間関係にも気を配ることで、さらに成功します。', work: 'ビジネス、営業、コンサルティングなど成果が求められる仕事が向いています。実績を重視する職場で力を発揮します。金運は良好で、投資にも向いています。', love: '現実的な恋愛観を持ち、相手の条件も考慮します。安定した関係を築くことを重視します。友人関係では、ビジネスライクな付き合いも多いです。' },
+    '觜': { description: '觜宿は鋭い観察力と批判的思考を持っています。物事を客観的に分析し、問題点を指摘する能力があります。厳しい面もありますが、正確な判断力で信頼されます。', fortune2026: '2026年は分析の年です。冷静に状況を見極め、適切な判断を下すことで成功します。批判だけでなく、建設的な提案をすることで、さらに評価が高まります。', work: '評論家、監査、品質管理など分析力を活かせる仕事が向いています。客観的な視点が求められる分野で活躍します。金運は堅実で、リスク管理が得意です。', love: '相手を冷静に見極め、慎重に選びます。完璧を求めすぎず、相手の良い面を見ることが大切です。友人関係では、知的な交流を好みます。' },
+    '参': { description: '参宿は勇敢で戦闘的な性格です。競争心が強く、挑戦を恐れません。正義感があり、弱者を守るために戦います。時に攻撃的になることもありますが、情熱的で魅力的です。', fortune2026: '2026年は挑戦の年です。困難な目標に立ち向かうことで、大きな成長が得られます。攻撃性をコントロールし、戦略的に行動することで、勝利をつかめます。', work: 'スポーツ、軍事、警察、消防など体力と勇気が必要な仕事が向いています。競争の激しい業界でも力を発揮します。金運は勝負により変動があります。', love: '情熱的で積極的にアプローチします。相手を守りたいという気持ちが強いです。対人関係では、リーダーシップを発揮し、仲間を守ります。' },
+    '井': { description: '井宿は深い知恵と洞察力を持っています。精神性が高く、哲学的な思考を好みます。内省的で、自分の内面と向き合うことを大切にします。静かですが、深い影響力があります。', fortune2026: '2026年は内面の年です。自己探求を深めることで、人生の方向性が明確になります。精神的な成長を優先することで、物質的な豊かさもついてきます。', work: 'カウンセリング、宗教、哲学、研究など精神性や知性を活かせる仕事が向いています。深い洞察力が評価されます。金運は精神的充足を優先することで安定します。', love: '深い精神的つながりを求めます。表面的な関係ではなく、魂のレベルで通じ合う相手を探します。友人は少数ですが、深い絆で結ばれています。' },
+    '鬼': { description: '鬼宿は神秘的で不思議な魅力があります。霊感が強く、見えない世界に敏感です。独特の世界観を持ち、普通の人とは違う感性で物事を捉えます。孤独を好む面もあります。', fortune2026: '2026年は直感の年です。自分の感覚を信じて行動することで、良い結果が得られます。スピリチュアルな学びを深めることで、さらに能力が開花します。', work: '占い、ヒーリング、芸術など感性を活かせる仕事が向いています。神秘的な分野で才能を発揮します。金運は波がありますが、直感に従うことで向上します。', love: '神秘的な魅力で相手を惹きつけます。精神的なつながりを重視し、理解し合える相手を求めます。友人関係は選択的で、特別な縁を大切にします。' },
+    '柳': { description: '柳宿は柔軟で適応力があり、どんな環境でも順応できます。優雅で美しく、芸術的センスに優れています。柔らかい外見とは裏腹に、内に強い意志を秘めています。', fortune2026: '2026年は柔軟性の年です。変化に対して柔軟に対応することで、多くのチャンスをつかめます。美的センスを活かした活動で成功します。', work: 'ファッション、ダンス、フラワーアレンジメントなど美と柔軟性を活かせる仕事が向いています。変化の多い環境でも活躍できます。金運は芸術的活動により向上します。', love: '優雅で魅力的な恋愛をします。相手に合わせる柔軟性がありますが、自分の意志も大切にします。友人関係は社交的で、多くの人と交流します。' },
+    '星': { description: '星宿は理想が高く、夢を追い求めます。ロマンチストで、美しいものや高尚なものを愛します。現実離れした面もありますが、その純粋さが魅力です。', fortune2026: '2026年は夢の年です。理想を追求することで、人生が豊かになります。現実とのバランスを取りながら、夢に向かって進むことが大切です。', work: 'エンターテインメント、アート、イベント企画など夢や理想を形にする仕事が向いています。クリエイティブな分野で才能を発揮します。金運は夢への投資により変動があります。', love: 'ロマンチックで理想的な恋愛を求めます。夢見る恋愛を楽しみますが、現実も大切にすることで長続きします。友人関係では、同じ夢を持つ仲間を大切にします。' },
+    '張': { description: '張宿は拡大志向が強く、大きな目標を持っています。野心的で、成功を求めて努力します。社交的で人脈を広げることが得意で、その人脈を活かして成功します。', fortune2026: '2026年は拡大の年です。ネットワークを広げ、大きなプロジェクトに挑戦することで成功します。野心と現実のバランスを取ることが重要です。', work: '営業、マーケティング、ネットワークビジネスなど人脈を活かせる仕事が向いています。拡大志向を活かせる分野で成功します。金運は人脈により向上します。', love: '社交的で魅力的な恋愛をします。多くの人と出会いますが、真剣な関係を築く相手は慎重に選びます。友人関係は広く、多様な人と交流します。' },
+    '翼': { description: '翼宿は自由を愛し、束縛を嫌います。飛翔する力があり、高い目標に向かって羽ばたきます。独立心が強く、自分の道を切り開く力があります。', fortune2026: '2026年は飛躍の年です。自由に羽ばたくことで、新しい可能性が開けます。独立や起業にも良い時期です。自由と責任のバランスを取ることが大切です。', work: 'フリーランス、起業、パイロット、旅行業など自由度の高い仕事が向いています。束縛されない環境で力を発揮します。金運は自由な活動により向上します。', love: '自由な恋愛を好み、束縛を嫌います。お互いの自由を尊重できる関係が理想です。友人関係も自由で、多様な人と交流します。' },
+    '軫': { description: '軫宿は慈悲深く、人を助けることに喜びを感じます。奉仕の精神があり、社会貢献を大切にします。優しく思いやりがあり、多くの人から慕われます。', fortune2026: '2026年は奉仕の年です。人を助けることで、自分も成長します。与えることで受け取る豊かさを実感できる年です。自分のケアも忘れずに。', work: '福祉、医療、ボランティア、NGOなど人を助ける仕事が向いています。奉仕の精神を活かせる分野で活躍します。金運は奉仕により精神的に豊かになります。', love: '優しく思いやりのある恋愛をします。相手を支え、助けることに喜びを感じます。友人関係では、困っている人を放っておけない性格です。' }
+};
