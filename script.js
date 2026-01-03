@@ -329,193 +329,17 @@ const goseiData = {
 };
 
 const kabbalahData = {
-    1: { description: `
-<strong>― 創造と始動の数 ―</strong><br><br>
-<strong>本質</strong><br>
-あなたは「最初の一歩」を踏み出すために生まれてきた人。誰もやっていないこと、まだ形になっていないアイデアに命を吹き込む力を持ちます。<br><br>
-
-<strong>強み</strong><br>
-・行動力と決断力／独立心／突破力とリーダーシップ<br><br>
-
-<strong>課題・注意点</strong><br>
-・独断専行になりやすい／孤立しがち／失敗を弱さと誤解しやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-「完璧」を待たず<strong>7割で始める</strong>ことが運気上昇の鍵。信頼できる相談相手を一人持つと成功が加速します。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-起業・新規企画・プロジェクト立ち上げ役に最適。フォロワーではなく「旗振り役」で本領発揮。`
-    },
-    2: { description: `
-<strong>― 調和と受容の数 ―</strong><br><br>
-<strong>本質</strong><br>
-人と人、心と心をつなぐ「橋渡し役」。争いを和らげ、場の空気を整える天性の感受性を持ちます。<br><br>
-
-<strong>強み</strong><br>
-・共感力／聞く力／調整力／サポートで信頼される<br><br>
-
-<strong>課題・注意点</strong><br>
-・本音を後回しにしがち／合わせすぎて疲れる／優柔不断になりやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-「NO」と言う練習を。自分の気持ちを書き出すと心のバランスが整います。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-秘書・調整役・カウンセリング・教育分野で開花。縁の下の力持ちとして評価されます。`
-    },
-    3: { description: `
-<strong>― 表現と喜びの数 ―</strong><br><br>
-<strong>本質</strong><br>
-あなたは「楽しさ」を広げる存在。言葉・表情・感性を通じて人の心を明るく照らします。<br><br>
-
-<strong>強み</strong><br>
-・表現力／発信力／社交性／創造的アイデア<br><br>
-
-<strong>課題・注意点</strong><br>
-・飽きっぽさ／感情の波／話が広がりすぎやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-話す・書く・描くなどアウトプットを習慣に。<strong>締切</strong>を設けると才能が形になります。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-広報・営業・芸術・教育・SNS発信と好相性。`
-    },
-    4: { description: `
-<strong>― 基盤と安定の数 ―</strong><br><br>
-<strong>本質</strong><br>
-秩序と信頼を築く「土台の人」。目立たなくても、あなたがいることで物事は崩れません。<br><br>
-
-<strong>強み</strong><br>
-・継続力／責任感／実務能力／誠実さ<br><br>
-
-<strong>課題・注意点</strong><br>
-・変化を恐れやすい／融通が利かない／頑張りすぎて疲弊<br><br>
-
-<strong>開運アドバイス</strong><br>
-週に一度「予定を入れない日」を作る。小さな変化を楽しむと運が動きます。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-管理・事務・技術・インフラ系で真価発揮。`
-    },
-    5: { description: `
-<strong>― 変化と自由の数 ―</strong><br><br>
-<strong>本質</strong><br>
-変化の波に乗る冒険者。停滞を壊し、新しい風を運ぶ存在です。<br><br>
-
-<strong>強み</strong><br>
-・柔軟性／適応力／情報感度／行動範囲の広さ<br><br>
-
-<strong>課題・注意点</strong><br>
-・落ち着きのなさ／継続が苦手／刺激を求めすぎる<br><br>
-
-<strong>開運アドバイス</strong><br>
-「自由＋ルール」。最低限の習慣（睡眠・運動など）を固定すると才能が安定します。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-変化が多い環境、企画、営業、旅やイベントなどで運が伸びます。`
-    },
-    6: { description: `
-<strong>― 愛と責任の数 ―</strong><br><br>
-<strong>本質</strong><br>
-守り、育て、支える役割。人の人生に深く関わる使命を持ちます。<br><br>
-
-<strong>強み</strong><br>
-・面倒見の良さ／誠実さ／安心感／調和を作る力<br><br>
-
-<strong>課題・注意点</strong><br>
-・世話の焼きすぎ／自己犠牲／境界線が曖昧になりやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-「自分を満たす時間」を最優先に。与える前に受け取ること。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-教育・医療福祉・マネジメント・家庭運で強みが活きます。`
-    },
-    7: { description: `
-<strong>― 探究と神秘の数 ―</strong><br><br>
-<strong>本質</strong><br>
-真理を探す求道者。表面的な答えでは満足せず、本質を見抜こうとします。<br><br>
-
-<strong>強み</strong><br>
-・洞察力／分析力／学びの深さ／精神性<br><br>
-
-<strong>課題・注意点</strong><br>
-・孤立しやすい／考えすぎ／現実逃避になりやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-学びを「言語化」して共有すると運が開きます（ブログ・メモ・講座など）。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-研究・分析・専門職・コンサル・職人気質の分野と好相性。`
-    },
-    8: { description: `
-<strong>― 成功と現実化の数 ―</strong><br><br>
-<strong>本質</strong><br>
-理想を現実に変える力の人。お金・組織・影響力と縁が深いタイプです。<br><br>
-
-<strong>強み</strong><br>
-・実行力／結果を出す力／目標達成力／統率力<br><br>
-
-<strong>課題・注意点</strong><br>
-・支配的になりやすい／失敗への恐れ／休まない<br><br>
-
-<strong>開運アドバイス</strong><br>
-成功を「分かち合う」ことで運気が安定。休息を戦略として入れると強くなります。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-経営・マネジメント・投資・交渉ごとで強み。`
-    },
-    9: { description: `
-<strong>― 完成と博愛の数 ―</strong><br><br>
-<strong>本質</strong><br>
-多くの経験を経て、人を導く存在。精神的成熟と「手放し」がテーマです。<br><br>
-
-<strong>強み</strong><br>
-・包容力／視野の広さ／共感／理想を語れる力<br><br>
-
-<strong>課題・注意点</strong><br>
-・過去に囚われる／情に流される／抱え込みやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-「終わらせる」「手放す」を意識すると運が回復。寄付やボランティアなども吉。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-教育・支援・芸術・奉仕的役割で存在感が増します。`
-    },
-    11: { description: `
-<strong>― マスターナンバー：直感と啓示 ―</strong><br><br>
-<strong>本質</strong><br>
-強い直感と使命を持つ魂。普通の人生では物足りず、感性や霊感が人生を導きます。<br><br>
-
-<strong>強み</strong><br>
-・インスピレーション／共感／表現力／人を目覚めさせる力<br><br>
-
-<strong>課題・注意点</strong><br>
-・繊細さ／不安定さ／理想と現実のギャップで消耗しやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-直感を信じて「表現」へ。創作・発信・人前で話すほど運が開きます。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-アート・企画・カウンセリング・スピリチュアル分野などで輝きます。`
-    },
-    22: { description: `
-<strong>― マスターナンバー：理想の実装 ―</strong><br><br>
-<strong>本質</strong><br>
-夢を社会に実装する「建築家」。大きなビジョンを現実の仕組みに変える使命を持ちます。<br><br>
-
-<strong>強み</strong><br>
-・実務力＋ビジョン／スケールの大きさ／組織化／長期計画<br><br>
-
-<strong>課題・注意点</strong><br>
-・責任を背負いすぎる／完璧主義／孤軍奮闘になりやすい<br><br>
-
-<strong>開運アドバイス</strong><br>
-一人で抱えず「仲間と進む」こと。分担と仕組み化で運が最大化します。<br><br>
-
-<strong>仕事・人間関係</strong><br>
-事業開発・組織運営・教育・社会的プロジェクトで大成功の器。`
-    }
+    1: { description: '始まりと創造の数。独立心が強く、新しいことを始める力があります。リーダーシップを発揮します。' },
+    2: { description: '調和とバランスの数。協調性があり、人との関係を大切にします。サポート役として輝きます。' },
+    3: { description: '表現と創造の数。芸術的才能があり、コミュニケーション能力に優れています。' },
+    4: { description: '安定と基盤の数。堅実で信頼できる存在です。コツコツと努力を重ねます。' },
+    5: { description: '変化と自由の数。冒険心があり、新しい経験を求めます。柔軟性に富んでいます。' },
+    6: { description: '愛と責任の数。家族や仲間を大切にし、調和のある環境を作ります。' },
+    7: { description: '神秘と知恵の数。深い洞察力があり、真実を追求します。スピリチュアルな面に興味があります。' },
+    8: { description: '力と成功の数。物質的な豊かさを手にする力があります。野心的で目標達成に向けて努力します。' },
+    9: { description: '完成と博愛の数。広い視野を持ち、人類愛に満ちています。精神的な成長を遂げます。' },
+    11: { description: 'マスターナンバー。直感力が鋭く、スピリチュアルな才能があります。インスピレーションを受け取る力があります。' },
+    22: { description: 'マスターナンバー。大きな夢を実現する力があります。実務能力とビジョンを併せ持ちます。' }
 };
 
 // 干支の配列
@@ -1005,34 +829,34 @@ function getEto(year, month, day) {
 }
 
 // ============================================================
-// 総合スコアの計算（6つの占術で100点満点）
+// 総合スコアの計算（5つの占術で100点満点）
 // ============================================================
 
-function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah, sukuyo) {
+function calculateTotalScore(birthYear, kyusei, gosei, shichu, kabbalah, sukuyo) {
     // 生まれ年の干支を取得（参考情報として保持）
     const birthEto = getEto(birthYear, 2, 4);
     
-    // 1. 四柱推命の五行バランス（20-30点）★最重要
+    // 1. 四柱推命の五行バランス（25-35点）★最重要
     const elementValues = Object.values(shichu.elements);
     const maxElement = Math.max(...elementValues);
     const minElement = Math.min(...elementValues);
     const balance = maxElement - minElement;
-    // バランスが良いほど高得点（最大30点、最小20点）
-    const shichuScore = Math.max(20, 30 - balance * 1.5);
+    // バランスが良いほど高得点（最大35点、最小25点）
+    const shichuScore = Math.max(25, 35 - balance * 1.5);
     
-    // 2. 九星×西洋占星術の組み合わせ（18-28点）★重要
-    const kyuseiWesternCombos = {
-        '一白水星': { '蟹座': 28, '蠍座': 26, '魚座': 27, '牡牛座': 23, '乙女座': 24, '山羊座': 25 },
-        '二黒土星': { '牡牛座': 28, '乙女座': 27, '山羊座': 26, '蟹座': 23, '蠍座': 24, '魚座': 25 },
-        '三碧木星': { '牡羊座': 28, '獅子座': 27, '射手座': 26, '双子座': 24, '水瓶座': 25, '天秤座': 23 },
-        '四緑木星': { '双子座': 28, '天秤座': 27, '水瓶座': 26, '牡羊座': 24, '獅子座': 25, '射手座': 23 },
-        '五黄土星': { '山羊座': 28, '牡牛座': 26, '乙女座': 25, '獅子座': 24, '蟹座': 23, '蠍座': 24 },
-        '六白金星': { '天秤座': 28, '水瓶座': 27, '双子座': 26, '牡牛座': 23, '乙女座': 24, '山羊座': 25 },
-        '七赤金星': { '獅子座': 28, '射手座': 27, '牡羊座': 26, '双子座': 24, '天秤座': 25, '水瓶座': 23 },
-        '八白土星': { '山羊座': 28, '牡牛座': 27, '乙女座': 26, '蠍座': 24, '蟹座': 25, '魚座': 23 },
-        '九紫火星': { '牡羊座': 28, '獅子座': 27, '射手座': 26, '天秤座': 24, '双子座': 25, '水瓶座': 23 }
+    // 2. 九星気学（20-25点）★重要
+    const kyuseiScores = {
+        '一白水星': 25,
+        '二黒土星': 23,
+        '三碧木星': 24,
+        '四緑木星': 23,
+        '五黄土星': 25,
+        '六白金星': 24,
+        '七赤金星': 24,
+        '八白土星': 23,
+        '九紫火星': 25
     };
-    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 21;
+    const kyuseiScore = kyuseiScores[kyusei] || 22;
     
     // 3. 五星三心（15-20点）★重要
     const goseiScores = {
@@ -1059,16 +883,18 @@ function calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah
     const kabbalahScore = kabbalahScores[kabbalah] || 10;
     
     // 合計（最大約100点）
-    const rawScore = shichuScore + kyuseiWesternScore + goseiScore + sukuyoScore + kabbalahScore;
+    const rawScore = shichuScore + kyuseiScore + goseiScore + sukuyoScore + kabbalahScore;
     
     return {
         shichu: shichuScore,
-        kyuseiWestern: kyuseiWesternScore,
+        kyusei: kyuseiScore,
         gosei: goseiScore,
         sukuyo: sukuyoScore,
         kabbalah: kabbalahScore,
         total: rawScore,
         percentage: Math.round(rawScore) // 100点満点
+    };
+}
     };
 }
 
@@ -1164,7 +990,6 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
         try {
             // 各占術の計算
             const kyusei = calculateKyusei(year, month, day);
-            const western = calculateWesternZodiac(month, day);
             const gosei = calculateGosei(year, month, day, gender);
             const shichu = calculateShichu(year, month, day, hour, minute);
             const kabbalah = calculateKabbalah(year, month, day);
@@ -1174,7 +999,7 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
             const birthEto = getEto(year, month, day);
             
             // 結果を表示
-            displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto, year, month, day, hour, minute);
+            displayResults(name, kyusei, gosei, shichu, kabbalah, sukuyo, birthEto, year, month, day, hour, minute);
             
             // フォームを非表示にして結果を表示
             document.querySelector('.fortune-card').style.display = 'none';
@@ -1200,57 +1025,25 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
     }, 1500);
 });
 
-
-// ============================================================
-// DOM参照の安全ラッパー（要素が無い場合でも落とさない）
-// ============================================================
-function safeGet(id) {
-    return document.getElementById(id);
-}
-function safeSetText(id, value) {
-    const el = safeGet(id);
-    if (!el) {
-        console.warn(`[UI] #${id} が見つかりません（HTML側のid不足の可能性）`);
-        return;
-    }
-    el.textContent = value ?? '';
-}
-function safeSetHTML(id, value) {
-    const el = safeGet(id);
-    if (!el) {
-        console.warn(`[UI] #${id} が見つかりません（HTML側のid不足の可能性）`);
-        return;
-    }
-    el.innerHTML = value ?? '';
-}
-function safeQuerySetHTML(selector, value) {
-    const el = document.querySelector(selector);
-    if (!el) {
-        console.warn(`[UI] ${selector} が見つかりません（HTML側のclass不足の可能性）`);
-        return;
-    }
-    el.innerHTML = value ?? '';
-}
-
 // ============================================================
 // 結果表示
 // ============================================================
 
-function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
+function displayResults(name, kyusei, gosei, shichu, kabbalah, sukuyo, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
     // 九星気学
     const kyuseiInfo = kyuseiData[kyusei];
-    safeSetText('kyuseiStar', kyusei);
-    safeSetHTML('kyuseiDesc', kyuseiInfo.description);
-    safeSetText('kyuseiColor', kyuseiInfo.color);
-    safeSetText('kyuseiDirection', kyuseiInfo.direction);
+    document.getElementById('kyuseiStar').textContent = kyusei;
+    document.getElementById('kyuseiDesc').innerHTML = kyuseiInfo.description;
+    document.getElementById('kyuseiColor').textContent = kyuseiInfo.color;
+    document.getElementById('kyuseiDirection').textContent = kyuseiInfo.direction;
     
     // ラッキーアイテムを追加表示
-    safeQuerySetHTML('.lucky-info', `
+    document.querySelector('.lucky-info').innerHTML = `
         <div class="luck-item">ラッキーカラー: <span>${kyuseiInfo.color}</span></div>
         <div class="luck-item">ラッキー方位: <span>${kyuseiInfo.direction}</span></div>
         <div class="luck-item">ラッキーフード: <span>${kyuseiInfo.luckyFood}</span></div>
         <div class="luck-item">ラッキーアクション: <span>${kyuseiInfo.luckyAction}</span></div>
-    `);
+    `;
     
     // 四柱推命（厳密版）
     const birthDateTime = new Date(birthYear, birthMonth - 1, birthDay, birthHour, birthMinute);
@@ -1300,13 +1093,8 @@ function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, 
     // 五行バランスの表示
     displayElements(shichu.elements);
     
-    // 西洋占星術
-    const westernInfo = westernZodiacData[western];
-    document.getElementById('westernSign').textContent = `${western} ${westernInfo.emoji}`;
-    document.getElementById('westernDesc').innerHTML = westernInfo.description;
-    
     // 五星三心占い
-    safeSetText('goseiType', gosei);
+    document.getElementById('goseiType').textContent = gosei;
     document.getElementById('goseiDesc').innerHTML = goseiData[gosei].description + 
         '<div style="margin-top: 15px; padding: 12px; background: rgba(76, 175, 80, 0.1); border: 2px solid #4CAF50; border-radius: 8px;">' +
         '<p style="font-size: 0.9em; color: #2E7D32; font-weight: bold; margin: 0 0 8px 0;">✓ 運命数テーブルを使用した正確な計算</p>' +
@@ -1319,24 +1107,24 @@ function displayResults(name, kyusei, western, gosei, shichu, kabbalah, sukuyo, 
     
     // カバラ数秘術
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
-    safeSetHTML('kabbalahDesc', kabbalahData[kabbalah].description);
+    document.getElementById('kabbalahDesc').innerHTML = kabbalahData[kabbalah].description;
     
     // 宿曜占星術
     const sukuyoInfo = sukuyoData[sukuyo];
     document.getElementById('sukuyoStar').textContent = `${sukuyo}宿`;
-    safeSetHTML('sukuyoDesc', sukuyoInfo.description);
-    safeSetHTML('sukuyoFortune', sukuyoInfo.fortune2026);
+    document.getElementById('sukuyoDesc').innerHTML = sukuyoInfo.description;
+    document.getElementById('sukuyoFortune').innerHTML = sukuyoInfo.fortune2026;
     document.getElementById('sukuyoWork').innerHTML = sukuyoInfo.work;
     document.getElementById('sukuyoLove').innerHTML = sukuyoInfo.love;
     
     // 総合運勢
-    displayTotal(name, kyusei, western, gosei, shichu, kabbalah, sukuyo);
+    displayTotal(name, kyusei, gosei, shichu, kabbalah, sukuyo);
     
     // ランキング表示
-    displayRanking(name, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah, sukuyo);
+    displayRanking(name, birthYear, birthEto, kyusei, gosei, shichu, kabbalah, sukuyo);
     
     // コピー用テキスト生成
-    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto);
+    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, gosei, shichu, kabbalah, sukuyo, birthEto);
 }
 
 // ============================================================
@@ -1363,7 +1151,7 @@ function displayElements(elements) {
     });
     html += '</div>';
     
-    safeSetHTML('shichuElements', html);
+    document.getElementById('shichuElements').innerHTML = html;
     
     // アニメーション付きでバーを伸ばす
     setTimeout(() => {
@@ -1580,8 +1368,8 @@ const fortuneTemplates = {
     }
 };
 
-function displayTotal(userName, kyusei, western, gosei, shichu, kabbalah, sukuyo) {
-    console.log('総合運勢を生成中...', { userName, kyusei, western, gosei, kabbalah, sukuyo });
+function displayTotal(userName, kyusei, gosei, shichu, kabbalah, sukuyo) {
+    console.log('総合運勢を生成中...', { userName, kyusei, gosei, kabbalah, sukuyo });
     
     // ローディング表示
     document.getElementById('totalFortune').innerHTML = '<p style="text-align: center; color: #764ba2; font-weight: bold; animation: pulse 1.5s infinite;">✨ 総合運勢を鑑定中...</p>';
@@ -1687,23 +1475,23 @@ function displayTotal(userName, kyusei, western, gosei, shichu, kabbalah, sukuyo
 // ランキング表示
 // ============================================================
 
-function displayRanking(userName, birthYear, birthEto, western, kyusei, gosei, shichu, kabbalah, sukuyo) {
-    const scores = calculateTotalScore(birthYear, kyusei, western, gosei, shichu, kabbalah, sukuyo);
+function displayRanking(userName, birthYear, birthEto, kyusei, gosei, shichu, kabbalah, sukuyo) {
+    const scores = calculateTotalScore(birthYear, kyusei, gosei, shichu, kabbalah, sukuyo);
     const totalScore = scores.percentage;
     const ranking = calculateRanking(totalScore);
     const fortuneLevel = getFortuneLevel(totalScore);
     
-    const westernEmoji = westernZodiacData[western].emoji;
-    safeSetHTML('etoSignCombo', 
-        `<strong>${userName}さんの2026年運勢</strong><br>${birthEto}年生まれ × ${western}${westernEmoji}`);
-safeSetHTML('scoreBreakdown', `
+    document.getElementById('etoSignCombo').innerHTML = 
+        `<strong>${userName}さんの2026年運勢</strong><br>${birthEto}年生まれ × ${kyusei}`;
+    
+    document.getElementById('scoreBreakdown').innerHTML = `
         <div class="score-item">
             <span class="score-label">四柱推命（五行バランス）</span>
             <span class="score-value">${scores.shichu}点</span>
         </div>
         <div class="score-item">
-            <span class="score-label">九星×西洋占星術</span>
-            <span class="score-value">${scores.kyuseiWestern}点</span>
+            <span class="score-label">九星気学</span>
+            <span class="score-value">${scores.kyusei}点</span>
         </div>
         <div class="score-item">
             <span class="score-label">五星三心</span>
@@ -1717,37 +1505,38 @@ safeSetHTML('scoreBreakdown', `
             <span class="score-label">カバラ数秘術</span>
             <span class="score-value">${scores.kabbalah}点</span>
         </div>
-    `);
-safeSetHTML('totalScoreDisplay', `
+    `;
+    
+    document.getElementById('totalScoreDisplay').innerHTML = `
         総合スコア
         <span class="score-number">${totalScore}</span>
         <span class="score-max">/ 100点</span>
-    `);
-document.getElementById('rankingPosition').textContent = 
-        `108通りの組み合わせ中 ${ranking}位`;
+    `;
     
-    safeSetHTML('fortuneLevel', `
+    document.getElementById('rankingPosition').textContent = 
+        `9つの九星による運勢 ${ranking}位`;
+    
+    document.getElementById('fortuneLevel').innerHTML = `
         <div class="star-rating">${fortuneLevel.stars}</div>
         <div class="fortune-message">${fortuneLevel.message}</div>
-    `);
+    `;
 }
 
 // ============================================================
 // コピー用テキスト生成
 // ============================================================
 
-function generateCopyText(userName, year, month, day, hour, minute, kyusei, western, gosei, shichu, kabbalah, sukuyo, birthEto) {
-    const westernEmoji = westernZodiacData[western].emoji;
+function generateCopyText(userName, year, month, day, hour, minute, kyusei, gosei, shichu, kabbalah, sukuyo, birthEto) {
     const timeStr = hour !== 12 || minute !== 0 ? ` ${hour}時${minute}分` : '';
     
     const copyText = `【${userName}さんの運勢鑑定結果 - 2026年】
 
 生年月日: ${year}年${month}月${day}日${timeStr}
 干支: ${birthEto}年生まれ
-西洋占星術: ${western}${westernEmoji}
+九星気学: ${kyusei}
 
 ━━━━━━━━━━━━━━━━
-📊 6種類の占術による総合鑑定
+📊 5種類の占術による総合鑑定
 ━━━━━━━━━━━━━━━━
 
 🌟 九星気学: ${kyusei}
@@ -1763,9 +1552,6 @@ ${kyuseiData[kyusei].description}
 空亡: ${shichu.kubou && Array.isArray(shichu.kubou) ? shichu.kubou.join('・') : '--・--'}
 五行バランス: 木${shichu.elements['木']} 火${shichu.elements['火']} 土${shichu.elements['土']} 金${shichu.elements['金']} 水${shichu.elements['水']}
 ${shichu.taiun ? `大運: ${shichu.taiun.description} (${shichu.taiun.period})` : ''}
-
-♈ 西洋占星術: ${western}${westernEmoji}
-${westernZodiacData[western].description}
 
 🎭 五星三心占い: ${gosei}
 ${goseiData[gosei].description}
@@ -1787,7 +1573,7 @@ ${kabbalahData[kabbalah].description}
 ━━━━━━━━━━━━━━━━
 【推奨プロンプト】
 
-あなたは熟練の占術師です。上記の6種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
+あなたは熟練の占術師です。上記の5種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
 
 特に以下の点について教えてください：
 1. 2026年の総合運勢と主要な運気の流れ
@@ -1918,7 +1704,7 @@ function hideLoading() {
 function normalizeScore(rawScore) {
     const normalized = 60 + ((rawScore - SCORE_MIN) / (SCORE_MAX - SCORE_MIN)) * 40;
     return Math.round(Math.max(60, Math.min(100, normalized)));
-}
+}}
 
 // ============================================================
 // 宿曜占星術（27宿）
