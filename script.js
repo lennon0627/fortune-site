@@ -213,6 +213,20 @@ function updateDayOptions() {
     if (currentDayValue && currentDayValue <= maxDay) {
         daySelect.value = currentDayValue;
     }
+    
+    // 未来日が選択された場合の警告表示
+    const existingWarning = document.getElementById('future-date-warning');
+    if (existingWarning) {
+        existingWarning.remove();
+    }
+    
+    if (maxDay === 0) {
+        const warning = document.createElement('p');
+        warning.id = 'future-date-warning';
+        warning.style.cssText = 'color: #f44336; font-size: 0.85em; margin-top: 5px;';
+        warning.textContent = '⚠️ 未来の日付は選択できません';
+        daySelect.parentElement.appendChild(warning);
+    }
 }
 
 function initializeTimeSelects() {
@@ -631,12 +645,19 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
     const monthShi = etoList[(calcMonth + 1) % 12];
     
     // 日柱 - ユリウス通日を使用した正確な計算
-    console.log('ユリウス日計算前:', { year, month, day });
-    const jdn = calculateJulianDayNumber(year, month, day);
+    console.log('ユリウス日計算前:', { year, month, day, hour });
+    let jdn = calculateJulianDayNumber(year, month, day);
     console.log('ユリウス日計算結果:', jdn);
     
     // ユリウス日を整数化してインデックス計算
-    const jdnInt = Math.floor(jdn);
+    let jdnInt = Math.floor(jdn);
+    
+    // 【重要】23時以降（子の刻）は翌日の日柱として扱う
+    if (hour >= 23) {
+        jdnInt += 1;
+        console.log('23時以降のため日柱を翌日に繰り上げ:', jdnInt);
+    }
+    
     const dayKanIndex = (jdnInt + 9) % 10;  // 基準日からの干支計算
     const dayShiIndex = (jdnInt + 1) % 12;
     const dayKan = jikkanList[dayKanIndex];
@@ -1014,6 +1035,7 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
             <span class="pillar-label">時柱:</span>
             <span class="pillar-value">${shichu.hour}</span>
         </div>
+        ${birthHour >= 23 ? '<p style="font-size: 0.85em; color: #ff9800; margin: 10px 0; padding: 8px; background: rgba(255, 152, 0, 0.1); border-left: 3px solid #ff9800;">ℹ️ 23時以降生まれのため、日柱は翌日の干支で計算されています。</p>' : ''}
         ${taiunDisplay}
         <div class="kubou-display">
             <strong>空亡（天中殺）:</strong> ${shichu.kubou && Array.isArray(shichu.kubou) ? shichu.kubou.join('・') : '--・--'}
@@ -1100,6 +1122,19 @@ function displayElements(elements) {
     setTimeout(() => {
         drawRadarChart(elements);
     }, 500);
+    
+    // リサイズ時に再描画（デバウンス処理付き）
+    let resizeTimer;
+    const resizeHandler = () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            drawRadarChart(elements);
+        }, 250);
+    };
+    
+    // 既存のリスナーを削除してから追加（重複防止）
+    window.removeEventListener('resize', resizeHandler);
+    window.addEventListener('resize', resizeHandler);
 }
 
 function drawRadarChart(elements) {
@@ -1499,24 +1534,38 @@ ${tarotData[tarot].description}
     document.getElementById('copyText').value = copyText;
     
     const copyBtn = document.getElementById('copyBtn');
-    copyBtn.onclick = function() {
+    copyBtn.onclick = async function() {
         const textarea = document.getElementById('copyText');
-        textarea.select();
-        document.execCommand('copy');
+        const text = textarea.value;
         
-        const originalText = copyBtn.innerHTML;
-        copyBtn.innerHTML = '✅ コピーしました！';
-        copyBtn.style.background = 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)';
-        
-        setTimeout(() => {
-            copyBtn.innerHTML = originalText;
-            copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
-        }, 2000);
+        try {
+            // 最新のClipboard APIを使用
+            if (navigator.clipboard && navigator.clipboard.writeText) {
+                await navigator.clipboard.writeText(text);
+            } else {
+                // フォールバック: 古いブラウザ用
+                textarea.select();
+                document.execCommand('copy');
+            }
+            
+            // 成功時のフィードバック
+            const originalText = copyBtn.innerHTML;
+            copyBtn.innerHTML = '✅ コピーしました！';
+            copyBtn.style.background = 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)';
+            
+            setTimeout(() => {
+                copyBtn.innerHTML = originalText;
+                copyBtn.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)';
+            }, 2000);
+        } catch (err) {
+            console.error('コピー失敗:', err);
+            alert('コピーに失敗しました。手動でコピーしてください。');
+        }
     };
     
     // AIボタンにクリック時のリマインド機能を追加
     document.querySelectorAll('.ai-btn').forEach(btn => {
-        btn.addEventListener('click', function(e) {
+        btn.addEventListener('click', async function(e) {
             const copyText = document.getElementById('copyText').value;
             if (!copyText) return;
             
@@ -1527,13 +1576,24 @@ ${tarotData[tarot].description}
                 // まだコピーしていない場合、確認ダイアログを表示
                 const confirmed = confirm('結果をクリップボードにコピーしてからAIサイトに移動しますか？\n\n「OK」を押すと自動でコピーして移動します。');
                 if (confirmed) {
-                    // 自動でコピー
-                    document.getElementById('copyText').select();
-                    document.execCommand('copy');
-                    
-                    // フィードバック表示
-                    copyBtn.innerHTML = '✅ コピーしました！';
-                    copyBtn.style.background = 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)';
+                    try {
+                        // 最新のClipboard APIを使用
+                        if (navigator.clipboard && navigator.clipboard.writeText) {
+                            await navigator.clipboard.writeText(copyText);
+                        } else {
+                            // フォールバック: 古いブラウザ用
+                            document.getElementById('copyText').select();
+                            document.execCommand('copy');
+                        }
+                        
+                        // フィードバック表示
+                        copyBtn.innerHTML = '✅ コピーしました！';
+                        copyBtn.style.background = 'linear-gradient(135deg, #00b894 0%, #00cec9 100%)';
+                    } catch (err) {
+                        console.error('コピー失敗:', err);
+                        alert('コピーに失敗しました。手動でコピーしてからAIサイトに移動してください。');
+                        e.preventDefault();
+                    }
                 } else {
                     // キャンセルされた場合は移動しない
                     e.preventDefault();
