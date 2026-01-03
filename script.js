@@ -556,6 +556,35 @@ function calculateKubou(dayShi) {
 }
 
 /**
+ * 空亡（天中殺）の計算
+ * 
+ * @param {string} dayShi - 日柱の地支
+ * @returns {Array} 空亡の地支2つ
+ */
+function calculateKubou(dayShi) {
+    const kubouPairs = [
+        ['戌', '亥'], // 子丑の空亡
+        ['申', '酉'], // 寅卯の空亡
+        ['午', '未'], // 辰巳の空亡
+        ['辰', '巳'], // 午未の空亡
+        ['寅', '卯'], // 申酉の空亡
+        ['子', '丑']  // 戌亥の空亡
+    ];
+    
+    const shiIndex = etoList.indexOf(dayShi);
+    
+    // エラーハンドリング: dayShiが見つからない場合
+    if (shiIndex === -1) {
+        console.error('空亡計算エラー: 無効な地支:', dayShi);
+        return ['--', '--'];
+    }
+    
+    const pairIndex = Math.floor(shiIndex / 2);
+    
+    return kubouPairs[pairIndex] || ['--', '--'];
+}
+
+/**
  * 大運の計算
  * 人生の10年ごとの運勢の流れ
  */
