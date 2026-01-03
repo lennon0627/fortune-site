@@ -342,48 +342,6 @@ const kabbalahData = {
     22: { description: 'マスターナンバー。大きな夢を実現する力があります。実務能力とビジョンを併せ持ちます。' }
 };
 
-const ziweiData = {
-    '紫微星': { description: '帝王の星。リーダーシップがあり、人を統率する力があります。高貴で品格があります。' },
-    '天機星': { description: '知恵の星。頭の回転が速く、戦略的思考に優れています。計画を立てるのが得意です。' },
-    '太陽星': { description: '光輝く星。明るく活発で、人を照らす存在です。正義感が強く、リーダーシップがあります。' },
-    '武曲星': { description: '武勇の星。決断力があり、困難を乗り越える力があります。実行力に優れています。' },
-    '天同星': { description: '福徳の星。温和で人当たりが良く、平和を愛します。幸運に恵まれやすい星です。' },
-    '廉貞星': { description: '華麗な星。魅力的で人を惹きつける力があります。情熱的で、感情豊かです。' },
-    '天府星': { description: '財庫の星。豊かさと安定をもたらします。管理能力があり、蓄財に長けています。' },
-    '太陰星': { description: '月の星。優しく思いやりがあり、感受性が豊かです。内面的な美しさを持っています。' },
-    '貪狼星': { description: '欲望の星。野心的で、目標達成に向けて努力します。多才で、様々なことに興味を持ちます。' },
-    '巨門星': { description: '口舌の星。コミュニケーション能力があり、説得力があります。分析力に優れています。' },
-    '天相星': { description: '宰相の星。サポート役として優れており、人を助ける力があります。調整能力に長けています。' },
-    '天梁星': { description: '福寿の星。年長者のような落ち着きがあり、人に慕われます。保護する力があります。' },
-    '七殺星': { description: '勇猛の星。勇敢で行動力があり、困難に立ち向かいます。独立心が強いです。' },
-    '破軍星': { description: '開拓の星。変革を起こす力があり、新しいことに挑戦します。破壊と創造の力を持っています。' }
-};
-
-const tarotData = {
-    '愚者': { description: '新しい冒険の始まりを示します。純粋な心で未知の世界に飛び込む勇気が与えられます。' },
-    '魔術師': { description: '創造力と実現力が最高潮に達します。望むものを形にする力があります。' },
-    '女教皇': { description: '直感と内なる知恵が高まります。静かに内省する時間が重要です。' },
-    '女帝': { description: '豊かさと創造性に満ちた年になります。愛情を注ぐことで幸せが訪れます。' },
-    '皇帝': { description: '安定と秩序をもたらす力があります。リーダーシップを発揮する年です。' },
-    '教皇': { description: '伝統と知恵を大切にする年です。学びと成長の機会に恵まれます。' },
-    '恋人': { description: '重要な選択と深い絆の年です。心の繋がりが幸運を呼びます。' },
-    '戦車': { description: '強い意志で前進する年です。目標達成に向けて突き進む力があります。' },
-    '力': { description: '内なる強さと優しさで困難を乗り越えます。忍耐が実を結びます。' },
-    '隠者': { description: '自己探求と内省の年です。深い洞察力が得られます。' },
-    '運命の輪': { description: '大きな転機と幸運の訪れを示します。チャンスを逃さないでください。' },
-    '正義': { description: 'バランスと公正さが重要な年です。誠実な行動が報われます。' },
-    '吊られた男': { description: '視点を変えることで新しい発見があります。試練は成長の機会です。' },
-    '死神': { description: '終わりと新しい始まりの年です。変化を恐れず受け入れてください。' },
-    '節制': { description: '調和とバランスが幸運を呼びます。中庸の道が成功への鍵です。' },
-    '悪魔': { description: '欲望と向き合う年です。執着を手放すことで自由が得られます。' },
-    '塔': { description: '突然の変化がありますが、それは必要な浄化です。新たな基盤を築けます。' },
-    '星': { description: '希望と癒しの年です。夢に向かって進む勇気が与えられます。' },
-    '月': { description: '直感と想像力が高まります。不安を乗り越えて真実を見つけます。' },
-    '太陽': { description: '喜びと成功に満ちた年です。自信を持って輝いてください。' },
-    '審判': { description: '過去の総決算と新生の年です。重要な決断が訪れます。' },
-    '世界': { description: '完成と達成の年です。大きな目標が実現する可能性があります。' }
-};
-
 // 干支の配列
 const etoList = ['子', '丑', '寅', '卯', '辰', '巳', '午', '未', '申', '酉', '戌', '亥'];
 
@@ -856,38 +814,6 @@ function calculateKabbalah(year, month, day) {
 }
 
 // ============================================================
-// 紫微斗数の計算
-// ============================================================
-
-function calculateZiwei(year, month, day, hour = 12) {
-    const stars = Object.keys(ziweiData);
-    const birthDate = new Date(year, month - 1, day, hour);
-    const baseDate = new Date(1900, 0, 1);
-    const daysDiff = Math.floor((birthDate - baseDate) / (1000 * 60 * 60 * 24));
-    const hourIndex = Math.floor((hour + 1) % 24 / 2);
-    const index = (daysDiff + hourIndex) % stars.length;
-    
-    return stars[index];
-}
-
-// ============================================================
-// 年運タロットの計算
-// ============================================================
-
-function calculateYearTarot(year, month, day) {
-    const cards = Object.keys(tarotData);
-    const targetYear = 2026;
-    
-    // 生年月日と対象年を組み合わせて計算
-    let sum = targetYear + year + month + day;
-    while (sum >= cards.length) {
-        sum = String(sum).split('').reduce((a, b) => parseInt(a) + parseInt(b), 0);
-    }
-    
-    return cards[sum % cards.length];
-}
-
-// ============================================================
 // 干支の取得
 // ============================================================
 
@@ -903,79 +829,66 @@ function getEto(year, month, day) {
 }
 
 // ============================================================
-// 総合スコアの計算（定数を使用）
+// 総合スコアの計算（6つの占術で100点満点）
 // ============================================================
 
-function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shichu, kabbalah, ziwei, tarot) {
-    // 生まれ年の干支を取得（スコア計算には使用しないが、参考情報として保持）
+function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shichu, kabbalah) {
+    // 生まれ年の干支を取得（参考情報として保持）
     const birthEto = getEto(birthYear, 2, 4);
     
-    // 1. 干支×タロットの相性（15点固定）
-    const etoTarotScore = SCORE_CONFIG.ETO_TAROT.min;
-    
-    // 2. 九星×西洋占星術の組み合わせ（10-20点）
-    const kyuseiWesternCombos = {
-        '一白水星': { '蟹座': 20, '蠍座': 18, '魚座': 19, '牡牛座': 15, '乙女座': 16 },
-        '二黒土星': { '牡牛座': 20, '乙女座': 19, '山羊座': 18, '蟹座': 15 },
-        '三碧木星': { '牡羊座': 20, '獅子座': 19, '射手座': 18, '双子座': 16, '水瓶座': 17 },
-        '四緑木星': { '双子座': 20, '天秤座': 19, '水瓶座': 18, '牡羊座': 16 },
-        '五黄土星': { '山羊座': 20, '牡牛座': 18, '乙女座': 17, '獅子座': 16 },
-        '六白金星': { '天秤座': 20, '水瓶座': 19, '双子座': 18, '牡牛座': 15 },
-        '七赤金星': { '獅子座': 20, '射手座': 19, '牡羊座': 18, '双子座': 16 },
-        '八白土星': { '山羊座': 20, '牡牛座': 19, '乙女座': 18, '蠍座': 16 },
-        '九紫火星': { '牡羊座': 20, '獅子座': 19, '射手座': 18, '天秤座': 16 }
-    };
-    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 12;
-    
-    // 3. 数秘術（10-15点）
-    const numerologyScores = {
-        1: 15, 2: 12, 3: 14, 4: 11, 5: 13,
-        6: 12, 7: 11, 8: 14, 9: 13, 11: 15, 22: 15
-    };
-    const numerologyScore = numerologyScores[numerology] || 10;
-    
-    // 4. 五星三心（11-15点）
-    const goseiScores = {
-        '金のイルカ': 15, '銀のイルカ': 13, '金の鳳凰': 14, '銀の鳳凰': 13,
-        '金のインディアン': 14, '銀のインディアン': 12, '金の時計': 13, '銀の時計': 12,
-        '金のカメレオン': 15, '銀のカメレオン': 13, '金の羅針盤': 14, '銀の羅針盤': 12
-    };
-    const goseiScore = goseiScores[gosei] || 11;
-    
-    // 5. 四柱推命の五行バランス（10-25点）
+    // 1. 四柱推命の五行バランス（15-30点）★最重要
     const elementValues = Object.values(shichu.elements);
     const maxElement = Math.max(...elementValues);
     const minElement = Math.min(...elementValues);
     const balance = maxElement - minElement;
-    const shichuScore = Math.max(10, 25 - balance * 2);
+    // バランスが良いほど高得点（最大30点、最小15点）
+    const shichuScore = Math.max(15, 30 - balance * 2);
     
-    // 6. カバラ（3-5点）
-    const kabbalahScore = kabbalah === 11 || kabbalah === 22 ? 5 : 
-                          kabbalah === 1 || kabbalah === 9 ? 4 : 3;
-    
-    // 7. 紫微斗数（3-5点）
-    const ziweiScores = {
-        '紫微星': 5, '天機星': 4, '太陽星': 5, '武曲星': 4,
-        '天同星': 5, '廉貞星': 4, '天府星': 5, '太陰星': 4,
-        '貪狼星': 4, '巨門星': 3, '天相星': 4, '天梁星': 5,
-        '七殺星': 4, '破軍星': 3
+    // 2. 九星×西洋占星術の組み合わせ（15-25点）★重要
+    const kyuseiWesternCombos = {
+        '一白水星': { '蟹座': 25, '蠍座': 23, '魚座': 24, '牡牛座': 20, '乙女座': 21, '山羊座': 22 },
+        '二黒土星': { '牡牛座': 25, '乙女座': 24, '山羊座': 23, '蟹座': 20, '蠍座': 21, '魚座': 22 },
+        '三碧木星': { '牡羊座': 25, '獅子座': 24, '射手座': 23, '双子座': 21, '水瓶座': 22, '天秤座': 20 },
+        '四緑木星': { '双子座': 25, '天秤座': 24, '水瓶座': 23, '牡羊座': 21, '獅子座': 22, '射手座': 20 },
+        '五黄土星': { '山羊座': 25, '牡牛座': 23, '乙女座': 22, '獅子座': 21, '蟹座': 20, '蠍座': 21 },
+        '六白金星': { '天秤座': 25, '水瓶座': 24, '双子座': 23, '牡牛座': 20, '乙女座': 21, '山羊座': 22 },
+        '七赤金星': { '獅子座': 25, '射手座': 24, '牡羊座': 23, '双子座': 21, '天秤座': 22, '水瓶座': 20 },
+        '八白土星': { '山羊座': 25, '牡牛座': 24, '乙女座': 23, '蠍座': 21, '蟹座': 22, '魚座': 20 },
+        '九紫火星': { '牡羊座': 25, '獅子座': 24, '射手座': 23, '天秤座': 21, '双子座': 22, '水瓶座': 20 }
     };
-    const ziweiScore = ziweiScores[ziwei] || 3;
+    const kyuseiWesternScore = kyuseiWesternCombos[kyusei]?.[western] || 18;
     
-    // 合計
-    const rawScore = etoTarotScore + kyuseiWesternScore + numerologyScore + 
-                     goseiScore + shichuScore + kabbalahScore + ziweiScore;
+    // 3. 五星三心（15-20点）★重要
+    const goseiScores = {
+        '金のイルカ': 20, '銀のイルカ': 18, '金の鳳凰': 19, '銀の鳳凰': 18,
+        '金のインディアン': 19, '銀のインディアン': 17, '金の時計': 18, '銀の時計': 17,
+        '金のカメレオン': 20, '銀のカメレオン': 18, '金の羅針盤': 19, '銀の羅針盤': 17
+    };
+    const goseiScore = goseiScores[gosei] || 16;
+    
+    // 4. 数秘術（12-18点）
+    const numerologyScores = {
+        1: 18, 2: 15, 3: 17, 4: 14, 5: 16,
+        6: 15, 7: 14, 8: 17, 9: 16, 11: 18, 22: 18
+    };
+    const numerologyScore = numerologyScores[numerology] || 13;
+    
+    // 5. カバラ占術（5-7点）
+    const kabbalahScore = kabbalah === 11 || kabbalah === 22 ? 7 : 
+                          kabbalah === 1 || kabbalah === 9 ? 6 : 5;
+    
+    // 合計（最大約100点）
+    const rawScore = shichuScore + kyuseiWesternScore + goseiScore + 
+                     numerologyScore + kabbalahScore;
     
     return {
-        etoTarot: etoTarotScore,
-        kyuseiWestern: kyuseiWesternScore,
-        numerology: numerologyScore,
-        gosei: goseiScore,
         shichu: shichuScore,
+        kyuseiWestern: kyuseiWesternScore,
+        gosei: goseiScore,
+        numerology: numerologyScore,
         kabbalah: kabbalahScore,
-        ziwei: ziweiScore,
-        raw: rawScore,
-        normalized: normalizeScore(rawScore)
+        total: rawScore,
+        percentage: Math.round(rawScore) // 100点満点
     };
 }
 
@@ -984,13 +897,13 @@ function calculateTotalScore(birthYear, kyusei, numerology, western, gosei, shic
 // ============================================================
 
 function calculateRanking(score) {
-    const totalCombinations = 144;
+    const totalCombinations = 108; // 9九星 × 12星座 = 108通り
     
     // スコアから決定的に順位を計算（同じスコアなら必ず同じ順位）
-    // 線形マッピング: スコア100→1位、スコア60→144位
+    // 線形マッピング: スコア100→1位、スコア60→108位
     const rank = Math.round(totalCombinations - ((score - 60) / 40) * (totalCombinations - 1));
     
-    // 1-144の範囲に収める
+    // 1-108の範囲に収める
     return Math.max(1, Math.min(totalCombinations, rank));
 }
 
@@ -1076,14 +989,12 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
             const gosei = calculateGosei(year, month, day, gender);
             const shichu = calculateShichu(year, month, day, hour, minute);
             const kabbalah = calculateKabbalah(year, month, day);
-            const ziwei = calculateZiwei(year, month, day, hour);
-            const tarot = calculateYearTarot(year, month, day);
             
             // 干支を取得
             const birthEto = getEto(year, month, day);
             
             // 結果を表示
-            displayResults(name, kyusei, numerology, western, gosei, shichu, kabbalah, ziwei, tarot, birthEto, year, month, day, hour, minute);
+            displayResults(name, kyusei, numerology, western, gosei, shichu, kabbalah, birthEto, year, month, day, hour, minute);
             
             // フォームを非表示にして結果を表示
             document.querySelector('.fortune-card').style.display = 'none';
@@ -1113,7 +1024,7 @@ document.getElementById('fortuneForm').addEventListener('submit', async function
 // 結果表示
 // ============================================================
 
-function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziwei, tarot, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
+function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, birthEto, birthYear, birthMonth, birthDay, birthHour, birthMinute) {
     // 九星気学
     const kyuseiInfo = kyuseiData[kyusei];
     document.getElementById('kyuseiStar').textContent = kyusei;
@@ -1202,22 +1113,14 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     document.getElementById('kabbalahNumber').textContent = `運命数: ${kabbalah}`;
     document.getElementById('kabbalahDesc').innerHTML = kabbalahData[kabbalah].description;
     
-    // 紫微斗数
-    document.getElementById('ziweiStar').textContent = ziwei;
-    document.getElementById('ziweiDesc').innerHTML = ziweiData[ziwei].description;
-    
-    // 年運タロット
-    document.getElementById('tarotCard').textContent = tarot;
-    document.getElementById('tarotDesc').innerHTML = tarotData[tarot].description;
-    
     // 総合運勢
-    displayTotal(name, kyusei, num, western, gosei, shichu, ziwei, tarot);
+    displayTotal(name, kyusei, num, western, gosei, shichu);
     
     // ランキング表示
-    displayRanking(name, birthYear, birthEto, western, kyusei, num, gosei, shichu, kabbalah, ziwei, tarot);
+    displayRanking(name, birthYear, birthEto, western, kyusei, num, gosei, shichu, kabbalah);
     
     // コピー用テキスト生成
-    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, num, western, gosei, shichu, kabbalah, ziwei, tarot, birthEto);
+    generateCopyText(name, birthYear, birthMonth, birthDay, birthHour, birthMinute, kyusei, num, western, gosei, shichu, kabbalah, birthEto);
 }
 
 // ============================================================
@@ -1461,7 +1364,7 @@ const fortuneTemplates = {
     }
 };
 
-function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, tarot) {
+function displayTotal(userName, kyusei, num, western, gosei, shichu) {
     console.log('総合運勢を生成中...', { userName, kyusei, num, western, gosei });
     
     // ローディング表示
@@ -1473,8 +1376,6 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
         const numInfo = numerologyData[num];
         const westernInfo = westernZodiacData[western];
         const goseiInfo = goseiData[gosei];
-        const ziweiInfo = ziweiData[ziwei];
-        const tarotInfo = tarotData[tarot];
         
         const dominantElement = Object.entries(shichu.elements).sort((a, b) => b[1] - a[1])[0];
         
@@ -1528,10 +1429,10 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
         ];
         
         const yearForecasts = [
-            `2026年は年運タロット「<strong>${tarot}</strong>」が示すように、${tarotInfo.description}`,
-            `${userName}さんの今年の年運タロット「<strong>${tarot}</strong>」が現れました。${tarotInfo.description}`,
-            `<strong>${western}</strong> ${westernInfo.emoji}として迎える2026年、年運タロット「<strong>${tarot}</strong>」の力が加わることで、${tarotInfo.description}`,
-            `${userName}さんの2026年、${westernInfo.description}年運タロット「<strong>${tarot}</strong>」が示すように、${tarotInfo.description}`
+            `2026年は<strong>${western}</strong> ${westernInfo.emoji}として、${westernInfo.description}充実した一年を過ごせるでしょう。`,
+            `${userName}さんの今年は<strong>${western}</strong>の特性が活きる年です。${westernInfo.description}チャンスを確実につかんでください。`,
+            `<strong>${gosei}</strong>として迎える2026年、${goseiInfo.description}大きな飛躍が期待できます。`,
+            `${userName}さんの2026年は、運命数<strong>${num}</strong>の力が最大限に発揮される年です。${numInfo.description}自信を持って前進しましょう。`
         ];
         
         const elements = [
@@ -1546,12 +1447,6 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
             `${userName}さんは<strong>${gosei}</strong>の力を信じて進むことで、予想以上の成果が得られます。`
         ];
         
-        const ziweiFortune = [
-            `紫微斗数の<strong>${ziwei}</strong>は、${ziweiInfo.description}${userName}さんはこの星の力を借りて、大きな飛躍が期待できます。`,
-            `<strong>${ziwei}</strong>の加護を受ける${userName}さんは、${ziweiInfo.description}チャンスを確実につかむことができるでしょう。`,
-            `${userName}さんには<strong>${ziwei}</strong>が示すように、${ziweiInfo.description}運命の流れに身を任せてください。`
-        ];
-        
         const conclusions = [
             `${userName}さん、${kyuseiInfo.color}を身につけ、${kyuseiInfo.direction}の方位を意識することで、さらに運気が高まります。2026年は、あなたらしさを大切にしながら、新しい可能性にも目を向けていってください！✨`,
             `ラッキーカラーの${kyuseiInfo.color}と、幸運の方位${kyuseiInfo.direction}が、${userName}さんの人生をサポートします。自分を信じて、輝かしい一年を過ごしましょう！🌟`,
@@ -1561,7 +1456,7 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
         const fortune = `
             <p>${openings[Math.floor(Math.random() * openings.length)]}</p>
             <p><strong>2026年の展望:</strong> ${yearForecasts[Math.floor(Math.random() * yearForecasts.length)]}</p>
-            <p>${elements[Math.floor(Math.random() * elements.length)]} ${ziweiFortune[Math.floor(Math.random() * ziweiFortune.length)]}</p>
+            <p>${elements[Math.floor(Math.random() * elements.length)]}</p>
             <p><strong>五行バランスからのアドバイス:</strong> ${gogyouAdvice}</p>
             <p><strong>開運のヒント:</strong> ${advice[Math.floor(Math.random() * advice.length)]}</p>
             <p>${conclusions[Math.floor(Math.random() * conclusions.length)]}</p>
@@ -1576,9 +1471,9 @@ function displayTotal(userName, kyusei, num, western, gosei, shichu, ziwei, taro
 // ランキング表示
 // ============================================================
 
-function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gosei, shichu, kabbalah, ziwei, tarot) {
-    const scores = calculateTotalScore(birthYear, kyusei, num, western, gosei, shichu, kabbalah, ziwei, tarot);
-    const totalScore = scores.normalized;
+function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gosei, shichu, kabbalah) {
+    const scores = calculateTotalScore(birthYear, kyusei, num, western, gosei, shichu, kabbalah);
+    const totalScore = scores.percentage;
     const ranking = calculateRanking(totalScore);
     const fortuneLevel = getFortuneLevel(totalScore);
     
@@ -1588,32 +1483,24 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gos
     
     document.getElementById('scoreBreakdown').innerHTML = `
         <div class="score-item">
-            <span class="score-label">干支×タロット</span>
-            <span class="score-value">${scores.etoTarot}点</span>
+            <span class="score-label">四柱推命（五行バランス）</span>
+            <span class="score-value">${scores.shichu}点</span>
         </div>
         <div class="score-item">
             <span class="score-label">九星×西洋占星術</span>
             <span class="score-value">${scores.kyuseiWestern}点</span>
         </div>
         <div class="score-item">
-            <span class="score-label">数秘術</span>
-            <span class="score-value">${scores.numerology}点</span>
-        </div>
-        <div class="score-item">
             <span class="score-label">五星三心</span>
             <span class="score-value">${scores.gosei}点</span>
         </div>
         <div class="score-item">
-            <span class="score-label">四柱推命</span>
-            <span class="score-value">${scores.shichu}点</span>
+            <span class="score-label">数秘術</span>
+            <span class="score-value">${scores.numerology}点</span>
         </div>
         <div class="score-item">
-            <span class="score-label">カバラ</span>
+            <span class="score-label">カバラ占術</span>
             <span class="score-value">${scores.kabbalah}点</span>
-        </div>
-        <div class="score-item">
-            <span class="score-label">紫微斗数</span>
-            <span class="score-value">${scores.ziwei}点</span>
         </div>
     `;
     
@@ -1624,7 +1511,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gos
     `;
     
     document.getElementById('rankingPosition').textContent = 
-        `144通りの組み合わせ中 ${ranking}位`;
+        `108通りの組み合わせ中 ${ranking}位`;
     
     document.getElementById('fortuneLevel').innerHTML = `
         <div class="star-rating">${fortuneLevel.stars}</div>
@@ -1636,7 +1523,7 @@ function displayRanking(userName, birthYear, birthEto, western, kyusei, num, gos
 // コピー用テキスト生成
 // ============================================================
 
-function generateCopyText(userName, year, month, day, hour, minute, kyusei, num, western, gosei, shichu, kabbalah, ziwei, tarot, birthEto) {
+function generateCopyText(userName, year, month, day, hour, minute, kyusei, num, western, gosei, shichu, kabbalah, birthEto) {
     const westernEmoji = westernZodiacData[western].emoji;
     const timeStr = hour !== 12 || minute !== 0 ? ` ${hour}時${minute}分` : '';
     
@@ -1647,7 +1534,7 @@ function generateCopyText(userName, year, month, day, hour, minute, kyusei, num,
 西洋占星術: ${western}${westernEmoji}
 
 ━━━━━━━━━━━━━━━━
-📊 8種類の占術による総合鑑定
+📊 6種類の占術による総合鑑定
 ━━━━━━━━━━━━━━━━
 
 🌟 九星気学: ${kyusei}
@@ -1676,12 +1563,6 @@ ${goseiData[gosei].description}
 🔯 カバラ占術: 運命数${kabbalah}
 ${kabbalahData[kabbalah].description}
 
-🟣 紫微斗数: ${ziwei}
-${ziweiData[ziwei].description}
-
-🃏 2026年運タロット: ${tarot}
-${tarotData[tarot].description}
-
 ━━━━━━━━━━━━━━━━
 💬 AIで詳しく占いたい方へ
 ━━━━━━━━━━━━━━━━
@@ -1692,7 +1573,7 @@ ${tarotData[tarot].description}
 ━━━━━━━━━━━━━━━━
 【推奨プロンプト】
 
-あなたは熟練の占術師です。上記の8種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
+あなたは熟練の占術師です。上記の6種類の占術による鑑定結果に基づき、${userName}さんの2026年の運勢を、具体的かつ前向きなアドバイスと共に詳しく鑑定してください。
 
 特に以下の点について教えてください：
 1. 2026年の総合運勢と主要な運気の流れ
