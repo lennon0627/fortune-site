@@ -522,6 +522,35 @@ function calculateJulianDayNumber(year, month, day) {
 }
 
 /**
+ * 空亡（天中殺）の計算
+ * 
+ * @param {string} dayShi - 日柱の地支
+ * @returns {Array} 空亡の地支2つ
+ */
+function calculateKubou(dayShi) {
+    const kubouPairs = [
+        ['戌', '亥'], // 子丑の空亡
+        ['申', '酉'], // 寅卯の空亡
+        ['午', '未'], // 辰巳の空亡
+        ['辰', '巳'], // 午未の空亡
+        ['寅', '卯'], // 申酉の空亡
+        ['子', '丑']  // 戌亥の空亡
+    ];
+    
+    const shiIndex = etoList.indexOf(dayShi);
+    
+    // エラーハンドリング: dayShiが見つからない場合
+    if (shiIndex === -1) {
+        console.error('空亡計算エラー: 無効な地支:', dayShi);
+        return ['--', '--'];
+    }
+    
+    const pairIndex = Math.floor(shiIndex / 2);
+    
+    return kubouPairs[pairIndex] || ['--', '--'];
+}
+
+/**
  * 大運の計算
  * 人生の10年ごとの運勢の流れ
  */
@@ -621,6 +650,15 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
         }
     });
     
+    // デバッグログ
+    console.log('四柱推命計算:', {
+        year: yearKan + yearShi,
+        month: monthKan + monthShi,
+        day: dayKan + dayShi,
+        hour: hourKan + hourShi,
+        dayShi: dayShi
+    });
+    
     // 空亡の計算
     const kubou = calculateKubou(dayShi);
     
@@ -638,30 +676,6 @@ function calculateShichu(year, month, day, hour = 12, minute = 0) {
         note: `立春: ${risshun.getMonth() + 1}/${risshun.getDate()} ${risshun.getHours()}:${String(risshun.getMinutes()).padStart(2, '0')}`
     };
 }
-
-/**
- * 空亡（天中殺）の計算
- * 
- * @param {string} dayShi - 日柱の地支
- * @returns {Array} 空亡の地支2つ
- */
-function calculateKubou(dayShi) {
-    const kubouPairs = [
-        ['戌', '亥'], // 子丑の空亡
-        ['申', '酉'], // 寅卯の空亡
-        ['午', '未'], // 辰巳の空亡
-        ['辰', '巳'], // 午未の空亡
-        ['寅', '卯'], // 申酉の空亡
-        ['子', '丑']  // 戌亥の空亡
-    ];
-    
-    const shiIndex = etoList.indexOf(dayShi);
-    const pairIndex = Math.floor(shiIndex / 2);
-    
-    return kubouPairs[pairIndex];
-}
-
-
 
 // ============================================================
 // カバラ数秘術の計算
@@ -980,7 +994,7 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
         </div>
         ${taiunDisplay}
         <div class="kubou-display">
-            <strong>空亡（天中殺）:</strong> ${shichu.kubou.join('・')}
+            <strong>空亡（天中殺）:</strong> ${shichu.kubou && Array.isArray(shichu.kubou) ? shichu.kubou.join('・') : '--・--'}
             <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
                 ※空亡は運気の空白期間で、慎重な行動が求められる時期を示します
             </p>
@@ -1394,7 +1408,7 @@ ${numerologyData[num].description}
 🎋 四柱推命
 年柱: ${shichu.year} / 月柱: ${shichu.month}
 日柱: ${shichu.day} / 時柱: ${shichu.hour}
-空亡: ${shichu.kubou.join('・')}
+空亡: ${shichu.kubou && Array.isArray(shichu.kubou) ? shichu.kubou.join('・') : '--・--'}
 五行バランス: 木${shichu.elements['木']} 火${shichu.elements['火']} 土${shichu.elements['土']} 金${shichu.elements['金']} 水${shichu.elements['水']}
 ${shichu.taiun ? `大運: ${shichu.taiun.description} (${shichu.taiun.period})` : ''}
 
