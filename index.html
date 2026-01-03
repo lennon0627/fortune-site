@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="生年月日から8種類の占術で2026年の運勢を完全鑑定。九星気学・数秘術・四柱推命・西洋占星術・五星三心・カバラ・紫微斗数・タロット。">
     <title>究極の運勢占い✨ 8種類の占術で完全鑑定</title>
     <link rel="stylesheet" href="styles.css">
 </head>
@@ -22,10 +21,9 @@
             <div class="card-header">
                 <h2>生年月日を入力して占う</h2>
             </div>
-            <form id="fortuneForm" class="fortune-form" novalidate>
-                <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
+            <form id="fortuneForm" class="fortune-form">
                 <div class="input-group">
-                    <label for="birthYear"><span class="label-icon">🎂</span> 生年月日</label>
+                    <label><span class="label-icon">🎂</span> 生年月日</label>
                     <div class="date-selects">
                         <select id="birthYear" required>
                             <option value="">年</option>
@@ -42,7 +40,7 @@
                     </div>
                 </div>
                 <div class="input-group">
-                    <label for="birthHour"><span class="label-icon">🕐</span> 生まれた時間</label>
+                    <label><span class="label-icon">🕐</span> 生まれた時間</label>
                     <div class="time-selects">
                         <select id="birthHour">
                             <option value="">時</option>
@@ -55,20 +53,18 @@
                     </div>
                 </div>
                 <div class="input-group">
-    <fieldset class="gender-fieldset">
-        <legend><span class="label-icon">⚧</span> 性別</legend>
-        <div class="gender-selects" role="radiogroup" aria-label="性別">
-            <label class="gender-option">
-                <input type="radio" id="genderMale" name="gender" value="male" required>
-                <span>男性</span>
-            </label>
-            <label class="gender-option">
-                <input type="radio" id="genderFemale" name="gender" value="female" required>
-                <span>女性</span>
-            </label>
-        </div>
-    </fieldset>
-</div>
+                    <label><span class="label-icon">⚧</span> 性別</label>
+                    <div class="gender-selects">
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="male" required>
+                            <span>男性</span>
+                        </label>
+                        <label class="gender-option">
+                            <input type="radio" name="gender" value="female" required>
+                            <span>女性</span>
+                        </label>
+                    </div>
+                </div>
                 <div class="input-group">
                     <label for="name"><span class="label-icon">✨</span> お名前</label>
                     <input type="text" id="name" placeholder="山田太郎">
