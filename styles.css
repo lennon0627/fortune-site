@@ -318,8 +318,8 @@ body {
 /* ラッキー情報 */
 .lucky-info {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
     margin-top: 20px;
 }
 
@@ -328,7 +328,6 @@ body {
     background: #f5f5f5;
     border-radius: 8px;
     font-weight: bold;
-    font-size: 0.95em;
 }
 
 .luck-item span {
@@ -361,46 +360,6 @@ body {
     font-weight: bold;
 }
 
-/* 空亡表示 */
-.kubou-display {
-    margin-top: 20px;
-    padding: 15px;
-    background: linear-gradient(135deg, #fff5e6 0%, #ffe6f0 100%);
-    border-left: 4px solid #764ba2;
-    border-radius: 8px;
-}
-
-.kubou-display strong {
-    color: #667eea;
-    font-size: 1.1em;
-}
-
-/* 大運表示 */
-.taiun-display {
-    margin-top: 15px;
-    padding: 15px;
-    background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
-    border-left: 4px solid #4caf50;
-    border-radius: 8px;
-}
-
-.taiun-display strong {
-    color: #2e7d32;
-    font-size: 1.1em;
-}
-
-/* 節入り注釈 */
-.setsuniri-note {
-    margin-bottom: 15px;
-    padding: 12px;
-    background: #fff3cd;
-    border-left: 4px solid #ffc107;
-    border-radius: 5px;
-    color: #856404;
-    font-size: 0.9em;
-    line-height: 1.6;
-}
-
 /* 五行バー */
 .element-bars {
     margin: 20px 0;
@@ -429,28 +388,12 @@ body {
 .element-fill {
     height: 100%;
     background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
-    transition: width 1s ease-out; /* アニメーション時間を1秒に */
+    transition: width 0.5s ease;
 }
 
 .element-count {
     text-align: center;
     font-weight: bold;
-}
-
-/* 五行レーダーチャート */
-.radar-chart-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 30px;
-    padding: 20px;
-    background: linear-gradient(135deg, #f5f7fa 0%, #e8f0fe 100%);
-    border-radius: 15px;
-}
-
-#gogyouRadarChart {
-    display: block;
-    margin: 0 auto;
 }
 
 /* 総合運勢 */
