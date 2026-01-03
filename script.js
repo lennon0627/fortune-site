@@ -521,6 +521,43 @@ function calculateJulianDayNumber(year, month, day) {
            day + b - 1524.5;
 }
 
+/**
+ * 大運の計算
+ * 人生の10年ごとの運勢の流れ
+ */
+function calculateTaiun(year, month, day, yearKan, yearShi) {
+    const currentYear = new Date().getFullYear();
+    const age = currentYear - year;
+    
+    // 大運の開始年齢（性別と陰陽によって異なるが、ここでは簡易版）
+    const taiunStart = 8; // 一般的に8歳前後で大運が始まる
+    
+    if (age < taiunStart) {
+        return {
+            current: '初年運',
+            description: 'まだ大運期に入っていません'
+        };
+    }
+    
+    // 現在の大運期数
+    const taiunNumber = Math.floor((age - taiunStart) / 10);
+    
+    // 大運の干支を計算（月柱から順次変化）
+    const taiunKanIndex = (jikkanList.indexOf(yearKan) + taiunNumber + 1) % 10;
+    const taiunShiIndex = (etoList.indexOf(yearShi) + taiunNumber + 1) % 12;
+    
+    const taiunKanshi = jikkanList[taiunKanIndex] + etoList[taiunShiIndex];
+    const startAge = taiunStart + (taiunNumber * 10);
+    const endAge = startAge + 9;
+    
+    return {
+        current: taiunKanshi,
+        period: `${startAge}歳〜${endAge}歳`,
+        number: taiunNumber + 1,
+        description: `第${taiunNumber + 1}大運期（${taiunKanshi}）`
+    };
+}
+
 function calculateShichu(year, month, day, hour = 12, minute = 0) {
     // 正確な立春判定
     const risshun = calculateAccurateRisshun(year);
@@ -624,42 +661,7 @@ function calculateKubou(dayShi) {
     return kubouPairs[pairIndex];
 }
 
-/**
- * 大運の計算
- * 人生の10年ごとの運勢の流れ
- */
-function calculateTaiun(year, month, day, yearKan, yearShi) {
-    const currentYear = new Date().getFullYear();
-    const age = currentYear - year;
-    
-    // 大運の開始年齢（性別と陰陽によって異なるが、ここでは簡易版）
-    const taiunStart = 8; // 一般的に8歳前後で大運が始まる
-    
-    if (age < taiunStart) {
-        return {
-            current: '初年運',
-            description: 'まだ大運期に入っていません'
-        };
-    }
-    
-    // 現在の大運期数
-    const taiunNumber = Math.floor((age - taiunStart) / 10);
-    
-    // 大運の干支を計算（月柱から順次変化）
-    const taiunKanIndex = (jikkanList.indexOf(yearKan) + taiunNumber + 1) % 10;
-    const taiunShiIndex = (etoList.indexOf(yearShi) + taiunNumber + 1) % 12;
-    
-    const taiunKanshi = jikkanList[taiunKanIndex] + etoList[taiunShiIndex];
-    const startAge = taiunStart + (taiunNumber * 10);
-    const endAge = startAge + 9;
-    
-    return {
-        current: taiunKanshi,
-        period: `${startAge}歳〜${endAge}歳`,
-        number: taiunNumber + 1,
-        description: `第${taiunNumber + 1}大運期（${taiunKanshi}）`
-    };
-}
+
 
 // ============================================================
 // カバラ数秘術の計算
