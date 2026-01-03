@@ -8,6 +8,142 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeTimeSelects();
 });
 
+// ============================================================
+// UIユーティリティ（アクセシビリティ / UX改善）
+// ============================================================
+
+const el = {
+    form: null,
+    error: null,
+    year: null,
+    month: null,
+    day: null,
+    hour: null,
+    minute: null,
+    name: null,
+    genderRadios: null,
+    genderOptions: null,
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    // 参照をキャッシュ
+    el.form = document.getElementById('fortuneForm');
+    el.error = document.getElementById('formError');
+    el.year = document.getElementById('birthYear');
+    el.month = document.getElementById('birthMonth');
+    el.day = document.getElementById('birthDay');
+    el.hour = document.getElementById('birthHour');
+    el.minute = document.getElementById('birthMinute');
+    el.name = document.getElementById('name');
+    el.genderRadios = document.querySelectorAll('input[name="gender"]');
+    el.genderOptions = document.querySelectorAll('.gender-option');
+
+    // 性別の見た目（:has を使わず JS でクラス付与）
+    el.genderRadios.forEach(r => r.addEventListener('change', syncGenderCheckedUI));
+    syncGenderCheckedUI();
+
+    // URLパラメータ / LocalStorage から復元
+    restoreInputsFromUrlOrStorage();
+});
+
+function setFormError(message, focusEl) {
+    if (!el.error) return;
+    el.error.textContent = message;
+    el.error.classList.add('is-visible');
+    if (focusEl && typeof focusEl.focus === 'function') {
+        focusEl.focus({ preventScroll: true });
+    }
+    // 少し上にスクロールして見えるように
+    const top = el.form?.getBoundingClientRect()?.top ?? 0;
+    window.scrollTo({ top: window.scrollY + top - 20, behavior: 'smooth' });
+}
+
+function clearFormError() {
+    if (!el.error) return;
+    el.error.textContent = '';
+    el.error.classList.remove('is-visible');
+}
+
+function syncGenderCheckedUI() {
+    document.querySelectorAll('.gender-option').forEach(opt => opt.classList.remove('is-checked'));
+    const checked = document.querySelector('input[name="gender"]:checked');
+    if (checked) {
+        const wrapper = checked.closest('.gender-option');
+        if (wrapper) wrapper.classList.add('is-checked');
+    }
+}
+
+function restoreInputsFromUrlOrStorage() {
+    // 1) URLパラメータ優先
+    const params = new URLSearchParams(location.search);
+    const birth = params.get('birth');   // YYYY-MM-DD
+    const time = params.get('time');     // HH:MM
+    const gender = params.get('gender'); // male/female
+    const name = params.get('name');
+
+    if (birth) {
+        const [y, m, d] = birth.split('-').map(v => parseInt(v, 10));
+        if (y && m && d) {
+            el.year.value = String(y);
+            el.month.value = String(m);
+            updateDayOptions();
+            el.day.value = String(d);
+        }
+    }
+    if (time) {
+        const [hh, mm] = time.split(':');
+        if (hh != null && mm != null) {
+            el.hour.value = hh;
+            el.minute.value = mm;
+        }
+    }
+    if (gender === 'male' || gender === 'female') {
+        const radio = document.querySelector(`input[name="gender"][value="${gender}"]`);
+        if (radio) radio.checked = true;
+        syncGenderCheckedUI();
+    }
+    if (name && el.name) el.name.value = name;
+
+    // 2) URL指定がなければ LocalStorage
+    if (!birth && !time && !gender && !name) {
+        try {
+            const saved = JSON.parse(localStorage.getItem('fortune:lastInputs') || 'null');
+            if (saved?.birth) {
+                const [y, m, d] = saved.birth.split('-').map(v => parseInt(v, 10));
+                if (y && m && d) {
+                    el.year.value = String(y);
+                    el.month.value = String(m);
+                    updateDayOptions();
+                    el.day.value = String(d);
+                }
+            }
+            if (saved?.time) {
+                const [hh, mm] = saved.time.split(':');
+                el.hour.value = hh;
+                el.minute.value = mm;
+            }
+            if (saved?.gender) {
+                const radio = document.querySelector(`input[name="gender"][value="${saved.gender}"]`);
+                if (radio) radio.checked = true;
+                syncGenderCheckedUI();
+            }
+            if (saved?.name && el.name) el.name.value = saved.name;
+        } catch (_) {}
+    }
+}
+
+function persistInputsToStorage(birthdate, birthtime, name, gender) {
+    try {
+        localStorage.setItem('fortune:lastInputs', JSON.stringify({
+            birth: birthdate,
+            time: birthtime || '',
+            name: name || '',
+            gender: gender || '',
+            savedAt: Date.now()
+        }));
+    } catch (_) {}
+}
+
 function initializeDateSelects() {
     const yearSelect = document.getElementById('birthYear');
     const monthSelect = document.getElementById('birthMonth');
@@ -277,6 +413,7 @@ const gogyou = {
 
 document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    clearFormError();
     
     // プルダウンから値を取得
     const year = document.getElementById('birthYear').value;
@@ -289,18 +426,18 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
     
     // 必須項目のチェック
     if (!year || !month || !day) {
-        alert('生年月日を選択してください。');
+        setFormError('生年月日を選択してください。', el.year);
         return;
     }
     
     if (!gender) {
-        alert('性別を選択してください。');
+        setFormError('性別を選択してください。', document.getElementById('genderMale'));
         return;
     }
     
     // 時刻の入力チェック（片方だけ入力されている場合）
     if ((hour && !minute) || (!hour && minute)) {
-        alert('出生時刻は「時」と「分」の両方を入力してください。\n不明な場合は両方とも空欄のままにしてください。');
+        setFormError('出生時刻は「時」と「分」の両方を入力してください。不明な場合は両方とも空欄のままにしてください。', el.hour);
         return;
     }
     
@@ -313,6 +450,9 @@ document.getElementById('fortuneForm').addEventListener('submit', function(e) {
         birthtime = `${hour}:${minute}`;
     }
     
+    // 入力を保存（次回の利便性）
+    persistInputsToStorage(birthdate, birthtime, name, gender.value);
+
     // ローディング表示
     showLoading();
     
@@ -492,12 +632,24 @@ function generateCopyText(kyusei, num, western, gosei, shichu, ziwei, tarot, bir
 3. 最終メッセージ`;
     
     document.getElementById('copyText').value = copyText;
+
+    // 結果を保存
+    try { localStorage.setItem('fortune:lastResult', copyText); } catch (_) {}
     
     // コピーボタンのイベントリスナー
     document.getElementById('copyBtn').onclick = function() {
         const textarea = document.getElementById('copyText');
-        textarea.select();
-        document.execCommand('copy');
+        const textToCopy = textarea.value;
+        // Clipboard API優先（https環境 / localhost で有効）
+        if (navigator.clipboard && window.isSecureContext) {
+            navigator.clipboard.writeText(textToCopy).catch(() => {
+                textarea.select();
+                document.execCommand('copy');
+            });
+        } else {
+            textarea.select();
+            document.execCommand('copy');
+        }
         
         // ボタンのテキストを一時的に変更
         const originalText = this.innerHTML;
