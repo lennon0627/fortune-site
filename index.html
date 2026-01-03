@@ -3,13 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="生年月日から8種類の占術で2026年の運勢を完全鑑定。九星気学・数秘術・四柱推命・西洋占星術・五星三心・カバラ・紫微斗数・タロット。">
     <title>究極の運勢占い✨ 8種類の占術で完全鑑定</title>
     <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
     <div class="stars"></div>
-    
     <div class="container">
         <header class="header">
             <h1 class="title">
@@ -19,180 +18,69 @@
         </header>
 
         <div class="fortune-card">
-            <div class="card-header">
-                <h2>生年月日を入力して占う</h2>
-            </div>
-            <form id="fortuneForm" class="fortune-form" novalidate>
-                <div id="formError" class="form-error" role="alert" aria-live="polite"></div>
+            <div class="card-header"><h2>生年月日を入力して占う</h2></div>
+            <form id="fortuneForm" class="fortune-form">
+                <div id="formError" class="form-error"></div>
                 <div class="input-group">
-                    <label for="birthYear"><span class="label-icon">🎂</span> 生年月日</label>
+                    <label>🎂 生年月日</label>
                     <div class="date-selects">
-                        <select id="birthYear" required>
-                            <option value="">年</option>
-                        </select>
-                        <span class="date-separator">年</span>
-                        <select id="birthMonth" required>
-                            <option value="">月</option>
-                        </select>
-                        <span class="date-separator">月</span>
-                        <select id="birthDay" required>
-                            <option value="">日</option>
-                        </select>
-                        <span class="date-separator">日</span>
+                        <select id="birthYear" required><option value="">年</option></select>
+                        <select id="birthMonth" required><option value="">月</option></select>
+                        <select id="birthDay" required><option value="">日</option></select>
                     </div>
                 </div>
                 <div class="input-group">
-                    <label for="birthHour"><span class="label-icon">🕐</span> 生まれた時間</label>
+                    <label>🕐 生まれた時間（不明でも可）</label>
                     <div class="time-selects">
-                        <select id="birthHour">
-                            <option value="">時</option>
-                        </select>
-                        <span class="time-separator">時</span>
-                        <select id="birthMinute">
-                            <option value="">分</option>
-                        </select>
-                        <span class="time-separator">分</span>
+                        <select id="birthHour"><option value="">時</option></select>
+                        <select id="birthMinute"><option value="">分</option></select>
                     </div>
                 </div>
                 <div class="input-group">
-    <fieldset class="gender-fieldset">
-        <legend><span class="label-icon">⚧</span> 性別</legend>
-        <div class="gender-selects" role="radiogroup" aria-label="性別">
-            <label class="gender-option">
-                <input type="radio" id="genderMale" name="gender" value="male" required>
-                <span>男性</span>
-            </label>
-            <label class="gender-option">
-                <input type="radio" id="genderFemale" name="gender" value="female" required>
-                <span>女性</span>
-            </label>
-        </div>
-    </fieldset>
-</div>
+                    <label>⚧ 性別</label>
+                    <div class="gender-selects">
+                        <label class="gender-option"><input type="radio" name="gender" value="male" checked><span>男性</span></label>
+                        <label class="gender-option"><input type="radio" name="gender" value="female"><span>女性</span></label>
+                    </div>
+                </div>
                 <div class="input-group">
-                    <label for="name"><span class="label-icon">✨</span> お名前</label>
+                    <label>✨ お名前</label>
                     <input type="text" id="name" placeholder="山田太郎">
                 </div>
-                <button type="submit" class="submit-btn">
-                    <span>占う!</span><span class="btn-sparkle">✨</span>
-                </button>
+                <button type="submit" class="submit-btn">占う! ✨</button>
             </form>
         </div>
 
         <div id="results" class="results hidden">
-            <div class="result-section kyusei">
-                <h3 class="section-title"><span class="icon">🌟</span>九星気学</h3>
-                <div class="result-content">
-                    <div class="star-display" id="kyuseiStar"></div>
-                    <div id="kyuseiDesc"></div>
-                    <div class="lucky-info">
-                        <div class="luck-item">ラッキーカラー: <span id="kyuseiColor"></span></div>
-                        <div class="luck-item">ラッキー方位: <span id="kyuseiDirection"></span></div>
-                    </div>
-                </div>
-            </div>
-
-            <div class="result-section numerology">
-                <h3 class="section-title"><span class="icon">🔢</span>数秘術</h3>
-                <div class="result-content">
-                    <div class="number-display" id="numerologyNumber"></div>
-                    <div id="numerologyDesc"></div>
-                </div>
-            </div>
-
             <div class="result-section shichusuimei">
-                <h3 class="section-title"><span class="icon">🎋</span>四柱推命</h3>
+                <h3 class="section-title">🎋 四柱推命（五行バランス）</h3>
                 <div class="result-content">
-                    <div class="pillars" id="shichuPillars"></div>
-                    <div class="elements" id="shichuElements"></div>
+                    <div id="shichuPillars" class="pillars"></div>
+                    <canvas id="gogyouChart"></canvas>
                     <div id="shichuDesc"></div>
-                    <div class="radar-chart-container">
-                        <h4 style="text-align: center; margin: 20px 0 10px 0; color: #667eea;">五行バランスチャート</h4>
-                        <canvas id="gogyouRadarChart" width="300" height="300"></canvas>
-                    </div>
                 </div>
             </div>
-
-            <div class="result-section western">
-                <h3 class="section-title"><span class="icon">♈</span>西洋占星術</h3>
-                <div class="result-content">
-                    <div class="star-display" id="westernSign"></div>
-                    <div id="westernDesc"></div>
-                </div>
-            </div>
-
-            <div class="result-section gosei">
-                <h3 class="section-title"><span class="icon">🎭</span>五星三心占い</h3>
-                <div class="result-content">
-                    <div class="star-display" id="goseiType"></div>
-                    <div id="goseiDesc"></div>
-                </div>
-            </div>
-
-            <div class="result-section kabbalah">
-                <h3 class="section-title"><span class="icon">🔯</span>カバラ占術</h3>
-                <div class="result-content">
-                    <div class="number-display" id="kabbalahNumber"></div>
-                    <div id="kabbalahDesc"></div>
-                </div>
-            </div>
-
-            <div class="result-section ziwei">
-                <h3 class="section-title"><span class="icon">🟣</span>紫微斗数</h3>
-                <div class="result-content">
-                    <div class="star-display" id="ziweiStar"></div>
-                    <div id="ziweiDesc"></div>
-                </div>
-            </div>
-
-            <div class="result-section tarot">
-                <h3 class="section-title"><span class="icon">🃏</span>年運タロット（2026年）</h3>
-                <div class="result-content">
-                    <div class="star-display" id="tarotCard"></div>
-                    <div id="tarotDesc"></div>
-                </div>
-            </div>
+            
+            <div id="dynamicSections"></div>
 
             <div class="result-section total">
-                <h3 class="section-title"><span class="icon">💫</span>総合運勢</h3>
-                <div class="result-content" id="totalFortune"></div>
+                <h3 class="section-title">💫 総合鑑定メッセージ</h3>
+                <div id="totalFortune" class="result-content"></div>
             </div>
 
-            <!-- 総合運勢ランキング -->
             <div class="result-section ranking-section">
-                <h3 class="section-title"><span class="icon">🌟</span>2026年総合運勢ランキング</h3>
-                <div class="result-content">
-                    <div class="ranking-info">
-                        <div class="eto-sign-combo" id="etoSignCombo"></div>
-                        <div class="score-breakdown" id="scoreBreakdown"></div>
-                        <div class="total-score-display" id="totalScoreDisplay"></div>
-                        <div class="ranking-position" id="rankingPosition"></div>
-                        <div class="fortune-level" id="fortuneLevel"></div>
-                    </div>
-                </div>
+                <h3 class="section-title">🌟 2026年運勢スコア</h3>
+                <div class="total-score-display" id="totalScoreDisplay"></div>
+                <div id="rankingPosition" class="ranking-position"></div>
+                <div id="fortuneLevel" class="fortune-level"></div>
             </div>
 
-            <!-- コピー用テキストセクション -->
             <div class="result-section copy-section">
-                <h3 class="section-title"><span class="icon">📋</span>占い結果をコピー</h3>
-                <div class="result-content">
-                    <p style="margin-bottom: 15px;">AIで詳しく占いたい場合は、下記の結果をコピーしてご利用ください</p>
-                    <textarea id="copyText" class="copy-textarea" readonly></textarea>
-                    <div class="copy-actions">
-                        <button id="copyBtn" class="copy-btn">📋 結果をコピー</button>
-                    </div>
-                    <div class="ai-buttons">
-                        <a href="https://gemini.google.com" target="_blank" class="ai-btn gemini-btn">
-                            <span class="ai-icon">✨</span> Geminiで占う
-                        </a>
-                        <a href="https://chat.openai.com" target="_blank" class="ai-btn chatgpt-btn">
-                            <span class="ai-icon">🤖</span> ChatGPTで占う
-                        </a>
-                    </div>
-                </div>
+                <h3 class="section-title">📋 AI詳細鑑定用テキスト</h3>
+                <textarea id="copyText" class="copy-textarea" readonly></textarea>
+                <button id="copyBtn" class="copy-btn">結果をコピーしてGemini等で占う</button>
             </div>
-
-            <button class="reset-btn" onclick="resetForm()">もう一度占う</button>
+            <button class="reset-btn" onclick="location.reload()">もう一度占う</button>
         </div>
     </div>
     <script src="script.js"></script>
