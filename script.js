@@ -522,84 +522,108 @@ function calculateJulianDayNumber(year, month, day) {
 }
 
 function calculateShichu(year, month, day, hour = 12, minute = 0) {
-    // 正確な立春判定
-    const risshun = calculateAccurateRisshun(year);
-    const birthDate = new Date(year, month - 1, day, hour, minute);
-    
-    // 立春前の場合は前年として計算
-    const calcYear = birthDate < risshun ? year - 1 : year;
-    
-    // 年柱（干支）- より正確な計算
-    const yearKan = jikkanList[(calcYear - 4) % 10];
-    const yearShi = etoList[(calcYear - 4) % 12];
-    
-    // 月柱 - 節入りを正確に考慮
-    const setsunyu = calculateSetsunyu(year, month);
-    let calcMonth = month;
-    
-    // 節入り前かどうかを判定
-    if (birthDate < setsunyu) {
-        calcMonth = month === 1 ? 12 : month - 1;
-    }
-    
-    // 月柱の天干は年干から計算（五虎遁）
-    const yearKanIndex = jikkanList.indexOf(yearKan);
-    const monthKanBase = [2, 4, 6, 8, 0]; // 甲年の正月から始まる天干（丙寅）
-    const monthKanIndex = (monthKanBase[yearKanIndex % 5] + (calcMonth - 1) * 2) % 10;
-    const monthKan = jikkanList[monthKanIndex];
-    const monthShi = etoList[(calcMonth + 1) % 12];
-    
-    // 日柱 - ユリウス通日を使用した正確な計算
-    const jdn = calculateJulianDayNumber(year, month, day);
-    const dayKanIndex = (jdn + 9) % 10;  // 基準日からの干支計算
-    const dayShiIndex = (jdn + 1) % 12;
-    const dayKan = jikkanList[dayKanIndex];
-    const dayShi = etoList[dayShiIndex];
-    
-    // 時柱 - 子の刻（23-1時）の日跨ぎ処理を正確に
-    let hourIndex;
-    if (hour >= 23) {
-        // 23時以降は翌日の子の刻
-        hourIndex = 0;
-    } else if (hour < 1) {
-        // 0時台は前日の子の刻
-        hourIndex = 0;
-    } else {
-        // 通常の時間帯
-        hourIndex = Math.floor((hour + 1) / 2);
-    }
-    
-    // 時柱の天干は日干から計算（五鼠遁）
-    const dayKanIndex2 = jikkanList.indexOf(dayKan);
-    const hourKanBase = [0, 2, 4, 6, 8]; // 甲日の子時から始まる天干（甲子）
-    const hourKanIndex = (hourKanBase[dayKanIndex2 % 5] + hourIndex * 2) % 10;
-    const hourKan = jikkanList[hourKanIndex];
-    const hourShi = shiList[hourIndex];
-    
-    // 五行のカウント
-    const elements = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
-    [yearKan, yearShi, monthKan, monthShi, dayKan, dayShi, hourKan, hourShi].forEach(char => {
-        if (gogyou[char]) {
-            elements[gogyou[char]]++;
+    try {
+        // 正確な立春判定
+        const risshun = calculateAccurateRisshun(year);
+        const birthDate = new Date(year, month - 1, day, hour, minute);
+        
+        // 立春前の場合は前年として計算
+        const calcYear = birthDate < risshun ? year - 1 : year;
+        
+        // 年柱（干支）- より正確な計算
+        const yearKan = jikkanList[(calcYear - 4) % 10];
+        const yearShi = etoList[(calcYear - 4) % 12];
+        
+        // 月柱 - 節入りを正確に考慮
+        const setsunyu = calculateSetsunyu(year, month);
+        let calcMonth = month;
+        
+        // 節入り前かどうかを判定
+        if (birthDate < setsunyu) {
+            calcMonth = month === 1 ? 12 : month - 1;
         }
-    });
-    
-    // 空亡の計算
-    const kubou = calculateKubou(dayShi);
-    
-    // 大運の計算（10年ごとの運勢の流れ）
-    const taiunInfo = calculateTaiun(calcYear, month, day, yearKan, yearShi);
-    
-    return {
-        year: yearKan + yearShi,
-        month: monthKan + monthShi,
-        day: dayKan + dayShi,
-        hour: hourKan + hourShi,
-        elements: elements,
-        kubou: kubou,
-        taiun: taiunInfo,
-        note: `立春: ${risshun.getMonth() + 1}/${risshun.getDate()} ${risshun.getHours()}:${String(risshun.getMinutes()).padStart(2, '0')}`
-    };
+        
+        // 月柱の天干は年干から計算（五虎遁）
+        const yearKanIndex = jikkanList.indexOf(yearKan);
+        const monthKanBase = [2, 4, 6, 8, 0]; // 甲年の正月から始まる天干（丙寅）
+        const monthKanIndex = (monthKanBase[yearKanIndex % 5] + (calcMonth - 1) * 2) % 10;
+        const monthKan = jikkanList[monthKanIndex];
+        const monthShi = etoList[(calcMonth + 1) % 12];
+        
+        // 日柱 - ユリウス通日を使用した正確な計算
+        const jdn = calculateJulianDayNumber(year, month, day);
+        const dayKanIndex = (jdn + 9) % 10;  // 基準日からの干支計算
+        const dayShiIndex = (jdn + 1) % 12;
+        const dayKan = jikkanList[dayKanIndex];
+        const dayShi = etoList[dayShiIndex];
+        
+        console.log('日柱計算:', { dayKan, dayShi, jdn });
+        
+        // 時柱 - 子の刻（23-1時）の日跨ぎ処理を正確に
+        let hourIndex;
+        if (hour >= 23) {
+            // 23時以降は翌日の子の刻
+            hourIndex = 0;
+        } else if (hour < 1) {
+            // 0時台は前日の子の刻
+            hourIndex = 0;
+        } else {
+            // 通常の時間帯
+            hourIndex = Math.floor((hour + 1) / 2);
+        }
+        
+        // 時柱の天干は日干から計算（五鼠遁）
+        const dayKanIndex2 = jikkanList.indexOf(dayKan);
+        const hourKanBase = [0, 2, 4, 6, 8]; // 甲日の子時から始まる天干（甲子）
+        const hourKanIndex = (hourKanBase[dayKanIndex2 % 5] + hourIndex * 2) % 10;
+        const hourKan = jikkanList[hourKanIndex];
+        const hourShi = shiList[hourIndex];
+        
+        // 五行のカウント
+        const elements = { '木': 0, '火': 0, '土': 0, '金': 0, '水': 0 };
+        [yearKan, yearShi, monthKan, monthShi, dayKan, dayShi, hourKan, hourShi].forEach(char => {
+            if (gogyou[char]) {
+                elements[gogyou[char]]++;
+            }
+        });
+        
+        // 空亡の計算
+        const kubou = calculateKubou(dayShi);
+        console.log('空亡計算結果:', kubou);
+        
+        // 大運の計算（10年ごとの運勢の流れ）
+        const taiunInfo = calculateTaiun(calcYear, month, day, yearKan, yearShi);
+        
+        const result = {
+            year: yearKan + yearShi,
+            month: monthKan + monthShi,
+            day: dayKan + dayShi,
+            hour: hourKan + hourShi,
+            elements: elements,
+            kubou: kubou,
+            taiun: taiunInfo,
+            note: `立春: ${risshun.getMonth() + 1}/${risshun.getDate()} ${risshun.getHours()}:${String(risshun.getMinutes()).padStart(2, '0')}`
+        };
+        
+        console.log('四柱推命計算完了:', result);
+        return result;
+    } catch (error) {
+        console.error('四柱推命計算エラー:', error);
+        // エラーが発生した場合のデフォルト値を返す
+        return {
+            year: '甲子',
+            month: '甲子',
+            day: '甲子',
+            hour: '甲子',
+            elements: { '木': 2, '火': 2, '土': 2, '金': 2, '水': 2 },
+            kubou: ['子', '丑'],
+            taiun: {
+                current: '初年運',
+                description: '計算中'
+            },
+            note: '計算エラーが発生しました'
+        };
+    }
 }
 
 /**
@@ -619,6 +643,13 @@ function calculateKubou(dayShi) {
     ];
     
     const shiIndex = etoList.indexOf(dayShi);
+    
+    // 地支が見つからない場合のエラーハンドリング
+    if (shiIndex === -1) {
+        console.error('空亡計算エラー: 無効な地支', dayShi);
+        return ['子', '丑']; // デフォルト値を返す
+    }
+    
     const pairIndex = Math.floor(shiIndex / 2);
     
     return kubouPairs[pairIndex];
@@ -951,6 +982,9 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
     const birthDateTime = new Date(birthYear, birthMonth - 1, birthDay, birthHour, birthMinute);
     const setsuniriNote = getSetsuniriNote(birthDateTime, birthYear, birthMonth, birthDay);
     
+    // デバッグ用：四柱推命の結果を確認
+    console.log('四柱推命の結果:', shichu);
+    
     // 大運情報の表示
     let taiunDisplay = '';
     if (shichu.taiun) {
@@ -962,27 +996,35 @@ function displayResults(name, kyusei, num, western, gosei, shichu, kabbalah, ziw
         `;
     }
     
+    // 空亡表示（安全な処理）
+    let kubouDisplay = '';
+    if (shichu.kubou && Array.isArray(shichu.kubou) && shichu.kubou.length > 0) {
+        kubouDisplay = `
+            <div class="kubou-display">
+                <strong>空亡（天中殺）:</strong> ${shichu.kubou.join('・')}
+                <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
+                    ※空亡は運気の空白期間で、慎重な行動が求められる時期を示します
+                </p>
+            </div>
+        `;
+    }
+    
     document.getElementById('shichuPillars').innerHTML = `
         ${setsuniriNote}
         <div class="pillar-row">
             <span class="pillar-label">年柱:</span>
-            <span class="pillar-value">${shichu.year}</span>
+            <span class="pillar-value">${shichu.year || '計算中'}</span>
             <span class="pillar-label">月柱:</span>
-            <span class="pillar-value">${shichu.month}</span>
+            <span class="pillar-value">${shichu.month || '計算中'}</span>
         </div>
         <div class="pillar-row">
             <span class="pillar-label">日柱:</span>
-            <span class="pillar-value">${shichu.day}</span>
+            <span class="pillar-value">${shichu.day || '計算中'}</span>
             <span class="pillar-label">時柱:</span>
-            <span class="pillar-value">${shichu.hour}</span>
+            <span class="pillar-value">${shichu.hour || '計算中'}</span>
         </div>
         ${taiunDisplay}
-        <div class="kubou-display">
-            <strong>空亡（天中殺）:</strong> ${shichu.kubou.join('・')}
-            <p style="font-size: 0.9em; color: #666; margin-top: 5px;">
-                ※空亡は運気の空白期間で、慎重な行動が求められる時期を示します
-            </p>
-        </div>
+        ${kubouDisplay}
         <div style="text-align: right; font-size: 0.85em; color: #999; margin-top: 10px;">
             ${shichu.note || ''}
         </div>
@@ -1392,7 +1434,7 @@ ${numerologyData[num].description}
 🎋 四柱推命
 年柱: ${shichu.year} / 月柱: ${shichu.month}
 日柱: ${shichu.day} / 時柱: ${shichu.hour}
-空亡: ${shichu.kubou.join('・')}
+${shichu.kubou && Array.isArray(shichu.kubou) ? `空亡: ${shichu.kubou.join('・')}` : ''}
 五行バランス: 木${shichu.elements['木']} 火${shichu.elements['火']} 土${shichu.elements['土']} 金${shichu.elements['金']} 水${shichu.elements['水']}
 ${shichu.taiun ? `大運: ${shichu.taiun.description} (${shichu.taiun.period})` : ''}
 
